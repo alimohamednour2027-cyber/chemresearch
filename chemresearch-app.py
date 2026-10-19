@@ -1,4 +1,6 @@
 import streamlit as st
+from io import BytesIO
+from docx import Document
 
 # إعدادات صفحة الموقع
 st.set_page_config(
@@ -11,7 +13,7 @@ st.set_page_config(
 st.sidebar.title("🌐 Language / Dil / اللغة")
 lang_choice = st.sidebar.selectbox("Choose Language:", ["English", "Türkçe", "العربية"])
 
-# قاموس الترجمات الشامل (يغطي كل مفردات وتنبيهات الصفحة)
+# قاموس الترجمات الشامل
 if lang_choice == "English":
     t_title = "🧪 ChemResearch AI: Advanced Academic Article Writer"
     t_subtitle = "Designed for Solid-Phase Extraction (SPE), Adsorption, and Environmental Remediation Research."
@@ -41,6 +43,7 @@ if lang_choice == "English":
     t_spinner = "Analyzing sources and writing world-class academic text..."
     t_result_title = "📝 Generated Output:"
     t_success_gen = "Text generated successfully with source citations integrated!"
+    t_download_btn = "📥 Download as Word Document (.docx)"
 
 elif lang_choice == "Türkçe":
     t_title = "🧪 ChemResearch AI: Gelişmiş Akademik Makale Yazım Aracı"
@@ -71,8 +74,9 @@ elif lang_choice == "Türkçe":
     t_spinner = "Kaynaklar analiz ediliyor ve dünya standartlarında akademik metin yazılıyor..."
     t_result_title = "📝 Elde Edilen Metin:"
     t_success_gen = "Metin, yüklenen kaynaklarla ilişkilendirilerek başarıyla oluşturuldu!"
+    t_download_btn = "📥 Word Belgesi Olarak İndir (.docx)"
 
-else:  # العربية (شاملة تعريب كل زاوية في الصفحة)
+else:  # العربية
     t_title = "🧪 ChemResearch AI: أداة كتابة الأبحاث الأكاديمية المتقدمة"
     t_subtitle = "مخصص لأبحاث الاستخلاص (SPE)، الامتزاز (Adsorption)، وإزالة الملوثات البيئية."
     t_sidebar_header = "📚 مستودع المصادر (Sources Hub)"
@@ -101,6 +105,7 @@ else:  # العربية (شاملة تعريب كل زاوية في الصفحة
     t_spinner = "جاري تحليل المصادر وصياغة النص بأعلى معايير المجلات العالمية..."
     t_result_title = "📝 النص الناتج:"
     t_success_gen = "تم توليد النص بنجاح مع ربط الاستشهادات بالمصادر المرفوعة!"
+    t_download_btn = "📥 تحميل كملف Word (.docx)"
 
 # ==================== عرض واجهة الموقع ====================
 st.title(t_title)
@@ -151,30 +156,46 @@ if st.button(t_btn):
     with st.spinner(t_spinner):
         
         if "1." in section_choice:
-            output_text = f"""
-            ### Introduction
-            Rapid industrialization has led to a significant increase in the discharge of toxic heavy metal ions, specifically **{target_metal}**, into aquatic ecosystems [1]. Due to their persistence and bioaccumulation potential, these pollutants pose severe threats to environmental safety [2]. 
+            output_text = f"""Introduction
             
-            To address this, various conventional remediation techniques have been employed, but they often suffer from high operational costs and secondary sludge generation [3]. Recently, adsorption has emerged as a promising alternative. However, there remains a critical research gap in developing sustainable, high-capacity materials. 
+Rapid industrialization has led to a significant increase in the discharge of toxic heavy metal ions, specifically {target_metal}, into aquatic ecosystems [1]. Due to their persistence and bioaccumulation potential, these pollutants pose severe threats to environmental safety [2]. 
+
+To address this, various conventional remediation techniques have been employed, but they often suffer from high operational costs and secondary sludge generation [3]. Recently, adsorption has emerged as a promising alternative. However, there remains a critical research gap in developing sustainable, high-capacity materials. 
+
+To bridge this gap, the present study focuses on the facile synthesis and application of {adsorbent_material} for the efficient removal of {target_metal}. The structural properties were comprehensively investigated using {characterization_tools}."""
             
-            To bridge this gap, the present study focuses on the facile synthesis and application of **{adsorbent_material}** for the efficient removal of **{target_metal}**. The structural properties were comprehensively investigated using **{characterization_tools}**.
-            """
         elif "2." in section_choice:
-            output_text = f"""
-            ### Materials and Methods
-            All chemicals used were of analytical grade. The preparation of **{adsorbent_material}** involved a green synthesis route. The surface functional groups and morphological structures were analyzed using **{characterization_tools}**. Batch adsorption experiments were systematically conducted to evaluate the effects of initial pH, contact time, and initial metal concentration.
-            """
+            output_text = f"""Materials and Methods
+            
+All chemicals used were of analytical grade. The preparation of {adsorbent_material} involved a green synthesis route. The surface functional groups and morphological structures were analyzed using {characterization_tools}. Batch adsorption experiments were systematically conducted to evaluate the effects of initial pH, contact time, and initial metal concentration."""
+            
         elif "3." in section_choice:
-            output_text = f"""
-            ### Results and Discussion
-            The successful fabrication of **{adsorbent_material}** was confirmed by **{characterization_tools}** analyses, displaying active binding sites responsible for **{target_metal}** uptake. Adsorption kinetic data were best described by the pseudo-second-order model, indicating chemisorption as the rate-limiting step. Furthermore, equilibrium isotherm data aligned well with the Langmuir model, demonstrating a high maximum adsorption capacity.
-            """
+            output_text = f"""Results and Discussion
+            
+The successful fabrication of {adsorbent_material} was confirmed by {characterization_tools} analyses, displaying active binding sites responsible for {target_metal} uptake. Adsorption kinetic data were best described by the pseudo-second-order model, indicating chemisorption as the rate-limiting step. Furthermore, equilibrium isotherm data aligned well with the Langmuir model, demonstrating a high maximum adsorption capacity."""
+            
         else:
-            output_text = f"""
-            ### Conclusions
-            In summary, **{adsorbent_material}** was successfully developed and proven to be an efficient, eco-friendly material for removing **{target_metal}** from aqueous systems. The integration of advanced characterization and thermodynamic evaluation highlights its strong potential for sustainable industrial wastewater treatment.
-            """
+            output_text = f"""Conclusions
+            
+In summary, {adsorbent_material} was successfully developed and proven to be an efficient, eco-friendly material for removing {target_metal} from aqueous systems. The integration of advanced characterization and thermodynamic evaluation highlights its strong potential for sustainable industrial wastewater treatment."""
             
         st.markdown(f"### {t_result_title}")
         st.markdown(output_text)
         st.success(t_success_gen)
+
+        # دالة إنشاء ملف Word داخل الذاكرة وتصديره
+        doc = Document()
+        doc.add_heading(paper_title, level=1)
+        doc.add_paragraph(output_text)
+        
+        buffer = BytesIO()
+        doc.save(buffer)
+        buffer.seek(0)
+
+        # زر التحميل المباشر بصيغة Word
+        st.download_button(
+            label=t_download_btn,
+            data=buffer,
+            file_name="ChemResearch_Draft.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
