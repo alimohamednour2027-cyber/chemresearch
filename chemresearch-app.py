@@ -11,7 +11,7 @@ st.set_page_config(
 st.sidebar.title("🌐 Language / Dil / اللغة")
 lang_choice = st.sidebar.selectbox("Choose Language:", ["English", "Türkçe", "العربية"])
 
-# قاموس الترجمات والنصوص للغات الثلاث
+# قاموس الترجمات الشامل (يغطي كل مفردات وتنبيهات الصفحة)
 if lang_choice == "English":
     t_title = "🧪 ChemResearch AI: Advanced Academic Article Writer"
     t_subtitle = "Designed for Solid-Phase Extraction (SPE), Adsorption, and Environmental Remediation Research."
@@ -21,6 +21,7 @@ if lang_choice == "English":
     t_success_upload = "Sources added successfully."
     t_active_sources = "Active Sources:"
     t_no_sources = "No sources uploaded yet."
+    t_info_no_sources = "No sources uploaded yet. You can add them manually for citation mapping."
     
     t_exp_data = "🔬 Experiment & Research Data"
     t_paper_title = "Article or Experiment Title:"
@@ -50,6 +51,7 @@ elif lang_choice == "Türkçe":
     t_success_upload = "Kaynaklar başarıyla eklendi."
     t_active_sources = "Aktif Kaynaklar:"
     t_no_sources = "Henüz kaynak yüklenmedi."
+    t_info_no_sources = "Henüz kaynak yüklenmedi. Atıf eşlemesi için manuel ekleyebilirsiniz."
     
     t_exp_data = "🔬 Deney ve Araştırma Verileri"
     t_paper_title = "Makale veya Deney Başlığı:"
@@ -70,7 +72,7 @@ elif lang_choice == "Türkçe":
     t_result_title = "📝 Elde Edilen Metin:"
     t_success_gen = "Metin, yüklenen kaynaklarla ilişkilendirilerek başarıyla oluşturuldu!"
 
-else:  # العربية
+else:  # العربية (شاملة تعريب كل زاوية في الصفحة)
     t_title = "🧪 ChemResearch AI: أداة كتابة الأبحاث الأكاديمية المتقدمة"
     t_subtitle = "مخصص لأبحاث الاستخلاص (SPE)، الامتزاز (Adsorption)، وإزالة الملوثات البيئية."
     t_sidebar_header = "📚 مستودع المصادر (Sources Hub)"
@@ -79,6 +81,7 @@ else:  # العربية
     t_success_upload = "تم إدراج المصادر بنجاح."
     t_active_sources = "المصادر النشطة:"
     t_no_sources = "لم يتم رفع مصادر بعد."
+    t_info_no_sources = "لم يتم رفع مصادر بعد. يمكنك الإضافة يدوياً للربط المرجعي."
     
     t_exp_data = "🔬 بيانات التجربة والبحث"
     t_paper_title = "عنوان المقال أو التجربة:"
@@ -119,7 +122,7 @@ if uploaded_sources:
     for src in uploaded_sources:
         st.sidebar.text(f"📄 {src.name}")
 else:
-    st.sidebar.info(t_no_sources)
+    st.sidebar.info(t_info_no_sources)
 
 # لوحة المدخلات الرئيسية للتجربة
 st.markdown("---")
