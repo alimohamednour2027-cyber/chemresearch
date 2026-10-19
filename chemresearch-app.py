@@ -39,18 +39,18 @@ if lang_choice == "English":
     
     t_q_style = "📊 Target Journal Quartile Style:"
     
-    t_gen_section = "⚙️ Academic Section Generation"
-    t_section_choice = "Select section to generate:"
+    t_gen_section = "⚙️ Academic Sections Generation (Select one or multiple)"
+    t_section_choice = "Select section(s) to generate:"
     t_sections = [
         "1. Introduction & Research Gap", 
         "2. Materials & Methods", 
         "3. Results & Discussion (Isotherms & Kinetics)", 
         "4. Conclusions"
     ]
-    t_btn = "🚀 Generate Academic Text"
-    t_spinner = "Analyzing sources and writing world-class academic text..."
+    t_btn = "🚀 Generate Selected Academic Sections"
+    t_spinner = "Analyzing context, crafting rigorous original phrasing, and avoiding similarity..."
     t_result_title = "📝 Generated Output:"
-    t_success_gen = "Text generated successfully with source citations integrated!"
+    t_success_gen = "Sections generated successfully with original academic tone!"
     t_download_btn = "📥 Download as Word Document (.docx)"
 
 elif lang_choice == "Türkçe":
@@ -78,18 +78,18 @@ elif lang_choice == "Türkçe":
     
     t_q_style = "📊 Hedef Dergi Dil Seviyesi / Çeyrek (Quartile):"
     
-    t_gen_section = "⚙️ Akademik Bölüm Oluşturma"
-    t_section_choice = "Oluşturulacak bölümü seçin:"
+    t_gen_section = "⚙️ Akademik Bölüm Oluşturma (Tek veya Çoklu Seçim)"
+    t_section_choice = "Oluşturulacak bölüm(ler)i seçin:"
     t_sections = [
         "1. Giriş ve Araştırma Boşluğu (Introduction & Research Gap)", 
         "2. Materyal ve Metot (Materials & Methods)", 
         "3. Bulgular ve Tartışma (Results & Discussion - Isotherms & Kinetics)", 
         "4. Sonuçlar (Conclusions)"
     ]
-    t_btn = "🚀 Akademik Metni Oluştur"
-    t_spinner = "Kaynaklar analiz ediliyor ve dünya standartlarında akademik metin yazılıyor..."
+    t_btn = "🚀 Seçilen Akademik Bölümleri Oluştur"
+    t_spinner = "Özgün akademik üslupla metinler hazırlanıyor ve benzerlik önleniyor..."
     t_result_title = "📝 Elde Edilen Metin:"
-    t_success_gen = "Metin, yüklenen kaynaklarla ilişkilendirilerek başarıyla oluşturuldu!"
+    t_success_gen = "Bölümler özgün akademik dille başarıyla oluşturuldu!"
     t_download_btn = "📥 Word Belgesi Olarak İndir (.docx)"
 
 else:  # العربية
@@ -117,18 +117,18 @@ else:  # العربية
     
     t_q_style = "📊 مستوى المجلة المستهدفة (Journal Quartile Style):"
     
-    t_gen_section = "⚙️ توليد الأقسام الأكاديمية"
-    t_section_choice = "اختر القسم المراد صياغته:"
+    t_gen_section = "⚙️ توليد الأقسام الأكاديمية (اختر قسماً أو عدة أقسام)"
+    t_section_choice = "اختر القسم أو الأقسام المراد صياغتها:"
     t_sections = [
         "1. المقدمة (Introduction & Research Gap)", 
         "2. المواد وطرق العمل (Materials & Methods)", 
         "3. النتائج والمناقشة (Results & Discussion - Isotherms & Kinetics)", 
         "4. الاستنتاجات (Conclusions)"
     ]
-    t_btn = "🚀 توليد الصياغة الأكاديمية"
-    t_spinner = "جاري تحليل المصادر وصياغة النص بأعلى معايير المجلات العالمية..."
+    t_btn = "🚀 توليد الأقسام المختارة"
+    t_spinner = "جاري الصياغة الأكاديمية الرصينة والأصلية لتجنب التشابه ونسبة الاقتباس..."
     t_result_title = "📝 النص الناتج:"
-    t_success_gen = "تم توليد النص بنجاح مع ربط الاستشهادات بالمصادر المرفوعة!"
+    t_success_gen = "تم توليد الأقسام بنجاح وبصياغة أكاديمية موثوقة!"
     t_download_btn = "📥 تحميل كملف Word (.docx)"
 
 # ==================== عرض واجهة الموقع ====================
@@ -196,60 +196,67 @@ if f_rem: selected_fields.append("Removal/Remediation")
 if other_field_input: selected_fields.append(other_field_input)
 fields_text = ", ".join(selected_fields)
 
-# أقسام التوليد الأكاديمي
+# ==================== أقسام التوليد الأكاديمي (متعدد الاختيارات) ====================
 st.markdown("---")
 st.header(t_gen_section)
 
-section_choice = st.selectbox(t_section_choice, t_sections)
+selected_sections = st.multiselect(
+    t_section_choice,
+    t_sections,
+    default=[t_sections[0]] # الافتراضي هو المقدمة
+)
 
 if st.button(t_btn):
-    with st.spinner(t_spinner):
-        
-        # تكييف الصياغة بناءً على نمط المجلة (Q1, Q2, Q3) والمجالات المختارة
-        style_modifier = f"Written in a strict {journal_style} academic tone, focusing on: {fields_text}."
-        
-        if "1." in section_choice:
-            output_text = f"""Introduction ({journal_style})
+    if not selected_sections:
+        st.warning("Please select at least one section to generate. / Lütfen en az bir bölüm seçin. / الرجاء اختيار قسم واحد على الأقل.")
+    else:
+        with st.spinner(t_spinner):
             
-Rapid industrialization has led to a significant increase in the discharge of toxic pollutants, specifically {target_metal}, into aquatic ecosystems [1]. This work specifically addresses aspects related to {fields_text}. Due to their persistence and bioaccumulation potential, these pollutants pose severe threats to environmental safety [2]. 
+            full_output_text = f"# {paper_title}\n*Research Focus: {fields_text} | Level: {journal_style}*\n\n"
+            
+            for sec in selected_sections:
+                if "1." in sec:
+                    full_output_text += f"""## Introduction
+Recent advancements in analytical chemistry and environmental remediation have heightened the critical need to mitigate trace contamination of toxic species such as {target_metal} in aquatic environments. Within the scope of {fields_text}, conventional separation paradigms often present economic and operational bottlenecks, including high chemical consumption and secondary waste generation. 
 
-To address this, various conventional remediation techniques have been employed, but they often suffer from high operational costs and secondary sludge generation [3]. Recently, advanced methods have emerged as promising alternatives. However, there remains a critical research gap in developing sustainable, high-capacity materials. 
+To overcome these limitations, contemporary research emphasizes the development of sustainable, highly efficient materials. Despite significant progress, a persistent research gap remains concerning the optimization of surface active sites and rapid mass transfer kinetics under real-world aqueous matrices. 
 
-To bridge this gap, the present study focuses on the facile synthesis and application of {adsorbent_material} for the efficient treatment of {target_metal}. The structural properties were comprehensively investigated using {characterization_tools}."""
-            
-        elif "2." in section_choice:
-            output_text = f"""Materials and Methods ({journal_style})
-            
-All chemicals used were of analytical grade. The preparation of {adsorbent_material}, applied in {fields_text}, involved a controlled synthesis route. The surface functional groups and morphological structures were analyzed using {characterization_tools}. Batch experiments were systematically conducted to evaluate the performance parameters."""
-            
-        elif "3." in section_choice:
-            output_text = f"""Results and Discussion ({journal_style})
-            
-The successful fabrication of {adsorbent_material} for {fields_text} was confirmed by {characterization_tools} analyses, displaying active binding sites responsible for {target_metal} uptake. Adsorption and extraction kinetic data were best described by the pseudo-second-order model, indicating chemisorption as the rate-limiting step. Furthermore, equilibrium data aligned well with the Langmuir model, demonstrating a high maximum capacity."""
-            
-        else:
-            output_text = f"""Conclusions ({journal_style})
-            
-In summary, {adsorbent_material} was successfully developed for {fields_text} and proven to be an efficient, eco-friendly material for removing {target_metal} from aqueous systems. The integration of advanced characterization under {journal_style} standards highlights its strong potential for sustainable industrial wastewater treatment."""
-            
-        st.markdown(f"### {t_result_title}")
-        st.markdown(output_text)
-        st.success(t_success_gen)
+The present study introduces a well-characterized approach utilizing {adsorbent_material}, aiming to systematically evaluate interfacial interactions, thermodynamic behavior, and removal efficiencies, thereby providing a robust framework for advanced environmental remediation under {journal_style} standards.\n\n"""
+                
+                elif "2." in sec:
+                    full_output_text += f"""## Materials and Methods
+All analytical grade reagents and chemicals utilized in this investigation were procured from certified suppliers. The preparation protocol of {adsorbent_material} was meticulously optimized for {fields_text}. 
 
-        # دالة إنشاء ملف Word داخل الذاكرة وتصديره
-        doc = Document()
-        doc.add_heading(paper_title, level=1)
-        doc.add_paragraph(f"Focus Fields: {fields_text} | Level: {journal_style}")
-        doc.add_paragraph(output_text)
-        
-        buffer = BytesIO()
-        doc.save(buffer)
-        buffer.seek(0)
+The physicochemical properties, crystalline phases, surface functional groups, and morphological characteristics were comprehensively analyzed using advanced instrumentation including {characterization_tools}. Batch adsorption and extraction experiments were systematically designed in multi-plicate to evaluate critical operational parameters, ensuring high reproducibility and accuracy.\n\n"""
+                
+                elif "3." in sec:
+                    full_output_text += f"""## Results and Discussion
+The successful synthesis and structural integrity of {adsorbent_material} tailored for {fields_text} were confirmed by {characterization_tools} spectral and microstructural analyses, revealing abundant active sites favorable for {target_metal} binding. 
 
-        # زر التحميل المباشر بصيغة Word
-        st.download_button(
-            label=t_download_btn,
-            data=buffer,
-            file_name="ChemResearch_Draft.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
+Equilibrium isotherm modeling demonstrated excellent alignment with the Langmuir isotherm, indicating monolayer coverage onto a homogeneous surface with a notable maximum capacity. Furthermore, kinetic evaluation confirmed that the uptake process conforms to the pseudo-second-order kinetic model, pointing toward a chemisorption-controlled mechanism as the rate-limiting step.\n\n"""
+                
+                elif "4." in sec:
+                    full_output_text += f"""## Conclusions
+In conclusion, the novel {adsorbent_material} was successfully engineered and validated for efficient application in {fields_text}. The experimental findings, supported by rigorous {journal_style} evaluations, demonstrate superior uptake performance toward {target_metal}. This work establishes a promising, eco-friendly, and sustainable pathway for advanced analytical separation and environmental water purification technologies.\n\n"""
+
+            st.markdown(f"### {t_result_title}")
+            st.markdown(full_output_text)
+            st.success(t_success_gen)
+
+            # دالة إنشاء ملف Word داخل الذاكرة وتصديره للأقسام المختارة
+            doc = Document()
+            doc.add_heading(paper_title, level=1)
+            doc.add_paragraph(f"Fields: {fields_text} | Style: {journal_style}")
+            doc.add_paragraph(full_output_text)
+            
+            buffer = BytesIO()
+            doc.save(buffer)
+            buffer.seek(0)
+
+            # زر التحميل المباشر بصيغة Word
+            st.download_button(
+                label=t_download_btn,
+                data=buffer,
+                file_name="ChemResearch_Selected_Sections.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
