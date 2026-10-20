@@ -1,6 +1,9 @@
 import streamlit as st
 from io import BytesIO
 from docx import Document
+from docx.shared import Inches, Pt
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 import pypdf
 from google import genai
 
@@ -11,13 +14,19 @@ st.set_page_config(
     layout="wide"
 )
 
+# ==================== الحفاظ على البيانات عند تغيير الخيارات (Session State) ====================
+if "intro_output" not in st.session_state:
+    st.session_state.intro_output = ""
+if "methods_output" not in st.session_state:
+    st.session_state.methods_output = ""
+
 # ==================== الشريط الجانبي وإعدادات الـ API ====================
 st.sidebar.title("🌐 Language / Dil / اللغة")
 lang_choice = st.sidebar.selectbox("Choose Language:", ["English", "Türkçe", "العربية"])
 
 st.sidebar.markdown("---")
 st.sidebar.subheader("🔑 Gemini API Configuration")
-api_key_input = st.sidebar.text_input("Enter your Gemini API Key:", type="password")
+api_key_input = st.sidebar.text_input("Enter your Gemini API Key:", type="password", value="")
 
 st.sidebar.markdown("---")
 st.sidebar.subheader("📚 Sources Hub")
@@ -157,10 +166,8 @@ if st.button(t_btn_sec2, key="btn_sec2"):
     else:
         with st.spinner(t_spinner):
             try:
-                # تهيئة عميل جوجل الذكي
                 client = genai.Client(api_key=api_key_input)
                 
-                # بناء البرومبت الموجه للنموذج ليحلل المراجع ويصيغ المقدمة
                 prompt = f"""
                 You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
                 Write a rigorous, comprehensive, and original Introduction section for a PhD-level research article.
@@ -183,33 +190,45 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 4. Write in formal academic English suitable for Q1 journals.
                 """
                 
-                # استخدام الموديل المحدث والموصى به
                 response = client.models.generate_content(
-                    model="gemini-3.8-flash",
+                    model="gemini-2.5-flash",
                     contents=prompt,
                 )
                 
-                introduction_output = response.text
-                
-                st.markdown(introduction_output)
-                st.success(t_success_gen)
-
-                doc = Document()
-                doc.add_heading(paper_title + " - Introduction", level=1)
-                doc.add_paragraph(introduction_output)
-                buffer = BytesIO()
-                doc.save(buffer)
-                buffer.seek(0)
-
-                st.download_button(
-                    label=t_download_btn,
-                    data=buffer,
-                    file_name="ChemResearch_AI_Introduction.docx",
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    key="dl_sec2"
-                )
+                st.session_state.intro_output = response.text
             except Exception as e:
                 st.error(f"An error occurred during AI generation: {e}")
+
+# عرض النص المحفوظ في الذاكرة المؤقتة لكي لا يختفي عند تغيير اللغة
+if st.session_state.intro_output:
+    st.markdown(st.session_state.intro_output)
+    st.success(t_success_gen)
+
+    # إنشاء ملف Word منسق بشكل نظيف يمنع تشابك الأسطر والمعادلات
+    doc = Document()
+    p_title = doc.add_paragraph()
+    p_title.paragraph_format.space_after = Pt(12)
+    run_title = p_title.add_run(paper_title + " - Introduction")
+    run_title.bold = True
+    run_title.font.size = Pt(16)
+
+    for line in st.session_state.intro_output.split('\n'):
+        p = doc.add_paragraph()
+        p.paragraph_format.space_after = Pt(6)
+        p.paragraph_format.line_spacing = 1.15
+        p.add_run(line)
+
+    buffer = BytesIO()
+    doc.save(buffer)
+    buffer.seek(0)
+
+    st.download_button(
+        label=t_download_btn,
+        data=buffer,
+        file_name="ChemResearch_AI_Introduction.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        key="dl_sec2"
+    )
 
 st.markdown("---")
 
@@ -220,8 +239,7 @@ st.markdown("📊 **مستودع ملفات القسم الثالث (خاص با
 sources_sec3 = st.file_uploader(t_upload_sec3, type=["pdf", "txt"], accept_multiple_files=True, key="sec3_files")
 
 if st.button(t_btn_sec3, key="btn_sec3"):
-    with st.spinner("Generating experimental and results framework..."):
-        methods_results_output = f"""# {paper_title} - Materials, Methods & Discussion
+    methods_results_output = f"""# {paper_title} - Materials, Methods & Discussion
 *Research Focus: {fields_text} | Analytical Tool: {analytical_instrument}*
 
 ## Materials and Methods
@@ -239,25 +257,38 @@ To confirm successful fabrication, the material underwent comprehensive multi-te
 Based on the experimental data obtained via {analytical_instrument}, the successful synthesis and physicochemical restructuring of {adsorbent_material} designed for {fields_text} were comprehensively validated through {characterization_tools} analyses, revealing active binding sites favorable for {target_metal} sequestration.
 
 ### 3.2. Adsorption Kinetics, Isotherms, and Thermodynamics
-Experimental kinetic data and quantitative measurements performed via {analytical_instrument} were evaluated to elucidate rate-controlling mechanisms. Equilibrium isotherm data analyzed via Langmuir and Freundlich models exhibited exceptional compliance with the Langmuir isotherm, confirming monolayer coverage with a notable maximum adsorption capacity ($q_m$). The high correlation coefficients ($R^2 > 0.99$) indicate that chemisorption acts as the rate-limiting step.
+Experimental kinetic data and quantitative measurements performed via {analytical_instrument} were evaluated to elucidate rate-controlling mechanisms. Equilibrium isotherm data analyzed via Langmuir and Freundlich models exhibited exceptional compliance with the Langmuir isotherm, confirming monolayer coverage with a notable maximum adsorption capacity (qm). The high correlation coefficients (R2 > 0.99) indicate that chemisorption acts as the rate-limiting step.
 
 ## Conclusions
 In summary, this study successfully demonstrated the facile fabrication and high-performance application of {adsorbent_material} tailored specifically for {fields_text}. Comprehensive characterization verified the abundance of active surface functional groups, while analytical measurements via {analytical_instrument} confirmed superior uptake efficiencies toward {target_metal}. Overall, this research establishes an environmentally sustainable framework for advanced analytical separation and industrial wastewater treatment under {journal_style} standards.
 """
-        st.markdown(methods_results_output)
-        st.success("Sections generated successfully!")
+    st.session_state.methods_output = methods_results_output
 
-        doc = Document()
-        doc.add_heading(paper_title + " - Manuscript Draft", level=1)
-        doc.add_paragraph(methods_results_output)
-        buffer = BytesIO()
-        doc.save(buffer)
-        buffer.seek(0)
+if st.session_state.methods_output:
+    st.markdown(st.session_state.methods_output)
+    st.success("Sections generated successfully!")
 
-        st.download_button(
-            label=t_download_btn,
-            data=buffer,
-            file_name="ChemResearch_Methods_Results_Conclusions.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            key="dl_sec3"
-        )
+    doc_m = Document()
+    p_title_m = doc_m.add_paragraph()
+    p_title_m.paragraph_format.space_after = Pt(12)
+    run_title_m = p_title_m.add_run(paper_title + " - Manuscript Draft")
+    run_title_m.bold = True
+    run_title_m.font.size = Pt(16)
+
+    for line in st.session_state.methods_output.split('\n'):
+        p = doc_m.add_paragraph()
+        p.paragraph_format.space_after = Pt(6)
+        p.paragraph_format.line_spacing = 1.15
+        p.add_run(line)
+
+    buffer_m = BytesIO()
+    doc_m.save(buffer_m)
+    buffer_m.seek(0)
+
+    st.download_button(
+        label=t_download_btn,
+        data=buffer_m,
+        file_name="ChemResearch_Methods_Results_Conclusions.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        key="dl_sec3"
+    )
