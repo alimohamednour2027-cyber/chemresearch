@@ -2,8 +2,6 @@ import streamlit as st
 from io import BytesIO
 from docx import Document
 from docx.shared import Inches, Pt
-from docx.oxml import OxmlElement
-from docx.oxml.ns import qn
 import pypdf
 from google import genai
 
@@ -190,8 +188,9 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 4. Write in formal academic English suitable for Q1 journals.
                 """
                 
+                # تم تحديث اسم الموديل هنا إلى gemini-3.8-flash لتجاوز الخطأ
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-3.8-flash",
                     contents=prompt,
                 )
                 
@@ -199,12 +198,10 @@ if st.button(t_btn_sec2, key="btn_sec2"):
             except Exception as e:
                 st.error(f"An error occurred during AI generation: {e}")
 
-# عرض النص المحفوظ في الذاكرة المؤقتة لكي لا يختفي عند تغيير اللغة
 if st.session_state.intro_output:
     st.markdown(st.session_state.intro_output)
     st.success(t_success_gen)
 
-    # إنشاء ملف Word منسق بشكل نظيف يمنع تشابك الأسطر والمعادلات
     doc = Document()
     p_title = doc.add_paragraph()
     p_title.paragraph_format.space_after = Pt(12)
@@ -254,7 +251,7 @@ To confirm successful fabrication, the material underwent comprehensive multi-te
 
 ## Results and Discussion
 ### 3.1. Structural and Morphological Characterization
-Based on the experimental data obtained via {analytical_instrument}, the successful synthesis and physicochemical restructuring of {adsorbent_material} designed for {fields_text} were comprehensively validated through {characterization_tools} analyses, revealing active binding sites favorable for {target_metal} sequestration.
+Based on the experimental data obtained via {analytical_instrument}, the successful synthesis and physicochemical restructuring of {adsorbent_material} designed for {fields_text} were comprehensively validated through {characterization_tools} analyses, unifying active binding sites favorable for {target_metal} sequestration.
 
 ### 3.2. Adsorption Kinetics, Isotherms, and Thermodynamics
 Experimental kinetic data and quantitative measurements performed via {analytical_instrument} were evaluated to elucidate rate-controlling mechanisms. Equilibrium isotherm data analyzed via Langmuir and Freundlich models exhibited exceptional compliance with the Langmuir isotherm, confirming monolayer coverage with a notable maximum adsorption capacity (qm). The high correlation coefficients (R2 > 0.99) indicate that chemisorption acts as the rate-limiting step.
