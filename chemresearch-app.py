@@ -157,10 +157,10 @@ if st.button(t_btn_sec2, key="btn_sec2"):
     else:
         with st.spinner(t_spinner):
             try:
-                # تهيئة عميل جوجل الذكي الجديد
+                # تهيئة عميل جوجل الذكي
                 client = genai.Client(api_key=api_key_input)
                 
-                # بناء البرومبت الاحترافي الموجه للنموذج ليحلل المراجع ويصيغ المقدمة
+                # بناء البرومبت الموجه للنموذج ليحلل المراجع ويصيغ المقدمة
                 prompt = f"""
                 You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
                 Write a rigorous, comprehensive, and original Introduction section for a PhD-level research article.
@@ -174,7 +174,7 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 - Journal Standard: {journal_style}
                 
                 Context extracted from user's uploaded reference papers (Review PDFs):
-                {extracted_pdf_text[:15000]}  # تمرير النصوص المستخرجة للنموذج
+                {extracted_pdf_text[:15000]}
                 
                 Instructions:
                 1. Do NOT use generic boilerplate templates. Analyze the provided reference context and synthesize an original, deep academic introduction.
@@ -183,8 +183,9 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 4. Write in formal academic English suitable for Q1 journals.
                 """
                 
+                # استخدام الموديل المحدث والموصى به
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-3.8-flash",
                     contents=prompt,
                 )
                 
