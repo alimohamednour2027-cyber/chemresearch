@@ -14,7 +14,7 @@ st.set_page_config(
 st.sidebar.title("🌐 Language / Dil / اللغة")
 lang_choice = st.sidebar.selectbox("Choose Language:", ["English", "Türkçe", "العربية"])
 
-# قاموس الترجمات الشامل (3 أقسام مستقلة)
+# قاموس الترجمات الشامل
 if lang_choice == "English":
     t_title = "🧪 ChemResearch AI: Advanced Academic Platform"
     t_subtitle = "Multi-Section Modular Research & Manuscript Engine"
@@ -143,7 +143,7 @@ fields_text = ", ".join(selected_fields)
 
 st.markdown("---")
 
-# ==================== القسم الثاني: المقدمة المستقلة (Introduction) ====================
+# ==================== القسم الثاني: المقدمة المستقلة (Introduction - مركزة على موضوع البحث والفجوة العلمية) ====================
 st.header(sec2_title)
 
 st.markdown("📂 **مستودع ملفات القسم الثاني (خاص بالمقدمة والدراسات السابقة):**")
@@ -165,13 +165,13 @@ if st.button(t_btn_sec2, key="btn_sec2"):
 *Research Focus: {fields_text} | Quartile: {journal_style}*
 
 ## Introduction
-The escalating industrialization and widespread anthropogenic activities have dramatically accelerated the discharge of hazardous heavy metal species, notably {target_metal}, into natural water resources [1, 2]. Due to their non-biodegradable nature, high environmental persistence, and severe bioaccumulation tendencies across trophic levels, these metallic contaminants pose catastrophic threats to aquatic biodiversity and public health, even at trace micrograms-per-liter thresholds. Consequently, developing robust, highly efficient separation and decontamination strategies has become an imperative priority within environmental analytical chemistry.
+The escalating industrialization and widespread anthropogenic activities have dramatically accelerated the discharge of hazardous heavy metal species, notably {target_metal}, into natural aquatic ecosystems [1, 2]. Due to their non-biodegradable nature, high environmental persistence, and severe bioaccumulation tendencies across trophic levels, these metallic contaminants pose catastrophic threats to aquatic biodiversity and public health. Consequently, developing robust, highly efficient separation and decontamination strategies has become an imperative priority within environmental analytical chemistry.
 
-Over recent decades, conventional remediation methodologies—such as chemical precipitation, membrane filtration, and standard ion-exchange—have been extensively deployed. However, these traditional protocols frequently suffer from critical techno-economic bottlenecks, including excessive chemical reagent consumption, high energy expenditure, and the generation of secondary toxic sludge requiring hazardous disposal. In response to these limitations, advanced interfacial separation frameworks, specifically focusing on {fields_text}, have gained immense traction owing to their operational simplicity, high pre-concentration factors, and design flexibility.
+Over recent decades, conventional remediation methodologies—such as chemical precipitation, membrane filtration, and standard ion-exchange—have been extensively deployed in relation to {fields_text}. However, these traditional protocols frequently suffer from critical techno-economic bottlenecks, including excessive chemical reagent consumption, high energy expenditure, and the generation of secondary toxic sludge requiring hazardous disposal. In response to these limitations, advanced interfacial separation frameworks have gained immense traction owing to their operational simplicity, high pre-concentration factors, and design flexibility.
 
-Despite substantial breakthroughs synthesized from our literature analysis, a pronounced research gap persists in the current body of knowledge. Most existing sorbents or extraction sorptive phases exhibit limitations regarding selectivity under complex multi-ionic matrices, mechanical durability, and regeneration efficiency. Furthermore, synthesizing eco-friendly, cost-effective materials derived from renewable precursors remains an ongoing challenge. 
+Despite substantial breakthroughs synthesized from recent literature, a pronounced research gap persists regarding the selective uptake and rapid mass transfer kinetics of {target_metal} under complex multi-ionic matrices. Most existing sorbents exhibit limitations in structural stability, regeneration efficiency, and active binding site availability. Furthermore, synthesizing eco-friendly, cost-effective materials derived from sustainable precursors remains a critical scientific challenge in developing advanced sorptive phases.
 
-To address these critical gaps, the present study introduces a novel, systematically engineered approach utilizing {adsorbent_material}. The primary objectives of this research are structured to: (i) fabricate and structurally optimize {adsorbent_material} via a green chemical pathway; (ii) comprehensively elucidate surface morphologies and functional group dynamics using advanced characterization platforms including {characterization_tools}; (iii) rigorously investigate equilibrium isotherms, thermodynamic parameters, and adsorption/extraction kinetics; and (iv) evaluate anti-interference performance over consecutive operational cycles under rigorous {journal_style} criteria.
+To bridge these specific research gaps, the present study focuses on the rational design, facile synthesis, and comprehensive evaluation of {adsorbent_material}. By integrating advanced characterization platforms including {characterization_tools}, this work systematically investigates the interfacial interactions, thermodynamic behavior, and kinetic performance of {adsorbent_material} toward the efficient removal and pre-concentration of {target_metal}, establishing a robust foundation for sustainable water purification technologies.
 """
         st.markdown(introduction_output)
         st.success(t_success_gen)
