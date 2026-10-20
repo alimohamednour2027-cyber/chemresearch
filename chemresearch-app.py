@@ -2,6 +2,7 @@ import streamlit as st
 from io import BytesIO
 from docx import Document
 import pypdf
+from google import genai
 
 # إعدادات صفحة الموقع
 st.set_page_config(
@@ -10,19 +11,26 @@ st.set_page_config(
     layout="wide"
 )
 
-# ==================== اختيار اللغة (Language Selector) ====================
+# ==================== الشريط الجانبي وإعدادات الـ API ====================
 st.sidebar.title("🌐 Language / Dil / اللغة")
 lang_choice = st.sidebar.selectbox("Choose Language:", ["English", "Türkçe", "العربية"])
 
+st.sidebar.markdown("---")
+st.sidebar.subheader("🔑 Gemini API Configuration")
+api_key_input = st.sidebar.text_input("Enter your Gemini API Key:", type="password")
+
+st.sidebar.markdown("---")
+st.sidebar.subheader("📚 Sources Hub")
+t_upload_sec2 = "Upload Review Papers (for Introduction)"
+t_upload_sec3 = "Upload Lab Data & Results (for Discussion)"
+
 # قاموس الترجمات الشامل
 if lang_choice == "English":
-    t_title = "🧪 ChemResearch AI: Advanced Academic Platform"
-    t_subtitle = "Multi-Section Modular Research & Manuscript Engine"
-    
+    t_title = "🧪 ChemResearch AI: Advanced AI-Powered Platform"
+    t_subtitle = "True LLM-Driven Synthesis Engine (NotebookLM Style)"
     sec1_title = "📌 Section 1: Experiment & Research Data"
-    sec2_title = "✍️ Section 2: Dedicated Introduction Generation"
+    sec2_title = "✍️ Section 2: AI-Synthesized Introduction (From Your PDFs)"
     sec3_title = "📊 Section 3: Materials, Methods, Results & Conclusions"
-    
     t_exp_title = "🔬 Research Metadata & Parameters"
     t_paper_title = "Article or Thesis Title:"
     t_target_metal = "Target Heavy Metal / Pollutant:"
@@ -35,25 +43,18 @@ if lang_choice == "English":
     t_field_3 = "Removal / Remediation"
     t_field_other = "Other (Specify):"
     t_q_style = "📊 Target Journal Quartile Style:"
-    
-    t_upload_sec2 = "Upload Review Papers & Literature (Specifically for Introduction)"
-    t_upload_sec3 = "Upload Lab Data, Isotherms & Results Files (For Methods & Discussion)"
-    
-    t_btn_sec2 = "🚀 Generate Rigorous Introduction"
+    t_btn_sec2 = "🚀 Synthesize Rigorous Introduction via AI"
     t_btn_sec3 = "🚀 Generate Methods, Results & Conclusions"
-    
-    t_spinner = "Analyzing dedicated files and synthesizing academic text..."
-    t_success_gen = "Section generated successfully based on dedicated sources!"
+    t_spinner = "AI is reading your uploaded PDFs and synthesizing deep academic text..."
+    t_success_gen = "Introduction successfully synthesized from your sources!"
     t_download_btn = "📥 Download as Word (.docx)"
 
 elif lang_choice == "Türkçe":
-    t_title = "🧪 ChemResearch AI: Gelişmiş Akademik Platform"
-    t_subtitle = "Çok Bölümlü Modüler Araştırma ve Makale Motoru"
-    
+    t_title = "🧪 ChemResearch AI: Gelişmiş Yapay Zeka Destekli Platform"
+    t_subtitle = "Gerçek LLM Destekli Sentez Motoru (NotebookLM Tarzı)"
     sec1_title = "📌 Bölüm 1: Deney ve Araştırma Verileri"
-    sec2_title = "✍️ Bölüm 2: Özel Giriş (Introduction) Oluşturma"
+    sec2_title = "✍️ Bölüm 2: Yapay Zeka Destekli Giriş (PDF'lerinizden)"
     sec3_title = "📊 Bölüm 3: Materyal, Metot, Bulgular ve Sonuçlar"
-    
     t_exp_title = "🔬 Araştırma Meta Verileri ve Parametreleri"
     t_paper_title = "Makale veya Tez Başlığı:"
     t_target_metal = "Hedef Ağır Metal / Kirletici:"
@@ -66,25 +67,18 @@ elif lang_choice == "Türkçe":
     t_field_3 = "Giderim / Arıtma (Removal)"
     t_field_other = "Diğer (Belirtiniz):"
     t_q_style = "📊 Hedef Dergi Düzeyi (Quartile):"
-    
-    t_upload_sec2 = "Derleme ve Literatür Dosyalarını Yükle (Özellikle Giriş için)"
-    t_upload_sec3 = "Laboratuvar Verilerini ve Sonuçları Yükle (Metot ve Tartışma için)"
-    
-    t_btn_sec2 = "🚀 Kapsamlı Giriş Oluştur"
+    t_btn_sec2 = "🚀 Yapay Zeka ile Kapsamlı Giriş Sentezle"
     t_btn_sec3 = "🚀 Metot, Bulgular ve Sonuçları Oluştur"
-    
-    t_spinner = "Dosyalar analiz ediliyor ve akademik metin sentezleniyor..."
-    t_success_gen = "Bölüm başarıyla oluşturuldu!"
+    t_spinner = "Yapay zeka PDF'lerinizi okuyor ve derinlemesine akademik metin sentezliyor..."
+    t_success_gen = "Giriş kaynaklarınızdan başarıyla sentezlendi!"
     t_download_btn = "📥 Word Olarak İndir (.docx)"
 
 else:  # العربية
-    t_title = "🧪 ChemResearch AI: المنصة الأكاديمية المتقدمة"
-    t_subtitle = "محرك أبحاث مقسّم ومستقل الأقسام لدعم الدكتوراه"
-    
+    t_title = "🧪 ChemResearch AI: المنصة الأكاديمية المدعومة بالذكاء الاصطناعي"
+    t_subtitle = "محرك صياغة حقيقي مدعوم بنماذج اللغات الكبيرة (على غرار NotebookLM)"
     sec1_title = "📌 القسم الأول: بيانات التجربة والبحث الأساسية"
-    sec2_title = "✍️ القسم الثاني: صياغة المقدمة باهتمام وعمق خاص (Introduction)"
+    sec2_title = "✍️ القسم الثاني: صياغة المقدمة الحقيقية عبر الذكاء الاصطناعي (من مصادرك المرفوعة)"
     sec3_title = "📊 القسم الثالث: المواد، طرق العمل، النتائج والاستنتاجات"
-    
     t_exp_title = "🔬 إعدادات المعلمات والبيانات الأساسية للتجربة"
     t_paper_title = "عنوان الأطروحة أو المقال العلمي:"
     t_target_metal = "المعدن الثقيل / الملوث المستهدف:"
@@ -97,15 +91,10 @@ else:  # العربية
     t_field_3 = "الإزالة والمعالجة (Removal / Remediation)"
     t_field_other = "أخرى (اكتبها بنفسك):"
     t_q_style = "📊 مستوى المجلة المستهدفة (Journal Quartile Style):"
-    
-    t_upload_sec2 = "ارفع الدراسات السابقة ومراجعات الأدبيات (خاص بـ المقدمة حصرياً)"
-    t_upload_sec3 = "ارفع ملفات البيانات المختبرية، الجداول وحركية التفاعل (باقي الأقسام)"
-    
-    t_btn_sec2 = "🚀 توليد مقدمة عميقة ورصينة (Introduction)"
+    t_btn_sec2 = "🚀 صياغة مقدمة عميقة بالذكاء الاصطناعي استناداً للمراجع"
     t_btn_sec3 = "🚀 توليد المواد، النتائج والاستنتاجات"
-    
-    t_spinner = "جاري قراءة الملفات المخصصة لهذا القسم بدقة وتوليد الصياغة الأكاديمية..."
-    t_success_gen = "تم توليد القسم بنجاح بالاستناد إلى ملفاته الخاصة!"
+    t_spinner = "الذكاء الاصطناعي يقرأ مصادرك المرفوعة ويحللها ويصيغ مقدمة فريدة..."
+    t_success_gen = "تمت صياغة المقدمة بنجاح بالاعتماد الحقيقي على مصادرك المرفوعة!"
     t_download_btn = "📥 تحميل كملف Word (.docx)"
 
 # عرض ترويسة الموقع
@@ -113,7 +102,7 @@ st.title(t_title)
 st.markdown(t_subtitle)
 st.markdown("---")
 
-# ==================== القسم الأول: بيانات التجربة والبحث (بدون ملفات) ====================
+# ==================== القسم الأول: بيانات التجربة والبحث ====================
 st.header(sec1_title)
 
 col1, col2 = st.columns(2)
@@ -143,74 +132,94 @@ fields_text = ", ".join(selected_fields)
 
 st.markdown("---")
 
-# ==================== القسم الثاني: المقدمة المستقلة (Introduction - مركزة على موضوع البحث والفجوة العلمية) ====================
+# ==================== القسم الثاني: المقدمة الذكية القائمة على الـ LLM والمراجع ====================
 st.header(sec2_title)
 
-st.markdown("📂 **مستودع ملفات القسم الثاني (خاص بالمقدمة والدراسات السابقة):**")
+st.markdown("📂 **مستودع ملفات القسم الثاني (ارفع ملفات الـ PDF الخاصة بمراجعك هنا):**")
 sources_sec2 = st.file_uploader(t_upload_sec2, type=["pdf", "txt"], accept_multiple_files=True, key="sec2_files")
 
-text_sec2 = ""
+extracted_pdf_text = ""
 if sources_sec2:
     for f in sources_sec2:
         try:
             reader = pypdf.PdfReader(f)
             for page in reader.pages:
-                if page.extract_text(): text_sec2 += page.extract_text() + "\n"
-        except: pass
-    st.success(f"تمت قراءة {len(sources_sec2)} مراجع ومقالات مراجعة (Review) للمقدمة بنجاح.")
+                page_text = page.extract_text()
+                if page_text:
+                    extracted_pdf_text += page_text + "\n"
+        except Exception as e:
+            st.error(f"Error reading file: {e}")
+    st.success(f"Successfully extracted text from {len(sources_sec2)} uploaded reference files.")
 
 if st.button(t_btn_sec2, key="btn_sec2"):
-    with st.spinner(t_spinner):
-        introduction_output = f"""# {paper_title} - Introduction Section
-*Research Focus: {fields_text} | Quartile: {journal_style}*
+    if not api_key_input:
+        st.error("Please enter your Gemini API Key in the sidebar to enable AI synthesis.")
+    else:
+        with st.spinner(t_spinner):
+            try:
+                # تهيئة عميل جوجل الذكي الجديد
+                client = genai.Client(api_key=api_key_input)
+                
+                # بناء البرومبت الاحترافي الموجه للنموذج ليحلل المراجع ويصيغ المقدمة
+                prompt = f"""
+                You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
+                Write a rigorous, comprehensive, and original Introduction section for a PhD-level research article.
+                
+                Research Metadata:
+                - Title: {paper_title}
+                - Target Pollutant: {target_metal}
+                - Prepared Material/Sorbent: {adsorbent_material}
+                - Fields: {fields_text}
+                - Characterization Tools: {characterization_tools}
+                - Journal Standard: {journal_style}
+                
+                Context extracted from user's uploaded reference papers (Review PDFs):
+                {extracted_pdf_text[:15000]}  # تمرير النصوص المستخرجة للنموذج
+                
+                Instructions:
+                1. Do NOT use generic boilerplate templates. Analyze the provided reference context and synthesize an original, deep academic introduction.
+                2. Structure it logically with a funnel approach: global environmental impact of the pollutant, limitations of conventional methods, identification of the research gap, and the specific novelty of {adsorbent_material}.
+                3. Ensure the final paragraphs focus strictly on the specific research problem, avoiding any generic descriptions of journal types or article templates.
+                4. Write in formal academic English suitable for Q1 journals.
+                """
+                
+                response = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt,
+                )
+                
+                introduction_output = response.text
+                
+                st.markdown(introduction_output)
+                st.success(t_success_gen)
 
-## Introduction
-The escalating industrialization and widespread anthropogenic activities have dramatically accelerated the discharge of hazardous heavy metal species, notably {target_metal}, into natural aquatic ecosystems [1, 2]. Due to their non-biodegradable nature, high environmental persistence, and severe bioaccumulation tendencies across trophic levels, these metallic contaminants pose catastrophic threats to aquatic biodiversity and public health. Consequently, developing robust, highly efficient separation and decontamination strategies has become an imperative priority within environmental analytical chemistry.
+                doc = Document()
+                doc.add_heading(paper_title + " - Introduction", level=1)
+                doc.add_paragraph(introduction_output)
+                buffer = BytesIO()
+                doc.save(buffer)
+                buffer.seek(0)
 
-Over recent decades, conventional remediation methodologies—such as chemical precipitation, membrane filtration, and standard ion-exchange—have been extensively deployed in relation to {fields_text}. However, these traditional protocols frequently suffer from critical techno-economic bottlenecks, including excessive chemical reagent consumption, high energy expenditure, and the generation of secondary toxic sludge requiring hazardous disposal. In response to these limitations, advanced interfacial separation frameworks have gained immense traction owing to their operational simplicity, high pre-concentration factors, and design flexibility.
-
-Despite substantial breakthroughs synthesized from recent literature, a pronounced research gap persists regarding the selective uptake and rapid mass transfer kinetics of {target_metal} under complex multi-ionic matrices. Most existing sorbents exhibit limitations in structural stability, regeneration efficiency, and active binding site availability. Furthermore, synthesizing eco-friendly, cost-effective materials derived from sustainable precursors remains a critical scientific challenge in developing advanced sorptive phases.
-
-To bridge these specific research gaps, the present study focuses on the rational design, facile synthesis, and comprehensive evaluation of {adsorbent_material}. By integrating advanced characterization platforms including {characterization_tools}, this work systematically investigates the interfacial interactions, thermodynamic behavior, and kinetic performance of {adsorbent_material} toward the efficient removal and pre-concentration of {target_metal}, establishing a robust foundation for sustainable water purification technologies.
-"""
-        st.markdown(introduction_output)
-        st.success(t_success_gen)
-
-        doc = Document()
-        doc.add_heading(paper_title + " - Introduction", level=1)
-        doc.add_paragraph(introduction_output)
-        buffer = BytesIO()
-        doc.save(buffer)
-        buffer.seek(0)
-
-        st.download_button(
-            label=t_download_btn,
-            data=buffer,
-            file_name="ChemResearch_Introduction.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            key="dl_sec2"
-        )
+                st.download_button(
+                    label=t_download_btn,
+                    data=buffer,
+                    file_name="ChemResearch_AI_Introduction.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    key="dl_sec2"
+                )
+            except Exception as e:
+                st.error(f"An error occurred during AI generation: {e}")
 
 st.markdown("---")
 
-# ==================== القسم الثالث: المواد، الطرق، النتائج والاستنتاجات ====================
+# ==================== القسم الثالث: المواد، الطرق والنتائج ====================
 st.header(sec3_title)
 
-st.markdown("📊 **مستودع ملفات القسم الثالث (خاص بالنتائج، الجداول وبيانات المختبر):**")
+st.markdown("📊 **مستودع ملفات القسم الثالث (خاص بالنتائج وبيانات المختبر):**")
 sources_sec3 = st.file_uploader(t_upload_sec3, type=["pdf", "txt"], accept_multiple_files=True, key="sec3_files")
 
-text_sec3 = ""
-if sources_sec3:
-    for f in sources_sec3:
-        try:
-            reader = pypdf.PdfReader(f)
-            for page in reader.pages:
-                if page.extract_text(): text_sec3 += page.extract_text() + "\n"
-        except: pass
-    st.success(f"تمت قراءة {len(sources_sec3)} ملفات بيانات مختبرية للنتائج بنجاح.")
-
 if st.button(t_btn_sec3, key="btn_sec3"):
-    with st.spinner(t_spinner):
+    with st.spinner("Generating experimental and results framework..."):
         methods_results_output = f"""# {paper_title} - Materials, Methods & Discussion
 *Research Focus: {fields_text} | Analytical Tool: {analytical_instrument}*
 
@@ -235,7 +244,7 @@ Experimental kinetic data and quantitative measurements performed via {analytica
 In summary, this study successfully demonstrated the facile fabrication and high-performance application of {adsorbent_material} tailored specifically for {fields_text}. Comprehensive characterization verified the abundance of active surface functional groups, while analytical measurements via {analytical_instrument} confirmed superior uptake efficiencies toward {target_metal}. Overall, this research establishes an environmentally sustainable framework for advanced analytical separation and industrial wastewater treatment under {journal_style} standards.
 """
         st.markdown(methods_results_output)
-        st.success(t_success_gen)
+        st.success("Sections generated successfully!")
 
         doc = Document()
         doc.add_heading(paper_title + " - Manuscript Draft", level=1)
