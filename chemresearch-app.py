@@ -5,7 +5,6 @@ from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import pypdf
 from google import genai
-import re
 
 # إعدادات صفحة الموقع
 st.set_page_config(
@@ -33,9 +32,9 @@ t_upload_sec2 = "Upload Review Papers (PDFs)"
 # قاموس الترجمات الشامل
 if lang_choice == "English":
     t_title = "🧪 ChemResearch AI: Advanced Academic Platform"
-    t_subtitle = "Q1 Introduction Synthesis & Clean Auto-Citation Engine"
+    t_subtitle = "Q1 Introduction Synthesis & Interactive Hyperlinked Citations"
     sec1_title = "📌 Section 1: Experiment & Research Metadata"
-    sec2_title = "✍️ Section 2: AI-Synthesized Introduction & Auto-Citations"
+    sec2_title = "✍️ Section 2: AI-Synthesized Introduction & Interactive Citations"
     t_paper_title = "Article or Thesis Title:"
     t_target_metal = "Target Heavy Metal / Pollutant:"
     t_adsorbent = "Prepared Novel Material / Sorbent:"
@@ -48,16 +47,16 @@ if lang_choice == "English":
     t_field_other = "Other (Specify):"
     t_q_style = "📊 Target Journal Quartile Style:"
     t_citation_style = "📖 Citation Style:"
-    t_btn_sec2 = "🚀 Synthesize Clean Introduction & Citations"
-    t_spinner = "AI is analyzing your PDFs and generating a clean academic synthesis..."
-    t_success_gen = "Clean introduction successfully synthesized with organized citations!"
-    t_download_btn = "📥 Download Clean Introduction & References as Word (.docx)"
+    t_btn_sec2 = "🚀 Synthesize Interactive Introduction & References"
+    t_spinner = "AI is analyzing your PDFs and building interactive hyperlinks..."
+    t_success_gen = "Introduction successfully synthesized with interactive hyperlinks!"
+    t_download_btn = "📥 Download Introduction & References as Word (.docx)"
 
 elif lang_choice == "Türkçe":
     t_title = "🧪 ChemResearch AI: Gelişmiş Akademik Platform"
-    t_subtitle = "Q1 Giriş Sentezi ve Temiz Otomatik Atıf Motoru"
+    t_subtitle = "Q1 Giriş Sentezi ve Etkileşimli Köprülü Atıflar"
     sec1_title = "📌 Bölüm 1: Deney ve Araştırma Verileri"
-    sec2_title = "✍️ Bölüm 2: Yapay Zeka Destekli Giriş ve Otomatik Atıf Merkezi"
+    sec2_title = "✍️ Bölüm 2: Yapay Zeka Destekli Giriş ve Etkileşimli Atıf Merkezi"
     t_paper_title = "Makale veya Tez Başlığı:"
     t_target_metal = "Hedef Ağır Metal / Kirletici:"
     t_adsorbent = "Hazırlanan Yeni Malzeme / Adsorban:"
@@ -70,16 +69,16 @@ elif lang_choice == "Türkçe":
     t_field_other = "Diğer (Belirtiniz):"
     t_q_style = "📊 Hedef Dergi Düzeyi (Quartile):"
     t_citation_style = "📖 Atıf Stili:"
-    t_btn_sec2 = "🚀 Temiz Giriş ve Atıfları Sentezle"
-    t_spinner = "Yapay zeka PDF'lerinizi analiz ediyor ve temiz bir sentez oluşturuyor..."
-    t_success_gen = "Temiz giriş ve düzenli atıflar başarıyla sentezlendi!"
-    t_download_btn = "📥 Temiz Giriş ve Referansları Word Olarak İndir (.docx)"
+    t_btn_sec2 = "🚀 Etkileşimli Giriş ve Referansları Sentezle"
+    t_spinner = "Yapay zeka PDF'lerinizi analiz ediyor ve etkileşimli bağlantılar oluşturuyor..."
+    t_success_gen = "Giriş ve etkileşimli atıflar başarıyla sentezlendi!"
+    t_download_btn = "📥 Giriş ve Referansları Word Olarak İndir (.docx)"
 
 else:  # العربية
     t_title = "🧪 المنصة الأكاديمية المتقدمة ChemResearch AI"
-    t_subtitle = "محرك صياغة المقدمات الأكاديمية والتوثيق التلقائي المنظم والخالي من التكرار"
+    t_subtitle = "محرك صياغة المقدمات الأكاديمية والتوثيق التفاعلي المرتبط بالانترنت"
     sec1_title = "📌 القسم الأول: بيانات التجربة والبحث الأساسية"
-    sec2_title = "✍️ القسم الثاني: مركز صياغة المقدمة والتوثيق العلمي التلقائي"
+    sec2_title = "✍️ القسم الثاني: مركز صياغة المقدمة والتوثيق التفاعلي"
     t_paper_title = "عنوان الأطروحة أو المقال العلمي:"
     t_target_metal = "المعدن الثقيل / الملوث المستهدف:"
     t_adsorbent = "المادة الماصة / الجديدة المُحضرة:"
@@ -92,9 +91,9 @@ else:  # العربية
     t_field_other = "أخرى (اكتبها بنفسك):"
     t_q_style = "📊 مستوى المجلة المستهدفة (Journal Quartile Style):"
     t_citation_style = "📖 أسلوب التوثيق والاستشهاد (Citation Style):"
-    t_btn_sec2 = "🚀 صياغة مقدمة نظيفة ومنظمة بدون تكرار أو نجوم"
-    t_spinner = "الذكاء الاصطناعي ينظم الاستشهادات ويصيغ محتوى أكاديمياً نظيفاً..."
-    t_success_gen = "تمت صياغة المقدمة وتوثيقها بدقة متناهية وبدون أي تكرار!"
+    t_btn_sec2 = "🚀 صياغة المقدمة التفاعلية مع الروابط الذكية"
+    t_spinner = "الذكاء الاصطناعي يحلل المراجع ويدمج الروابط التفاعلية والانتقالية..."
+    t_success_gen = "تمت صياغة المقدمة مع تفعيل الروابط الانتقالية والانترنت بنجاح!"
     t_download_btn = "📥 تحميل المقدمة وقائمة المراجع كملف Word نظيف (.docx)"
 
 # عرض ترويسة الموقع
@@ -122,7 +121,7 @@ with col_f3: f_rem = st.checkbox(t_field_3, value=True)
 
 other_field_input = st.text_input(t_field_other, value="")
 journal_style = st.selectbox(t_q_style, ["Q1 Style (High Impact & Rigorous)", "Q2 Style (Standard Professional)", "Q3 Style (Clear & Direct)"])
-citation_format = st.selectbox(t_citation_style, ["Numerical Style [1], [2], [3] (Sequential & Unique)", "Author-Date Style (APA / Harvard)"])
+citation_format = st.selectbox(t_citation_style, ["Numerical Style [1], [2] (Interactive HTML Links)", "Author-Date Style (APA / Harvard)"])
 
 selected_fields = []
 if f_spe: selected_fields.append("Solid-Phase Extraction (SPE)")
@@ -160,16 +159,16 @@ if st.button(t_btn_sec2, key="btn_sec2"):
             try:
                 client = genai.Client(api_key=api_key_input)
                 
-                # برومبت صارم يمنع النجوم وتكرار المراجع ويضمن تسلسلاً رقمياً فريداً
+                # برومبت يطلب تنسيق HTML للأزرار التفاعلية والروابط الانتقالية والانترنت
                 prompt = f"""
                 You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
-                Your task is to write a rigorous, comprehensive, and entirely original Introduction section for a PhD-level research article.
+                Your task is to write a rigorous, comprehensive, and entirely original Introduction section for a PhD-level research article with INTERACTIVE HTML CITATIONS.
                 
-                CRITICAL FORMATTING & CITATION RULES:
-                1. STRICTLY DO NOT use Markdown asterisks (*) or bold/italic markdown symbols anywhere in the text (no *, no **). Keep plain clean text.
-                2. Ensure citation numbers or author-date citations are strictly unique, sequential, and non-repetitive (e.g., [1], [2], [3] without duplicate numbers in the same or consecutive phrases).
-                3. Analyze the uploaded review paper texts to build a unique funnel introduction (Global environmental impact -> Limitations of conventional methods -> Research Gap -> Novelty of {adsorbent_material}).
-                4. At the end of the text, provide a clean "References" section listing unique literature derived from the uploaded sources in correct academic order, without any markdown stars.
+                CRITICAL HTML & INTERACTIVITY RULES:
+                1. Format in-text citations as clickable HTML anchor links pointing to the reference list at the bottom, e.g., <a href="#ref1">[1]</a>, <a href="#ref2">[2]</a>.
+                2. At the end of the text, provide a "References" section where each reference item has a unique HTML id matching the citation anchor (e.g., <p id="ref1">1. Author et al., Title, Journal. <a href="https://doi.org/..." target="_blank">[View Online]</a></p>). Extract or deduce valid DOI/web links from the provided PDF text or construct standard valid academic search links.
+                3. STRICTLY DO NOT use Markdown asterisks (*) or bold/italic markdown symbols anywhere in the text. Keep plain clean text or valid HTML tags.
+                4. Build a logical funnel introduction (Global environmental impact -> Limitations of conventional methods -> Research Gap -> Novelty of {adsorbent_material}).
                 5. Avoid complex LaTeX formatting (use standard text formats like Cu2+, Cd2+, qm, R2 > 0.99).
                 
                 Research Metadata:
@@ -179,12 +178,11 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 - Fields: {fields_text}
                 - Characterization Tools: {characterization_tools}
                 - Journal Standard: {journal_style}
-                - Citation Style: {citation_format}
                 
                 Extracted Text from Uploaded Review Papers:
                 {extracted_pdf_text[:25000]}
                 
-                Write in formal academic English suitable for Q1 journals.
+                Write in formal academic English suitable for Q1 journals using clean HTML paragraphs and anchor tags.
                 """
                 
                 response = client.models.generate_content(
@@ -192,16 +190,18 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                     contents=prompt,
                 )
                 
-                # تنظيف النص البرمجي مباشرة من أي نجوم قد ينتجها النموذج
-                cleaned_text = response.text.replace('*', '').replace('###', '')
+                cleaned_text = response.text.replace('###', '')
                 st.session_state.intro_output = cleaned_text
             except Exception as e:
                 st.error(f"An error occurred during AI generation: {e}")
 
-# عرض النتائج مع الحفاظ عليها عند تغيير اللغة وتنظيف النجوم
+# عرض النتائج باستخدام HTML التفاعلي لدعم الروابط الانتقالية والانترنت
 if st.session_state.intro_output:
-    st.markdown("### 📝 Generated Introduction & Clean Citations Preview:")
-    st.markdown(st.session_state.intro_output)
+    st.markdown("### 📝 Generated Interactive Introduction & References Preview:")
+    
+    # عرض النص باستخدام unsafe_allow_html لكي تعمل الروابط الانتقالية والانترنت بدقة
+    st.markdown(f"<div style='line-height: 1.6; font-size: 16px;'>{st.session_state.intro_output}</div>", unsafe_allow_html=True)
+    
     st.success(t_success_gen)
 
     # إنشاء مستند Word نظيف تماماً وخالٍ من النجوم ومحمي الخطوط
@@ -222,9 +222,10 @@ if st.session_state.intro_output:
     run_title.font.name = "Times New Roman"
     run_title.font.size = Pt(14)
 
-    # تنظيف النص نهائياً من أي نجوم أو رموز تنسيق قبل إضافته للـ Word
-    final_clean_text = st.session_state.intro_output.replace('*', '')
-    paragraphs = final_clean_text.split('\n\n')
+    # إزالة وسوم HTML عند التصدير لملف الـ Word ليبقى نظيفاً واحترافياً
+    import re
+    plain_text_for_word = re.sub('<[^<]+?>', '', st.session_state.intro_output)
+    paragraphs = plain_text_for_word.split('\n\n')
     
     for para_text in paragraphs:
         if para_text.strip():
@@ -242,7 +243,7 @@ if st.session_state.intro_output:
     st.download_button(
         label=t_download_btn,
         data=buffer,
-        file_name="ChemResearch_AI_Clean_Introduction.docx",
+        file_name="ChemResearch_AI_Interactive_Introduction.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         key="dl_sec2"
     )
