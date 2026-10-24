@@ -5,6 +5,7 @@ from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import pypdf
 from google import genai
+import re
 
 # إعدادات صفحة الموقع
 st.set_page_config(
@@ -32,7 +33,7 @@ t_upload_sec2 = "Upload Review Papers (PDFs)"
 # قاموس الترجمات الشامل
 if lang_choice == "English":
     t_title = "🧪 ChemResearch AI: Advanced Academic Platform"
-    t_subtitle = "Q1 Introduction Synthesis & Auto-Citation Engine (Anti-Repetition Enabled)"
+    t_subtitle = "Q1 Introduction Synthesis & Clean Auto-Citation Engine"
     sec1_title = "📌 Section 1: Experiment & Research Metadata"
     sec2_title = "✍️ Section 2: AI-Synthesized Introduction & Auto-Citations"
     t_paper_title = "Article or Thesis Title:"
@@ -47,14 +48,14 @@ if lang_choice == "English":
     t_field_other = "Other (Specify):"
     t_q_style = "📊 Target Journal Quartile Style:"
     t_citation_style = "📖 Citation Style:"
-    t_btn_sec2 = "🚀 Synthesize Fresh Introduction & Auto-Citations"
-    t_spinner = "AI is analyzing your PDFs and generating a unique academic synthesis..."
-    t_success_gen = "Fresh introduction successfully synthesized with automated citations!"
-    t_download_btn = "📥 Download Introduction & References as Word (.docx)"
+    t_btn_sec2 = "🚀 Synthesize Clean Introduction & Citations"
+    t_spinner = "AI is analyzing your PDFs and generating a clean academic synthesis..."
+    t_success_gen = "Clean introduction successfully synthesized with organized citations!"
+    t_download_btn = "📥 Download Clean Introduction & References as Word (.docx)"
 
 elif lang_choice == "Türkçe":
     t_title = "🧪 ChemResearch AI: Gelişmiş Akademik Platform"
-    t_subtitle = "Q1 Giriş Sentezi ve Otomatik Atıf Motoru (Tekrar Önleme Etkin)"
+    t_subtitle = "Q1 Giriş Sentezi ve Temiz Otomatik Atıf Motoru"
     sec1_title = "📌 Bölüm 1: Deney ve Araştırma Verileri"
     sec2_title = "✍️ Bölüm 2: Yapay Zeka Destekli Giriş ve Otomatik Atıf Merkezi"
     t_paper_title = "Makale veya Tez Başlığı:"
@@ -69,14 +70,14 @@ elif lang_choice == "Türkçe":
     t_field_other = "Diğer (Belirtiniz):"
     t_q_style = "📊 Hedef Dergi Düzeyi (Quartile):"
     t_citation_style = "📖 Atıf Stili:"
-    t_btn_sec2 = "🚀 Özgün Giriş ve Otomatik Atıfları Sentezle"
-    t_spinner = "Yapay zeka PDF'lerinizi analiz ediyor ve özgün bir akademik sentez oluşturuyor..."
-    t_success_gen = "Özgün giriş, otomatik atıflarla başarıyla sentezlendi!"
-    t_download_btn = "📥 Giriş ve Referansları Word Olarak İndir (.docx)"
+    t_btn_sec2 = "🚀 Temiz Giriş ve Atıfları Sentezle"
+    t_spinner = "Yapay zeka PDF'lerinizi analiz ediyor ve temiz bir sentez oluşturuyor..."
+    t_success_gen = "Temiz giriş ve düzenli atıflar başarıyla sentezlendi!"
+    t_download_btn = "📥 Temiz Giriş ve Referansları Word Olarak İndir (.docx)"
 
 else:  # العربية
     t_title = "🧪 المنصة الأكاديمية المتقدمة ChemResearch AI"
-    t_subtitle = "محرك صياغة المقدمات الأكاديمية والتوثيق التلقائي (مفعل ميزة منع التكرار والأصالة)"
+    t_subtitle = "محرك صياغة المقدمات الأكاديمية والتوثيق التلقائي المنظم والخالي من التكرار"
     sec1_title = "📌 القسم الأول: بيانات التجربة والبحث الأساسية"
     sec2_title = "✍️ القسم الثاني: مركز صياغة المقدمة والتوثيق العلمي التلقائي"
     t_paper_title = "عنوان الأطروحة أو المقال العلمي:"
@@ -91,10 +92,10 @@ else:  # العربية
     t_field_other = "أخرى (اكتبها بنفسك):"
     t_q_style = "📊 مستوى المجلة المستهدفة (Journal Quartile Style):"
     t_citation_style = "📖 أسلوب التوثيق والاستشهاد (Citation Style):"
-    t_btn_sec2 = "🚀 صياغة مقدمة أصيلة ومتجددة مع التوثيق التلقائي"
-    t_spinner = "الذكاء الاصطناعي يحلل مقالات المراجعة ويصيغ محتوى فريداً وأصيلاً..."
-    t_success_gen = "تمت صياغة المقدمة الفريدة وتوثيقها بالمراجع بنجاح تام!"
-    t_download_btn = "📥 تحميل المقدمة وقائمة المراجع كملف Word (.docx)"
+    t_btn_sec2 = "🚀 صياغة مقدمة نظيفة ومنظمة بدون تكرار أو نجوم"
+    t_spinner = "الذكاء الاصطناعي ينظم الاستشهادات ويصيغ محتوى أكاديمياً نظيفاً..."
+    t_success_gen = "تمت صياغة المقدمة وتوثيقها بدقة متناهية وبدون أي تكرار!"
+    t_download_btn = "📥 تحميل المقدمة وقائمة المراجع كملف Word نظيف (.docx)"
 
 # عرض ترويسة الموقع
 st.title(t_title)
@@ -121,7 +122,7 @@ with col_f3: f_rem = st.checkbox(t_field_3, value=True)
 
 other_field_input = st.text_input(t_field_other, value="")
 journal_style = st.selectbox(t_q_style, ["Q1 Style (High Impact & Rigorous)", "Q2 Style (Standard Professional)", "Q3 Style (Clear & Direct)"])
-citation_format = st.selectbox(t_citation_style, ["Numerical Style [1], [2] (Elsevier/Nature)", "Author-Date Style (APA / Harvard)"])
+citation_format = st.selectbox(t_citation_style, ["Numerical Style [1], [2], [3] (Sequential & Unique)", "Author-Date Style (APA / Harvard)"])
 
 selected_fields = []
 if f_spe: selected_fields.append("Solid-Phase Extraction (SPE)")
@@ -135,7 +136,7 @@ st.markdown("---")
 # ==================== القسم الثاني: مركز صياغة المقدمة الذكي التلقائي ====================
 st.header(sec2_title)
 
-st.markdown("📂 **مستودع مقالات المراجعة (ارفع ملفات الـ PDF الجديدة هنا لضمان صياغة فريدة ومحتوى متجدد بالكامل):**")
+st.markdown("📂 **مستودع مقالات المراجعة (ارفع ملفات الـ PDF هنا):**")
 sources_sec2 = st.file_uploader(t_upload_sec2, type=["pdf", "txt"], accept_multiple_files=True, key="sec2_files")
 
 extracted_pdf_text = ""
@@ -149,7 +150,7 @@ if sources_sec2:
                     extracted_pdf_text += f"\n--- Source File: {f.name} (Page {page_idx+1}) ---\n" + page_text + "\n"
         except Exception as e:
             st.error(f"Error reading PDF: {e}")
-    st.success(f"Successfully extracted text and reference metadata from {len(sources_sec2)} review files.")
+    st.success(f"Successfully extracted text from {len(sources_sec2)} review files.")
 
 if st.button(t_btn_sec2, key="btn_sec2"):
     if not api_key_input:
@@ -159,18 +160,17 @@ if st.button(t_btn_sec2, key="btn_sec2"):
             try:
                 client = genai.Client(api_key=api_key_input)
                 
-                # برومبت متطور يضمن الأصالة ومنع التكرار تماماً واستخراج المراجع والاستشهادات
+                # برومبت صارم يمنع النجوم وتكرار المراجع ويضمن تسلسلاً رقمياً فريداً
                 prompt = f"""
                 You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
-                Your task is to write a rigorous, comprehensive, and entirely original Introduction section for a PhD-level research article, with precise in-text scientific citations derived directly from the provided review PDFs.
+                Your task is to write a rigorous, comprehensive, and entirely original Introduction section for a PhD-level research article.
                 
-                CRITICAL ANTI-REPETITION INSTRUCTIONS:
-                1. Avoid repetitive phrasing, structural templates, or standard boilerplate text from previous generations. Ensure every generated paragraph introduces a fresh academic perspective derived exclusively from the currently uploaded files.
-                2. Analyze the uploaded review paper texts to build a unique funnel introduction (Global environmental impact -> Limitations of conventional methods -> Research Gap -> Novelty of {adsorbent_material}).
-                3. Automatically extract authors/titles/contexts from the provided text of the uploaded PDF files and insert accurate in-text citations matching the requested style: {citation_format} (e.g., [1], [2] or (Author et al., Year)).
-                4. Ensure every major claim or background statement is properly cited based on the uploaded reference documents.
-                5. At the end of the text, include a clean "References" section listing the literature derived from the uploaded sources in the correct academic format.
-                6. Avoid complex LaTeX formatting (use standard text formats like Cu2+, Cd2+, qm, R2 > 0.99).
+                CRITICAL FORMATTING & CITATION RULES:
+                1. STRICTLY DO NOT use Markdown asterisks (*) or bold/italic markdown symbols anywhere in the text (no *, no **). Keep plain clean text.
+                2. Ensure citation numbers or author-date citations are strictly unique, sequential, and non-repetitive (e.g., [1], [2], [3] without duplicate numbers in the same or consecutive phrases).
+                3. Analyze the uploaded review paper texts to build a unique funnel introduction (Global environmental impact -> Limitations of conventional methods -> Research Gap -> Novelty of {adsorbent_material}).
+                4. At the end of the text, provide a clean "References" section listing unique literature derived from the uploaded sources in correct academic order, without any markdown stars.
+                5. Avoid complex LaTeX formatting (use standard text formats like Cu2+, Cd2+, qm, R2 > 0.99).
                 
                 Research Metadata:
                 - Title: {paper_title}
@@ -179,6 +179,7 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 - Fields: {fields_text}
                 - Characterization Tools: {characterization_tools}
                 - Journal Standard: {journal_style}
+                - Citation Style: {citation_format}
                 
                 Extracted Text from Uploaded Review Papers:
                 {extracted_pdf_text[:25000]}
@@ -191,17 +192,19 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                     contents=prompt,
                 )
                 
-                st.session_state.intro_output = response.text
+                # تنظيف النص البرمجي مباشرة من أي نجوم قد ينتجها النموذج
+                cleaned_text = response.text.replace('*', '').replace('###', '')
+                st.session_state.intro_output = cleaned_text
             except Exception as e:
                 st.error(f"An error occurred during AI generation: {e}")
 
-# عرض النتائج مع الحفاظ عليها عند تغيير اللغة
+# عرض النتائج مع الحفاظ عليها عند تغيير اللغة وتنظيف النجوم
 if st.session_state.intro_output:
-    st.markdown("### 📝 Generated Introduction & Auto-Citations Preview:")
+    st.markdown("### 📝 Generated Introduction & Clean Citations Preview:")
     st.markdown(st.session_state.intro_output)
     st.success(t_success_gen)
 
-    # إنشاء مستند Word نظيف واحترافي بخط Times New Roman
+    # إنشاء مستند Word نظيف تماماً وخالٍ من النجوم ومحمي الخطوط
     doc = Document()
     
     sections = doc.sections
@@ -219,7 +222,10 @@ if st.session_state.intro_output:
     run_title.font.name = "Times New Roman"
     run_title.font.size = Pt(14)
 
-    paragraphs = st.session_state.intro_output.split('\n\n')
+    # تنظيف النص نهائياً من أي نجوم أو رموز تنسيق قبل إضافته للـ Word
+    final_clean_text = st.session_state.intro_output.replace('*', '')
+    paragraphs = final_clean_text.split('\n\n')
+    
     for para_text in paragraphs:
         if para_text.strip():
             p = doc.add_paragraph()
@@ -236,7 +242,7 @@ if st.session_state.intro_output:
     st.download_button(
         label=t_download_btn,
         data=buffer,
-        file_name="ChemResearch_AI_Introduction_Citations.docx",
+        file_name="ChemResearch_AI_Clean_Introduction.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         key="dl_sec2"
     )
