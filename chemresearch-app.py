@@ -26,15 +26,15 @@ st.sidebar.subheader("🔑 Gemini API Configuration")
 api_key_input = st.sidebar.text_input("Enter your Gemini API Key:", type="password", value="")
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("📚 Review Papers Hub")
-t_upload_sec2 = "Upload Review Papers (for Introduction Hub)"
+st.sidebar.subheader("📚 Literature Hub")
+t_upload_sec2 = "Upload Review Papers (PDFs)"
 
 # قاموس الترجمات الشامل
 if lang_choice == "English":
     t_title = "🧪 ChemResearch AI: Advanced Academic Platform"
-    t_subtitle = "Specialized Q1 Introduction Synthesis Engine (NotebookLM Style)"
+    t_subtitle = "Q1 Introduction Synthesis & Auto-Citation Engine (Anti-Repetition Enabled)"
     sec1_title = "📌 Section 1: Experiment & Research Metadata"
-    sec2_title = "✍️ Section 2: AI-Synthesized Introduction Hub"
+    sec2_title = "✍️ Section 2: AI-Synthesized Introduction & Auto-Citations"
     t_paper_title = "Article or Thesis Title:"
     t_target_metal = "Target Heavy Metal / Pollutant:"
     t_adsorbent = "Prepared Novel Material / Sorbent:"
@@ -46,16 +46,17 @@ if lang_choice == "English":
     t_field_3 = "Removal / Remediation"
     t_field_other = "Other (Specify):"
     t_q_style = "📊 Target Journal Quartile Style:"
-    t_btn_sec2 = "🚀 Synthesize Rigorous Introduction from Review Papers"
-    t_spinner = "AI is analyzing the introduction sections of your uploaded PDFs..."
-    t_success_gen = "Introduction successfully synthesized from your reference papers!"
-    t_download_btn = "📥 Download Introduction as Word (.docx)"
+    t_citation_style = "📖 Citation Style:"
+    t_btn_sec2 = "🚀 Synthesize Fresh Introduction & Auto-Citations"
+    t_spinner = "AI is analyzing your PDFs and generating a unique academic synthesis..."
+    t_success_gen = "Fresh introduction successfully synthesized with automated citations!"
+    t_download_btn = "📥 Download Introduction & References as Word (.docx)"
 
 elif lang_choice == "Türkçe":
     t_title = "🧪 ChemResearch AI: Gelişmiş Akademik Platform"
-    t_subtitle = "Özelleştirilmiş Q1 Giriş Sentez Motoru (NotebookLM Tarzı)"
+    t_subtitle = "Q1 Giriş Sentezi ve Otomatik Atıf Motoru (Tekrar Önleme Etkin)"
     sec1_title = "📌 Bölüm 1: Deney ve Araştırma Verileri"
-    sec2_title = "✍️ Bölüm 2: Yapay Zeka Destekli Giriş Sentezleme Merkezi"
+    sec2_title = "✍️ Bölüm 2: Yapay Zeka Destekli Giriş ve Otomatik Atıf Merkezi"
     t_paper_title = "Makale veya Tez Başlığı:"
     t_target_metal = "Hedef Ağır Metal / Kirletici:"
     t_adsorbent = "Hazırlanan Yeni Malzeme / Adsorban:"
@@ -67,16 +68,17 @@ elif lang_choice == "Türkçe":
     t_field_3 = "Giderim / Arıtma (Removal)"
     t_field_other = "Diğer (Belirtiniz):"
     t_q_style = "📊 Hedef Dergi Düzeyi (Quartile):"
-    t_btn_sec2 = "🚀 Derleme Makalelerinden Kapsamlı Giriş Sentezle"
-    t_spinner = "Yapay zeka yüklediğiniz PDF'lerin giriş bölümlerini analiz ediyor..."
-    t_success_gen = "Giriş referans makalelerinizden başarıyla sentezlendi!"
-    t_download_btn = "📥 Girişi Word Olarak İndir (.docx)"
+    t_citation_style = "📖 Atıf Stili:"
+    t_btn_sec2 = "🚀 Özgün Giriş ve Otomatik Atıfları Sentezle"
+    t_spinner = "Yapay zeka PDF'lerinizi analiz ediyor ve özgün bir akademik sentez oluşturuyor..."
+    t_success_gen = "Özgün giriş, otomatik atıflarla başarıyla sentezlendi!"
+    t_download_btn = "📥 Giriş ve Referansları Word Olarak İndir (.docx)"
 
 else:  # العربية
-    t_title = "🧪 ChemResearch AI: المنصة الأكاديمية المتقدمة"
-    t_subtitle = "محرك صياغة المقدمات الأكاديمية Q1 (على غرار NotebookLM)"
+    t_title = "🧪 المنصة الأكاديمية المتقدمة ChemResearch AI"
+    t_subtitle = "محرك صياغة المقدمات الأكاديمية والتوثيق التلقائي (مفعل ميزة منع التكرار والأصالة)"
     sec1_title = "📌 القسم الأول: بيانات التجربة والبحث الأساسية"
-    sec2_title = "✍️ القسم الثاني: مركز صياغة المقدمة الذكي (من مقالات المراجعة)"
+    sec2_title = "✍️ القسم الثاني: مركز صياغة المقدمة والتوثيق العلمي التلقائي"
     t_paper_title = "عنوان الأطروحة أو المقال العلمي:"
     t_target_metal = "المعدن الثقيل / الملوث المستهدف:"
     t_adsorbent = "المادة الماصة / الجديدة المُحضرة:"
@@ -88,10 +90,11 @@ else:  # العربية
     t_field_3 = "الإزالة والمعالجة (Removal / Remediation)"
     t_field_other = "أخرى (اكتبها بنفسك):"
     t_q_style = "📊 مستوى المجلة المستهدفة (Journal Quartile Style):"
-    t_btn_sec2 = "🚀 صياغة مقدمة عميقة من مقالات المراجعة المرفوعة"
-    t_spinner = "الذكاء الاصطناعي يحلل مقدمات ومصادر ملفات المراجعة المرفوعة..."
-    t_success_gen = "تمت صياغة المقدمة بنجاح بالاعتماد الحقيقي على مصادرك المرفوعة!"
-    t_download_btn = "📥 تحميل المقدمة كملف Word (.docx)"
+    t_citation_style = "📖 أسلوب التوثيق والاستشهاد (Citation Style):"
+    t_btn_sec2 = "🚀 صياغة مقدمة أصيلة ومتجددة مع التوثيق التلقائي"
+    t_spinner = "الذكاء الاصطناعي يحلل مقالات المراجعة ويصيغ محتوى فريداً وأصيلاً..."
+    t_success_gen = "تمت صياغة المقدمة الفريدة وتوثيقها بالمراجع بنجاح تام!"
+    t_download_btn = "📥 تحميل المقدمة وقائمة المراجع كملف Word (.docx)"
 
 # عرض ترويسة الموقع
 st.title(t_title)
@@ -118,6 +121,7 @@ with col_f3: f_rem = st.checkbox(t_field_3, value=True)
 
 other_field_input = st.text_input(t_field_other, value="")
 journal_style = st.selectbox(t_q_style, ["Q1 Style (High Impact & Rigorous)", "Q2 Style (Standard Professional)", "Q3 Style (Clear & Direct)"])
+citation_format = st.selectbox(t_citation_style, ["Numerical Style [1], [2] (Elsevier/Nature)", "Author-Date Style (APA / Harvard)"])
 
 selected_fields = []
 if f_spe: selected_fields.append("Solid-Phase Extraction (SPE)")
@@ -128,10 +132,10 @@ fields_text = ", ".join(selected_fields)
 
 st.markdown("---")
 
-# ==================== القسم الثاني: مركز صياغة المقدمة الذكي ====================
+# ==================== القسم الثاني: مركز صياغة المقدمة الذكي التلقائي ====================
 st.header(sec2_title)
 
-st.markdown("📂 **مستودع مقالات المراجعة (Review Papers) - ارفع ملفات الـ PDF هنا لكي يستخلص منها الذكاء الاصطناعي الخلفية والفجوة البحثية:**")
+st.markdown("📂 **مستودع مقالات المراجعة (ارفع ملفات الـ PDF الجديدة هنا لضمان صياغة فريدة ومحتوى متجدد بالكامل):**")
 sources_sec2 = st.file_uploader(t_upload_sec2, type=["pdf", "txt"], accept_multiple_files=True, key="sec2_files")
 
 extracted_pdf_text = ""
@@ -139,13 +143,13 @@ if sources_sec2:
     for f in sources_sec2:
         try:
             reader = pypdf.PdfReader(f)
-            for page in reader.pages:
+            for page_idx, page in enumerate(reader.pages):
                 page_text = page.extract_text()
                 if page_text:
-                    extracted_pdf_text += page_text + "\n"
+                    extracted_pdf_text += f"\n--- Source File: {f.name} (Page {page_idx+1}) ---\n" + page_text + "\n"
         except Exception as e:
-            st.error(f"Error reading file: {e}")
-    st.success(f"Successfully extracted text from {len(sources_sec2)} review reference files.")
+            st.error(f"Error reading PDF: {e}")
+    st.success(f"Successfully extracted text and reference metadata from {len(sources_sec2)} review files.")
 
 if st.button(t_btn_sec2, key="btn_sec2"):
     if not api_key_input:
@@ -155,12 +159,18 @@ if st.button(t_btn_sec2, key="btn_sec2"):
             try:
                 client = genai.Client(api_key=api_key_input)
                 
-                # برومبت مخصص يركز حصرياً على مقدمات المراجع والفجوة البحثية ومادة الامتزاز
+                # برومبت متطور يضمن الأصالة ومنع التكرار تماماً واستخراج المراجع والاستشهادات
                 prompt = f"""
                 You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
-                Your task is to write a rigorous, comprehensive, and original Introduction section for a PhD-level research article.
+                Your task is to write a rigorous, comprehensive, and entirely original Introduction section for a PhD-level research article, with precise in-text scientific citations derived directly from the provided review PDFs.
                 
-                CRITICAL INSTRUCTION: Analyze the provided text extracted from review papers, focusing strictly on the introductory contexts, environmental backgrounds, pollutant toxicity, limitations of conventional remediation techniques, and research gaps. Ignore procedural noise or unrelated experimental details.
+                CRITICAL ANTI-REPETITION INSTRUCTIONS:
+                1. Avoid repetitive phrasing, structural templates, or standard boilerplate text from previous generations. Ensure every generated paragraph introduces a fresh academic perspective derived exclusively from the currently uploaded files.
+                2. Analyze the uploaded review paper texts to build a unique funnel introduction (Global environmental impact -> Limitations of conventional methods -> Research Gap -> Novelty of {adsorbent_material}).
+                3. Automatically extract authors/titles/contexts from the provided text of the uploaded PDF files and insert accurate in-text citations matching the requested style: {citation_format} (e.g., [1], [2] or (Author et al., Year)).
+                4. Ensure every major claim or background statement is properly cited based on the uploaded reference documents.
+                5. At the end of the text, include a clean "References" section listing the literature derived from the uploaded sources in the correct academic format.
+                6. Avoid complex LaTeX formatting (use standard text formats like Cu2+, Cd2+, qm, R2 > 0.99).
                 
                 Research Metadata:
                 - Title: {paper_title}
@@ -170,13 +180,10 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 - Characterization Tools: {characterization_tools}
                 - Journal Standard: {journal_style}
                 
-                Context extracted from user's uploaded Review Papers:
-                {extracted_pdf_text[:18000]}
+                Extracted Text from Uploaded Review Papers:
+                {extracted_pdf_text[:25000]}
                 
-                Instructions:
-                1. Do NOT use generic templates. Synthesize an original, deep academic introduction using a funnel approach (Global impact -> Limitations -> Research Gap -> Novelty of {adsorbent_material}).
-                2. Avoid complex LaTeX formatting (use standard clear text formats like Cu2+, Cd2+, qm, R2 > 0.99).
-                3. Write in formal academic English suitable for Q1 journals.
+                Write in formal academic English suitable for Q1 journals.
                 """
                 
                 response = client.models.generate_content(
@@ -190,11 +197,11 @@ if st.button(t_btn_sec2, key="btn_sec2"):
 
 # عرض النتائج مع الحفاظ عليها عند تغيير اللغة
 if st.session_state.intro_output:
-    st.markdown("### 📝 Generated Introduction Preview:")
+    st.markdown("### 📝 Generated Introduction & Auto-Citations Preview:")
     st.markdown(st.session_state.intro_output)
     st.success(t_success_gen)
 
-    # إنشاء مستند Word نظيف واحترافي بخط Times New Roman وتباعد يحمي المعادلات
+    # إنشاء مستند Word نظيف واحترافي بخط Times New Roman
     doc = Document()
     
     sections = doc.sections
@@ -207,7 +214,7 @@ if st.session_state.intro_output:
     p_title = doc.add_paragraph()
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_title.paragraph_format.space_after = Pt(14)
-    run_title = p_title.add_run(paper_title + " - Introduction")
+    run_title = p_title.add_run(paper_title + " - Introduction & References")
     run_title.bold = True
     run_title.font.name = "Times New Roman"
     run_title.font.size = Pt(14)
@@ -229,7 +236,7 @@ if st.session_state.intro_output:
     st.download_button(
         label=t_download_btn,
         data=buffer,
-        file_name="ChemResearch_AI_Introduction.docx",
+        file_name="ChemResearch_AI_Introduction_Citations.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         key="dl_sec2"
     )
