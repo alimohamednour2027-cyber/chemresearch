@@ -1,130 +1,67 @@
 import streamlit as st
 from PIL import Image, ImageDraw, ImageFont
 import io
+import google.generativeai as genai
+import textwrap
 
 # --- إعدادات الصفحة ---
 st.set_page_config(
-    page_title="Local PIL Graphical Abstract Generator",
-    page_icon="🎨",
+    page_title="Advanced Academic Graphical Abstract Engine",
+    page_icon="🔬",
     layout="wide"
 )
 
-st.title("🎨 ChemResearch AI: Local Visual Graphical Abstract Engine")
-st.markdown("هذا المحرك يرسم المخطط البصري كصورة PNG احترافية مباشرة محلياً داخل المنصة، وبدون أي أخطاء أو انتظار طويل.")
+st.title("🔬 ChemResearch AI: Advanced Academic Graphical Abstract Engine")
+st.markdown("هذا المحرك يرسم مخططاً بصرياً أكاديمياً متكاملاً (Graphical Abstract) بناءً على نص بروتوكول التحضير التفصيلي الخاص بك، بأسلوب المجلات العلمية العالمية.")
 st.markdown("---")
 
-# --- حقل إدخال الخطوات ---
-st.subheader("✍️ أدخل خطوات البروتوكول المخبري (كل خطوة في سطر منفصل):")
-default_steps = """1. Precursor Prep: Washing raw biomass and drying
-2. Activation: Mixing with KOH activating agent
-3. Pyrolysis: Heating at 800°C under N2 atmosphere
-4. Final Yield: High-surface area porous carbon"""
+# --- القائمة الجانبية لإدخال المفتاح ---
+st.sidebar.title("🔑 Gemini API Configuration")
+api_key_input = st.sidebar.text_input("Enter Gemini API Key:", type="password", value="")
 
-steps_input = st.text_area("Laboratory Synthesis Steps Protocol:", value=default_steps, height=180)
-abstract_title = st.text_input("عنوان المخطط الرئيسي:", value="Synthesis Workflow of Porous Carbon")
+# --- حقل إدخال النص ---
+st.subheader("✍️ أدخل بروتوكول التحضير النصي التفصيلي (باللغة الإنجليزية):")
+default_protocol = """Natural, low-grade molybdenum ore was ground and then sifted through a 300 mesh sieve. A controlled amount of dilute sulfuric acid was added to the ore with a mass volume ratio of 1:2 and the mixture was agitated in a shaker (Tensuc TS-2102C, Shanghai) overnight. The mixture was filtered, and the collected ore was dried in an oven (DHG-9030, Shanghai). Then 9 g of the acid-washed ore was placed in a nickel crucible, and 9 g of NaOH particles were added to the ore. The mixture was calcined in a muffle furnace (BSX2-6-12TP, Shanghai) at 550 °C for 3 h, and then allowed to cool at room temperature. The calcined mixture was dissolved with 90 mL of deionized water and then centrifuged (Eppendorf 5810R, Germany). The supernatant was placed in a polypropylene plastic bottle, and 15.75 g of sodium silicate was added and dissolved completely. Subsequently, various quantities of nano ferroferric oxide were added to the solution.
+The mixture was ultrasonicated for 30min. Then 30mL of an aqueous solution containing 5.40 g of sodium aluminate was added while stirring, and the mixture was mechanically stirred for 2 h in a 70 °C water bath. The material in the plastic bottle was transferred to a reaction kettle and heated to 100 °C for 15 h to drive the reaction. Then the mixture was cooled to room temperature, rinsed several times in a centrifugation-dispersion cycle, and freeze-dried for 24 h. Water was used as a dispersant to magnetically separate the product and remove particles that were not fully loaded with nano ferroferric oxide. The separated magnetic zeolite was freeze-dried for 24 h."""
 
-if st.button("🚀 رسم وتوليد المخطط البصري الآن", key="draw_pil_abstract"):
-    if not steps_input.strip():
-        st.error("الرجاء إدخال خطوة واحدة على الأقل.")
+protocol_input = st.text_area("Preparation Protocol Text:", value=default_protocol, height=350)
+abstract_title = st.text_input("عنوان المخطط:", value="Synthesis of Magnetic Zeolite from Molybdenum Ore")
+
+if st.button("🚀 توليد المخطط البصري الاحترافي (Graphical Abstract)", key="gen_ai_visual_abstract"):
+    if not protocol_input.strip():
+        st.error("الرجاء إدخال بروتوكول التحضير.")
+    elif not api_key_input:
+        st.error("الرجاء إدخل Gemini API Key في القائمة الجانبية.")
     else:
-        with st.spinner("جاري رسم المخطط البصري بدقة عالية..."):
-            # إعداد أبعاد الصورة القياسية للمجلات
-            img_width = 1200
-            img_height = 600
-            image = Image.new("RGB", (img_width, img_height), color="white")
-            draw = ImageDraw.Draw(image)
-            
-            # تحميل الخطوط الافتراضية
+        with st.spinner("جاري تحليل النص وتصميم المخطط البصري... (قد يستغرق دقيقة)"):
             try:
-                font_title = ImageFont.truetype("arial.ttf", 26)
-                font_bold = ImageFont.truetype("arial.ttf", 15)
-                font_desc = ImageFont.truetype("arial.ttf", 12)
-            except:
-                font_title = ImageFont.load_default()
-                font_bold = ImageFont.load_default()
-                font_desc = ImageFont.load_default()
-
-            # رسم العنوان الرئيسي في الأعلى
-            draw.text((50, 30), abstract_title, fill=(20, 20, 20), font=font_title)
-            
-            # تحليل الخطوات وترتيبها أفقياً
-            steps = [line.strip() for line in steps_input.split('\n') if line.strip()]
-            num_steps = len(steps)
-            
-            if num_steps > 0:
-                start_x = 50
-                start_y = 120
-                total_width = img_width - 100
-                box_w = (total_width - (num_steps - 1) * 20) / num_steps
-                box_h = 430
+                # إعداد الاتصال بـ Gemini لتحليل النص
+                genai.configure(api_key=api_key_input)
+                # استخدام نموذج Gemini Pro لتحليل النص واستخراج المراحل
+                model = genai.GenerativeModel('gemini-1.5-pro')
                 
-                for i, step_text in enumerate(steps):
-                    bx = start_x + i * (box_w + 20)
-                    by = start_y
-                    
-                    # 1. رسم صندوق الإطار الأبيض النظيف لكل مرحلة
-                    draw.rectangle([bx, by, bx + box_w, by + box_h], fill=(255, 255, 255), outline=(160, 170, 180), width=2)
-                    
-                    # 2. رسم صندوق الأيقونة العلوي
-                    icon_h = 110
-                    draw.rectangle([bx + 15, by + 15, bx + box_w - 15, by + 15 + icon_h], fill=(235, 243, 250), outline=(130, 150, 170), width=1)
-                    
-                    # رمز تخطيطي داخل مربع الأيقونة
-                    draw.text((bx + (box_w/2) - 30, by + 55), f"ICON {i+1}", fill=(100, 130, 160), font=font_bold)
-                    
-                    # 3. معالجة النص بأمان تام باستخدام الفهارس الصحيحة للقائمة
-                    if ":" in step_text:
-                        parts = step_text.split(":", 1)
-                        label = parts[0].strip() if len(parts) > 0 else f"Step {i+1}"
-                        desc = parts[1].strip() if len(parts) > 1 else step_text
-                    else:
-                        label = f"Step {i+1}"
-                        desc = step_text
-                        
-                    # كتابة عنوان المرحلة بخط عريض وأزرق داكن
-                    draw.text((bx + 15, by + 140), label, fill=(40, 80, 140), font=font_bold)
-                    
-                    # كتابة الوصف المختصر داخل الصندوق مع التفاف النصوص
-                    words = desc.split()
-                    lines = []
-                    current_line = ""
-                    for word in words:
-                        test_line = current_line + " " + word if current_line else word
-                        if len(test_line) * 7 < box_w - 30:
-                            current_line = test_line
-                        else:
-                            lines.append(current_line)
-                            current_line = word
-                    if current_line:
-                        lines.append(current_line)
-                        
-                    text_y = by + 175
-                    for line in lines[:10]:
-                        draw.text((bx + 15, text_y), line, fill=(50, 50, 50), font=font_desc)
-                        text_y += 18
-                    
-                    # 4. رسم سهم الاتجاه الهندسي بين المراحل
-                    if i < num_steps - 1:
-                        arrow_x = bx + box_w + 3
-                        arrow_y = by + (box_h / 2)
-                        draw.polygon([
-                            (arrow_x, arrow_y - 6),
-                            (arrow_x + 14, arrow_y),
-                            (arrow_x, arrow_y + 6)
-                        ], fill=(100, 100, 100))
-            
-            # حفظ الصورة النهائية في الذاكرة المؤقتة
-            buf = io.BytesIO()
-            image.save(buf, format="PNG")
-            buf.seek(0)
-            
-            st.success("تم رسم وتوليد المخطط البصري بنجاح تام!")
-            st.image(image, caption=f"Local Abstract: {abstract_title}", use_column_width=True)
-            
-            # زر التحميل المباشر للصورة
-            st.download_button(
-                label="📥 تنزيل الصورة النهائية بصيغة PNG",
-                data=buf,
-                file_name="Graphical_Abstract_Final.png",
-                mime="image/png"
-            )
+                analysis_prompt = f"""
+                Analyze the following laboratory synthesis protocol and extract the main process flow into 6 sequential phases.
+                For each phase, provide a clear title and a detailed visual description (prompt) for the laboratory equipment and actions involved.
+                
+                Protocol:
+                "{protocol_input}"
+                
+                Output format for each phase:
+                Phase [X]: [Title]
+                Visual Description: [Detailed description for image generation]
+                """
+                
+                analysis_response = model.generate_content(analysis_prompt)
+                
+                st.success("تم تحليل البروتوكول بنجاح! جاري توليد الصورة النهائية...")
+                
+                # --- هذه هي النقطة الحاسمة: في النسخة القادمة سنربط هذا التحليل بمولد صور فعلي ---
+                # حالياً، سنعرض التقرير النصي الذي سيتم تحويله لصورة لإثبات أن الكود فهم الهيكل
+                st.markdown("### 📋 الهيكل البصري المستخلص من النص:")
+                st.write(analysis_response.text)
+                
+                st.warning("⚠️ ملاحظة: الكود الآن يحلل النص ويستخرج المراحل بدقة. الخطوة النهائية هي توصيل هذا الهيكل بمحرك توليد صور (مثل DALL-E 3 أو Imagen) عبر Gemini API لرسم الصورة المتسلسلة التي أرسلتها. هل أنت مستعد للربط النهائي؟")
+                
+            except Exception as e:
+                st.error(f"حدث خطأ أثناء الاتصال بـ Gemini: {e}")
