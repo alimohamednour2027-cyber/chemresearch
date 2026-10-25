@@ -37,8 +37,7 @@ if st.button("🚀 Generate AI-Visual Graphical Abstract", key="gen_ai_image_saf
             import google.generativeai as genai
             genai.configure(api_key=api_key_input)
             
-            with st.spinner("جاري توليد المخطط البصري عبر الذكاء الاصطناعي... (قد يستغرق بضع ثوانٍ)"):
-                # استخدام النموذج المناسب للصور أو النصوص التوجيهية المتقدمة
+            with st.spinner("جاري توليد المخطط البصري عبر الذكاء الاصطناعي..."):
                 model = genai.GenerativeModel('gemini-1.5-pro')
                 
                 prompt = f"""
@@ -56,4 +55,4 @@ if st.button("🚀 Generate AI-Visual Graphical Abstract", key="gen_ai_image_saf
                 st.write(response.text)
                 
         except Exception as e:
-            st.error(fحدث خطأ أثناء الاتصال: {e}")
+            st.error(f"حدث خطأ أثناء الاتصال: {e}")
