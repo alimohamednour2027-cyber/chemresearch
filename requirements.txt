@@ -7,3 +7,6 @@ google-generativeai
 pillow
 python-pptx
 streamlit
+streamlit
+python-pptx
+pillow
