@@ -13,4 +13,4 @@ pillow
 streamlit
 google-generativeai
 pillow
-matplotlib (مهمة لرسم المخططات البيانية إذا لزم الأمر)
+matplotlib
