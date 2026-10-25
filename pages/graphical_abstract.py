@@ -52,12 +52,11 @@ if st.button("🚀 بناء وتوليد المخطط البصري المتسل�
             draw.rectangle([0, 0, img_width, 95], fill=(35, 60, 100))
             draw.text((50, 32), abstract_title, fill=(255, 255, 255), font=font_title)
             
-            # --- 4. تحليل الخطوات والمراحل ---
+            # --- 4. تحليل الخطوات والمراحل بأمان تام ---
             phases = [p.strip() for p in protocol_input.split('\n') if p.strip()]
             num_phases = len(phases)
             
             if num_phases > 0:
-                # تصميم شبكي دقيق: 3 صناديق في كل صف (صفين إجمالاً)
                 cols_per_row = 3
                 margin_x = 50
                 margin_y = 140
@@ -66,9 +65,8 @@ if st.button("🚀 بناء وتوليد المخطط البصري المتسل�
                 
                 total_w = img_width - (2 * margin_x)
                 box_w = (total_w - (cols_per_row - 1) * spacing_x) / cols_per_row
-                box_h = 380 # ارتفاع كافٍ جداً لتوضيح المعدات والنصوص
+                box_h = 380
                 
-                # قائمة المعدات والأيقونات المخصصة لكل مرحلة بناءً على بروتوكولك
                 equipment_labels = [
                     "Grinder & H2SO4 Beaker\n(DHG-9030 Oven)",
                     "Nickel Crucible\n(Muffle Furnace 550°C)",
@@ -85,30 +83,28 @@ if st.button("🚀 بناء وتوليد المخطط البصري المتسل�
                     bx = margin_x + col * (box_w + spacing_x)
                     by = margin_y + row * (box_h + spacing_y)
                     
-                    # أ. رسم الصندوق الخارجي للمرحلة (إطار أکاديمي نظيف)
+                    # أ. رسم الصندوق الخارجي
                     draw.rectangle([bx, by, bx + box_w, by + box_h], fill=(255, 255, 255), outline=(150, 165, 180), width=2)
                     
-                    # ب. رسم صندوق الأيقونة العلوي (يُمثل المعدات المخبرية)
+                    # ب. رسم صندوق الأيقونة العلوي
                     icon_h = 110
                     draw.rectangle([bx + 15, by + 15, bx + box_w - 15, by + 15 + icon_h], fill=(235, 244, 252), outline=(120, 145, 170), width=1)
                     
-                    # كتابة اسم المعدة أو الأيقونة داخل صندوق المعدات
                     eq_text = equipment_labels[i] if i < len(equipment_labels) else f"Equipment {i+1}"
                     draw.text((bx + 25, by + 50), eq_text, fill=(45, 80, 130), font=font_icon)
                     
-                    # ج. معالجة عنوان ووصف المرحلة
+                    # ج. معالجة عنوان ووصف المرحلة بأمان تام باستخدام الفهارس
                     if ":" in phase_text:
                         parts = phase_text.split(":", 1)
-                        p_title = parts.strip()
-                        p_desc = parts.strip()
+                        p_title = parts[0].strip() if len(parts) > 0 else f"Phase {i+1}"
+                        p_desc = parts[1].strip() if len(parts) > 1 else phase_text
                     else:
                         p_title = f"Phase {i+1}"
                         p_desc = phase_text
                         
-                    # كتابة عنوان المرحلة بخط عريض واضح
                     draw.text((bx + 15, by + 140), p_title, fill=(30, 50, 90), font=font_phase)
                     
-                    # د. كتابة التفاصيل الوصفية مع الالتفاف التلقائي للنصوص داخل الصندوق
+                    # د. التفاف النصوص داخل الصندوق
                     words = p_desc.split()
                     lines = []
                     current_line = ""
@@ -127,7 +123,7 @@ if st.button("🚀 بناء وتوليد المخطط البصري المتسل�
                         draw.text((bx + 15, text_y), line, fill=(50, 50, 50), font=font_desc)
                         text_y += 20
                     
-                    # هـ. رسم أسهم التتابع الأفقية بين الصناديق في نفس الصف
+                    # هـ. رسم أسهم التتابع الأفقية
                     if col < cols_per_row - 1 and i < num_phases - 1:
                         arrow_x = bx + box_w + 8
                         arrow_y = by + (box_h / 2) - 40
@@ -137,7 +133,7 @@ if st.button("🚀 بناء وتوليد المخطط البصري المتسل�
                             (arrow_x, arrow_y + 8)
                         ], fill=(90, 100, 115))
                         
-                    # و. رسم سهم الانتقال العمودي بين الصف الأول والصف الثاني (بعد المرحلة الثالثة)
+                    # و. رسم سهم الانتقال العمودي بين الصفين
                     if i == 2 and num_phases > 3:
                         arrow_x = bx + (box_w / 2)
                         arrow_y = by + box_h + 8
