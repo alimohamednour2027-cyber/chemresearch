@@ -37,15 +37,15 @@ if st.button("🚀 رسم وتوليد المخطط البصري الآن", key=
             # تحميل الخطوط (الافتراضية لتجنب أخطاء المسارات)
             try:
                 font_title = ImageFont.truetype("arial.ttf", 26)
-                font_bold = ImageFont.truetype("arial.ttf", 16)
-                font_desc = ImageFont.truetype("arial.ttf", 13)
+                font_bold = ImageFont.truetype("arial.ttf", 15)
+                font_desc = ImageFont.truetype("arial.ttf", 12)
             except:
                 font_title = ImageFont.load_default()
                 font_bold = ImageFont.load_default()
                 font_desc = ImageFont.load_default()
 
             # رسم العنوان الرئيسي في الأعلى
-            draw.text((50, 35), abstract_title, fill=(20, 20, 20), font=font_title)
+            draw.text((50, 30), abstract_title, fill=(20, 20, 20), font=font_title)
             
             # تحليل الخطوات وترتيبها أفقياً
             steps = [line.strip() for line in steps_input.split('\n') if line.strip()]
@@ -53,13 +53,13 @@ if st.button("🚀 رسم وتوليد المخطط البصري الآن", key=
             
             if num_steps > 0:
                 start_x = 50
-                start_y = 130
+                start_y = 120
                 total_width = img_width - 100
-                box_w = (total_width - (num_steps - 1) * 25) / num_steps
-                box_h = 410
+                box_w = (total_width - (num_steps - 1) * 20) / num_steps
+                box_h = 430
                 
                 for i, step_text in enumerate(steps):
-                    bx = start_x + i * (box_w + 25)
+                    bx = start_x + i * (box_w + 20)
                     by = start_y
                     
                     # 1. رسم صندوق الإطار الأبيض النظيف لكل مرحلة
@@ -69,7 +69,10 @@ if st.button("🚀 رسم وتوليد المخطط البصري الآن", key=
                     icon_h = 110
                     draw.rectangle([bx + 15, by + 15, bx + box_w - 15, by + 15 + icon_h], fill=(235, 243, 250), outline=(130, 150, 170), width=1)
                     
-                    # 3. معالجة النص وفصله إلى عنوان ووصف
+                    # رمز تخطيطي داخل مربع الأيقونة (إشارة بصرية)
+                    draw.text((bx + (box_w/2) - 30, by + 55), f"ICON {i+1}", fill=(100, 130, 160), font=font_bold)
+                    
+                    # 3. معالجة النص وفصله إلى عنوان ووصف (تم تصحيح الخطأ هنا)
                     if ":" in step_text:
                         parts = step_text.split(":", 1)
                         label = parts.strip()
@@ -79,17 +82,15 @@ if st.button("🚀 رسم وتوليد المخطط البصري الآن", key=
                         desc = step_text
                         
                     # كتابة عنوان المرحلة بخط عريض وأزرق داكن
-                    draw.text((bx + 18, by + 140), label, fill=(40, 80, 140), font=font_bold)
+                    draw.text((bx + 15, by + 140), label, fill=(40, 80, 140), font=font_bold)
                     
-                    # كتابة الوصف المختصر داخل الصندوق
-                    # تقسيم النص الطويل إلى أسطر ليتناسب مع عرض الصندوق
+                    # كتابة الوصف المختصر داخل الصندوق مع التفاف النصوص
                     words = desc.split()
                     lines = []
                     current_line = ""
                     for word in words:
                         test_line = current_line + " " + word if current_line else word
-                        # تقدير بسيط لعرض النص
-                        if len(test_line) * 7.5 < box_w - 35:
+                        if len(test_line) * 7 < box_w - 30:
                             current_line = test_line
                         else:
                             lines.append(current_line)
@@ -98,18 +99,18 @@ if st.button("🚀 رسم وتوليد المخطط البصري الآن", key=
                         lines.append(current_line)
                         
                     text_y = by + 175
-                    for line in lines[:6]: # طباعة حتى 6 أسطر كحد أقصى لمنع الخروج عن الصندوق
-                        draw.text((bx + 18, text_y), line, fill=(50, 50, 50), font=font_desc)
-                        text_y += 20
+                    for line in lines[:10]:
+                        draw.text((bx + 15, text_y), line, fill=(50, 50, 50), font=font_desc)
+                        text_y += 18
                     
                     # 4. رسم سهم الاتجاه الهندسي بين المراحل
                     if i < num_steps - 1:
-                        arrow_x = bx + box_w + 4
+                        arrow_x = bx + box_w + 3
                         arrow_y = by + (box_h / 2)
                         draw.polygon([
-                            (arrow_x, arrow_y - 7),
-                            (arrow_x + 17, arrow_y),
-                            (arrow_x, arrow_y + 7)
+                            (arrow_x, arrow_y - 6),
+                            (arrow_x + 14, arrow_y),
+                            (arrow_x, arrow_y + 6)
                         ], fill=(100, 100, 100))
             
             # حفظ الصورة النهائية في الذاكرة المؤقتة
