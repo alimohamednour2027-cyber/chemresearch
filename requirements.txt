@@ -3,3 +3,7 @@ python-docx
 pypdf
 google-genai
 python-pptx
+google-generativeai
+pillow
+python-pptx
+streamlit
