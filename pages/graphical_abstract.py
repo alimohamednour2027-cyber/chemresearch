@@ -38,7 +38,8 @@ if st.button("🚀 Generate AI-Visual Graphical Abstract", key="gen_ai_image_saf
             genai.configure(api_key=api_key_input)
             
             with st.spinner("جاري توليد المخطط البصري عبر الذكاء الاصطناعي..."):
-                model = genai.GenerativeModel('gemini-1.5-pro')
+                # استخدام النموذج القياسي المتوافق مع جميع مفاتيح API الحديثة
+                model = genai.GenerativeModel('gemini-2.5-flash')
                 
                 prompt = f"""
                 Act as an expert scientific illustrator. Generate a detailed description and prompt layout for a professional graphical abstract for an academic journal (Q1 chemistry paper).
