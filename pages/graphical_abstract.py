@@ -1,159 +1,129 @@
 import streamlit as st
-from io import BytesIO
-from pptx import Presentation
-from pptx.util import Inches, Pt
-from pptx.enum.shapes import MSO_SHAPE
-from pptx.dml.color import RGBColor
-from pptx.enum.text import PP_ALIGN
+from PIL import Image, ImageDraw, ImageFont
+import io
 
 # --- إعدادات الصفحة ---
 st.set_page_config(
-    page_title="Professional Lab Workflow Designer",
-    page_icon="📐",
+    page_title="Local PIL Graphical Abstract Generator",
+    page_icon="🎨",
     layout="wide"
 )
 
-st.title("📐 ChemResearch AI: Professional Graphical Abstract Designer (PPTX)")
-st.markdown("هذا المحرك يولد مخططاً رسومياً احترافيًا ونظيفًا (خالياً من النصوص الطويلة)، بمسافات أفقية واسعة ومنظمة، قابل للتعديل بنسبة 100% في PowerPoint.")
+st.title("🎨 ChemResearch AI: Local Visual Graphical Abstract Engine")
+st.markdown("هذا المحرك يرسم المخطط البصري كصورة PNG احترافية مباشرة محلياً داخل المنصة، وبدون أي أخطاء أو انتظار طويل.")
 st.markdown("---")
 
-# --- إعدادات النص ---
-st.subheader("✍️ أدخل خطوات العملية المخبرية (مختصرة ومركزة لكل مرحلة، كل مرحلة في سطر منفصل):")
-default_steps = """1. Precursor Preparation: Washing and cleaning fish scales.
-2. Drying Process: Open-area drying followed by oven heating at 100°C.
-3. Chemical Treatment: Deproteinization and demineralization with NaOH/HCl.
-4. Final Product: Chitin/Chitosan powder yield."""
+# --- حقل إدخال الخطوات ---
+st.subheader("✍️ أدخل خطوات البروتوكول المخبري (كل خطوة في سطر منفصل):")
+default_steps = """1. Precursor Prep: Washing raw biomass and drying
+2. Activation: Mixing with KOH activating agent
+3. Pyrolysis: Heating at 800°C under N2 atmosphere
+4. Final Yield: High-surface area porous carbon"""
 
-steps_input = st.text_area("خطوات البروتوكول المخبري (الرجاء استخدام الإنجليزية):", value=default_steps, height=200)
-abstract_title = st.text_input("عنوان المخطط:", value="Extraction Workflow of Chitosan from Fish Scales")
+steps_input = st.text_area("Laboratory Synthesis Steps Protocol:", value=default_steps, height=180)
+abstract_title = st.text_input("عنوان المخطط الرئيسي:", value="Synthesis Workflow of Porous Carbon")
 
-if st.button("🚀 توليد وتحميل المخطط الاحترافي بصيغة PowerPoint", key="gen_clean_pptx"):
+if st.button("🚀 رسم وتوليد المخطط البصري الآن", key="draw_pil_abstract"):
     if not steps_input.strip():
         st.error("الرجاء إدخال خطوة واحدة على الأقل.")
     else:
-        with st.spinner("جاري تصميم المخطط الهندسي النظيف..."):
-            # إنشاء عرض تقديمي جديد
-            prs = Presentation()
-            prs.slide_width = Inches(13.33) # قياس الشريحة 16:9
-            prs.slide_height = Inches(7.5)
+        with st.spinner("جاري رسم المخطط البصري بدقة عالية..."):
+            # إعداد أبعاد الصورة القياسية للمجلات
+            img_width = 1200
+            img_height = 600
+            image = Image.new("RGB", (img_width, img_height), color="white")
+            draw = ImageDraw.Draw(image)
             
-            # إضافة شريحة فارغة
-            blank_layout = prs.slide_layouts[6]
-            slide = prs.slides.add_slide(blank_layout)
+            # تحميل الخطوط (الافتراضية لتجنب أخطاء المسارات)
+            try:
+                font_title = ImageFont.truetype("arial.ttf", 26)
+                font_bold = ImageFont.truetype("arial.ttf", 16)
+                font_desc = ImageFont.truetype("arial.ttf", 13)
+            except:
+                font_title = ImageFont.load_default()
+                font_bold = ImageFont.load_default()
+                font_desc = ImageFont.load_default()
+
+            # رسم العنوان الرئيسي في الأعلى
+            draw.text((50, 35), abstract_title, fill=(20, 20, 20), font=font_title)
             
-            # 1. إضافة العنوان الرئيسي
-            title_box = slide.shapes.add_textbox(Inches(0.7), Inches(0.5), Inches(11.93), Inches(0.8))
-            tf_title = title_box.text_frame
-            tf_title.word_wrap = True
-            p_title = tf_title.paragraphs[0]
-            p_title.text = abstract_title
-            p_title.font.name = "Times New Roman"
-            p_title.font.size = Pt(28)
-            p_title.font.bold = True
-            p_title.font.color.rgb = RGBColor(30, 30, 30)
-            p_title.alignment = PP_ALIGN.CENTER
-            
-            # 2. تحليل الخطوات وتوزيعها
+            # تحليل الخطوات وترتيبها أفقياً
             steps = [line.strip() for line in steps_input.split('\n') if line.strip()]
             num_steps = len(steps)
             
             if num_steps > 0:
-                start_left = Inches(0.5)
-                start_top = Inches(1.9)
-                total_width = Inches(12.33)
-                
-                box_width = (total_width / num_steps) - Inches(0.3)
-                box_height = Inches(4.5)
-                spacing = Inches(0.3)
+                start_x = 50
+                start_y = 130
+                total_width = img_width - 100
+                box_w = (total_width - (num_steps - 1) * 25) / num_steps
+                box_h = 410
                 
                 for i, step_text in enumerate(steps):
-                    current_left = start_left + i * (box_width + spacing)
+                    bx = start_x + i * (box_w + 25)
+                    by = start_y
                     
-                    # أ. صندوق الإطار النظيف لكل خطوة
-                    card_bg = slide.shapes.add_shape(
-                        MSO_SHAPE.ROUNDED_RECTANGLE, 
-                        current_left, start_top, box_width, box_height
-                    )
-                    card_bg.fill.solid()
-                    card_bg.fill.fore_color.rgb = RGBColor(255, 255, 255) # خلفية بيضاء
-                    card_bg.line.color.rgb = RGBColor(160, 170, 180) # إطار رمادي
-                    card_bg.line.width = Pt(1.2)
+                    # 1. رسم صندوق الإطار الأبيض النظيف لكل مرحلة
+                    draw.rectangle([bx, by, bx + box_w, by + box_h], fill=(255, 255, 255), outline=(160, 170, 180), width=2)
                     
-                    # ب. مساحة الأيقونة في الأعلى (مستطيل رمادي ناعم)
-                    icon_size = Inches(1.6)
-                    icon_left = current_left + (box_width / 2) - (icon_size / 2)
-                    icon_top = start_top + Inches(0.3)
+                    # 2. رسم صندوق الأيقونة العلوي (مستطيل بلون أزرق فاتح هادئ)
+                    icon_h = 110
+                    draw.rectangle([bx + 15, by + 15, bx + box_w - 15, by + 15 + icon_h], fill=(235, 243, 250), outline=(130, 150, 170), width=1)
                     
-                    icon_box = slide.shapes.add_shape(
-                        MSO_SHAPE.RECTANGLE,
-                        icon_left, icon_top, icon_size, icon_size
-                    )
-                    icon_box.fill.solid()
-                    icon_box.fill.fore_color.rgb = RGBColor(230, 240, 250) # أزرق فاتح
-                    icon_box.line.color.rgb = RGBColor(120, 130, 140)
-                    icon_box.line.width = Pt(0.8)
-                    
-                    # ج. صندوق النصوص (عنوان الخطوة + الوصف المختصر)
-                    tb = slide.shapes.add_textbox(
-                        current_left + Inches(0.15), 
-                        start_top + Inches(2.1), 
-                        box_width - Inches(0.3), 
-                        Inches(2.1)
-                    )
-                    tf = tb.text_frame
-                    tf.word_wrap = True
-                    
-                    # معالجة النص: فصل العنوان عن الوصف
+                    # 3. معالجة النص وفصله إلى عنوان ووصف
                     if ":" in step_text:
                         parts = step_text.split(":", 1)
-                        stage_label = parts[0].strip()
-                        stage_desc = parts[1].strip()
+                        label = parts.strip()
+                        desc = parts.strip()
                     else:
-                        stage_label = f"Phase {i+1}"
-                        stage_desc = step_text
+                        label = f"Step {i+1}"
+                        desc = step_text
+                        
+                    # كتابة عنوان المرحلة بخط عريض وأزرق داكن
+                    draw.text((bx + 18, by + 140), label, fill=(40, 80, 140), font=font_bold)
                     
-                    # عنوان المرحلة (خط عريض)
-                    p_stage = tf.paragraphs[0]
-                    p_stage.text = stage_label
-                    p_stage.font.name = "Times New Roman"
-                    p_stage.font.size = Pt(14)
-                    p_stage.font.bold = True
-                    p_stage.font.color.rgb = RGBColor(50, 90, 140) # أزرق داكن
-                    p_stage.alignment = PP_ALIGN.CENTER
+                    # كتابة الوصف المختصر داخل الصندوق
+                    # تقسيم النص الطويل إلى أسطر ليتناسب مع عرض الصندوق
+                    words = desc.split()
+                    lines = []
+                    current_line = ""
+                    for word in words:
+                        test_line = current_line + " " + word if current_line else word
+                        # تقدير بسيط لعرض النص
+                        if len(test_line) * 7.5 < box_w - 35:
+                            current_line = test_line
+                        else:
+                            lines.append(current_line)
+                            current_line = word
+                    if current_line:
+                        lines.append(current_line)
+                        
+                    text_y = by + 175
+                    for line in lines[:6]: # طباعة حتى 6 أسطر كحد أقصى لمنع الخروج عن الصندوق
+                        draw.text((bx + 18, text_y), line, fill=(50, 50, 50), font=font_desc)
+                        text_y += 20
                     
-                    # وصف الخطوة (خط عادي ومختصر)
-                    p_desc = tf.add_paragraph()
-                    p_desc.text = stage_desc
-                    p_desc.font.name = "Times New Roman"
-                    p_desc.font.size = Pt(11.5)
-                    p_desc.font.color.rgb = RGBColor(40, 40, 40)
-                    p_desc.alignment = PP_ALIGN.CENTER
-                    
-                    # د. سهم التتابع الهندسي
+                    # 4. رسم سهم الاتجاه الهندسي بين المراحل
                     if i < num_steps - 1:
-                        arrow_left = current_left + box_width + Inches(0.05)
-                        arrow_top = start_top + (box_height / 2) - Inches(0.2)
-                        arrow = slide.shapes.add_shape(
-                            MSO_SHAPE.RIGHT_ARROW,
-                            arrow_left, arrow_top, Inches(0.25), Inches(0.25)
-                        )
-                        arrow.fill.solid()
-                        arrow.fill.fore_color.rgb = RGBColor(100, 100, 100)
-                        arrow.line.color.rgb = RGBColor(80, 80, 80)
-
-            # حفظ الملف في الذاكرة للتنزيل
-            pptx_buffer = BytesIO()
-            prs.save(pptx_buffer)
-            pptx_buffer.seek(0)
+                        arrow_x = bx + box_w + 4
+                        arrow_y = by + (box_h / 2)
+                        draw.polygon([
+                            (arrow_x, arrow_y - 7),
+                            (arrow_x + 17, arrow_y),
+                            (arrow_x, arrow_y + 7)
+                        ], fill=(100, 100, 100))
             
-            st.success("تم توليد المخطط المخبري البصري بنجاح!")
+            # حفظ الصورة النهائية في الذاكرة المؤقتة
+            buf = io.BytesIO()
+            image.save(buf, format="PNG")
+            buf.seek(0)
             
+            st.success("تم رسم وتوليد المخطط البصري بنجاح تام!")
+            st.image(image, caption=f"Local Abstract: {abstract_title}", use_column_width=True)
+            
+            # زر التحميل المباشر للصورة
             st.download_button(
-                label="📥 تنزيل ملف PowerPoint (.pptx) القابل للتعديل",
-                data=pptx_buffer,
-                file_name="Professional_Lab_Workflow.pptx",
-                mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                label="📥 تنزيل الصورة النهائية بصيغة PNG",
+                data=buf,
+                file_name="Graphical_Abstract_Final.png",
+                mime="image/png"
             )
-
-st.markdown("---")
-st.info("💡 **نصيحة:** بعد تنزيل الملف وفتحه في PowerPoint، يمكنك بسهولة سحب أيقونات حقيقية (مثل صور الأفران أو الكؤوس الزجاجية) ووضعها داخل المستطيلات الزرقاء الفاتحة المخصصة لها.")
