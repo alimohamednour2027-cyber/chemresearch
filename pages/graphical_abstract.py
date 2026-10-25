@@ -13,24 +13,28 @@ st.set_page_config(
 )
 
 st.title("🧪 ChemResearch AI: Professional Lab-Style Graphical Abstract")
-st.markdown("هذا المحرك يصمم مخططات رسومية أكاديمية متكاملة تحاكي المقالات المنشورة في المجلات العالمية، وتحتوي على أشكال وأدوات مختبرية (كؤوس زجاجية، أفران، أدقاق تسخين)، مع إمكانية **التعديل والتحريك الكامل داخل برنامج PowerPoint**.")
+st.markdown("هذا المحرك يصمم مخططات رسومية أكاديمية متكاملة بمسافات أفقية واسعة ومقروءة تماماً، قابلة للتعديل والتحريك بنسبة 100% داخل برنامج PowerPoint.")
 st.markdown("---")
 
-st.subheader("✍️ أدخل خطوات العملية المخبرية (كل خطوة في سطر منفصل):")
-default_steps = """1. Cleaned Raw Material: Preparation and washing of precursor scales.
-2. Drying & Grinding: Open-area drying, thermal treatment at 100°C, and mechanical sieving.
-3. Deproteinization: Dissolution in NaOH 3.5%, stirring at 65°C, neutralization, and drying.
-4. Demineralization: Treatment with HCl 1M, stirring, neutralization, and drying to obtain Chitin.
-5. Deacetylation: Reaction with NaOH 40% at 100°C, final neutralization, and Chitosan Powder yield."""
+st.sidebar.title("🔑 Gemini API Configuration")
+st.sidebar.markdown("أدخل مفتاح الـ API لتفعيل ميزات الذكاء الاصطناعي القادمة:")
+api_key_input = st.sidebar.text_input("Enter Gemini API Key:", type="password", value="")
 
-steps_input = st.text_area("خطوات البروتوكول المخبري:", value=default_steps, height=200)
+st.subheader("✍️ أدخل خطوات العملية المخبرية (كل خطوة في سطر منفصل):")
+default_steps = """1. Raw Material Preparation: Washing and cleaning fish scales.
+2. Drying Process: Oven drying at 100°C for 12 hours.
+3. Grinding & Sieving: Mechanical grinding to obtain fine powder.
+4. Chemical Treatment: Deproteinization using NaOH solution.
+5. Final Product: Chitin/Chitosan powder yield."""
+
+steps_input = st.text_area("خطوات البروتوكول المخبري:", value=default_steps, height=180)
 abstract_title = st.text_input("عنوان المخطط الرسومي:", value="Extraction and Synthesis Workflow of Chitosan from Fish Scales")
 
-if st.button("🚀 توليد المخطط الرسومي الاحترافي بصيغة PowerPoint", key="gen_pro_abstract"):
+if st.button("🚀 توليد المخطط الرسومي النظيف بصيغة PowerPoint", key="gen_clean_abstract"):
     if not steps_input.strip():
         st.error("الرجاء إدخال خطوة واحدة على الأقل.")
     else:
-        with st.spinner("جاري تصميم المخطط المخبري الاحترافي..."):
+        with st.spinner("جاري تصميم المخطط المخبري المنظم..."):
             prs = Presentation()
             prs.slide_width = Inches(13.33)
             prs.slide_height = Inches(7.5)
@@ -61,67 +65,57 @@ if st.button("🚀 توليد المخطط الرسومي الاحترافي ب�
                 box_height = Inches(4.8)
                 spacing = Inches(0.25)
                 
-                # أشكال هندسية تحاكي أدوات المختبر (كؤوس، أفران، دورق)
-                lab_shapes = [
-                    MSO_SHAPE.OVAL,          # يمثل عينة أو مسحوق في طبق بتري
-                    MSO_SHAPE.SNIP_2_SAME_RECTANGLE, # يمثل جهاز تسخين أو فرن
-                    MSO_SHAPE.CHEVRON,       # يمثل دورق تفاعل كيميائي
-                    MSO_SHAPE.CAN,           # يمثل أنبوب أو محلول معالجة
-                    MSO_SHAPE.ROUNDED_RECTANGLE # يمثل المنتج النهائي
-                ]
-                
                 for i, step_text in enumerate(steps):
                     current_left = start_left + i * (box_width + spacing)
                     
-                    # صندوق الخلفية لكل خطوة
+                    # صندوق الخلفية لكل خطوة (خلفية بيضاء ونظيفة بدون تداخل)
                     card = slide.shapes.add_shape(
                         MSO_SHAPE.ROUNDED_RECTANGLE, 
                         current_left, start_top, box_width, box_height
                     )
                     card.fill.solid()
-                    card.fill.fore_color.rgb = RGBColor(245, 248, 252) # خلفية هادئة ونظيفة
-                    card.line.color.rgb = RGBColor(65, 130, 185) # إطار أزرق علمي
-                    card.line.width = Pt(1.5)
+                    card.fill.fore_color.rgb = RGBColor(255, 255, 255)
+                    card.line.color.rgb = RGBColor(180, 190, 200)
+                    card.line.width = Pt(1.2)
                     
-                    # أيقونة الأداة المخبرية في أعلى الصندوق
-                    icon_type = lab_shapes[i % len(lab_shapes)]
-                    icon_size = Inches(1.1)
+                    # مساحة مخصصة لأيقونة الأداة المخبرية في أعلى الصندوق
+                    icon_size = Inches(1.4)
                     icon_left = current_left + (box_width / 2) - (icon_size / 2)
-                    icon_top = start_top + Inches(0.25)
+                    icon_top = start_top + Inches(0.3)
                     
-                    icon = slide.shapes.add_shape(icon_type, icon_left, icon_top, icon_size, icon_size)
+                    icon = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, icon_left, icon_top, icon_size, icon_size)
                     icon.fill.solid()
-                    icon.fill.fore_color.rgb = RGBColor(53, 108, 158)
-                    icon.line.color.rgb = RGBColor(20, 60, 100)
+                    icon.fill.fore_color.rgb = RGBColor(235, 242, 250)
+                    icon.line.color.rgb = RGBColor(150, 170, 190)
                     
-                    # صندوق النصوص للوصف
+                    # صندوق النصوص للوصف (بمساحة كافية وواضحة)
                     tb = slide.shapes.add_textbox(
                         current_left + Inches(0.1), 
-                        start_top + Inches(1.45), 
+                        start_top + Inches(1.8), 
                         box_width - Inches(0.2), 
-                        Inches(3.2)
+                        Inches(2.8)
                     )
                     tf = tb.text_frame
                     tf.word_wrap = True
                     
                     # رقم المرحلة
                     p_num = tf.paragraphs[0]
-                    p_num.text = f"Phase {i+1}"
+                    p_num.text = f"Stage {i+1}"
                     p_num.font.name = "Times New Roman"
-                    p_num.font.size = Pt(14)
+                    p_num.font.size = Pt(13)
                     p_num.font.bold = True
-                    p_num.font.color.rgb = RGBColor(40, 90, 140)
+                    p_num.font.color.rgb = RGBColor(50, 90, 140)
                     p_num.alignment = PP_ALIGN.CENTER
                     
                     # نص الخطوة التفصيلي
                     p_desc = tf.add_paragraph()
                     p_desc.text = step_text
                     p_desc.font.name = "Times New Roman"
-                    p_desc.font.size = Pt(11.5)
+                    p_desc.font.size = Pt(11)
                     p_desc.font.color.rgb = RGBColor(40, 40, 40)
                     p_desc.alignment = PP_ALIGN.CENTER
                     
-                    # رسم سهم التتابع بين الخطوات
+                    # رسم سهم التتابع بين الخطوات بمسافة آمنة
                     if i < num_steps - 1:
                         arrow_left = current_left + box_width + Inches(0.02)
                         arrow_top = start_top + (box_height / 2) - Inches(0.2)
@@ -130,10 +124,9 @@ if st.button("🚀 توليد المخطط الرسومي الاحترافي ب�
                             arrow_left, arrow_top, Inches(0.21), Inches(0.21)
                         )
                         arrow.fill.solid()
-                        arrow.fill.fore_color.rgb = RGBColor(110, 110, 110)
-                        arrow.line.color.rgb = RGBCode = RGBColor(80, 80, 80) if 'RGBColor' in globals() else RGBColor(80, 80, 80)
+                        arrow.fill.fore_color.rgb = RGBColor(100, 100, 100)
+                        arrow.line.color.rgb = RGBColor(80, 80, 80)
 
-            # حفظ الملف في الذاكرة لتنزيله
             buffer = BytesIO()
             prs.save(buffer)
             buffer.seek(0)
@@ -142,6 +135,6 @@ if st.button("🚀 توليد المخطط الرسومي الاحترافي ب�
             st.download_button(
                 label="📥 تحميل ملف PowerPoint القابل للتعديل (.pptx)",
                 data=buffer,
-                file_name="Lab_Workflow_Graphical_Abstract.pptx",
+                file_name="Clean_Lab_Workflow_Abstract.pptx",
                 mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
             )
