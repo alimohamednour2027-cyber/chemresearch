@@ -34,7 +34,7 @@ if st.button("🚀 رسم وتوليد المخطط البصري الآن", key=
             image = Image.new("RGB", (img_width, img_height), color="white")
             draw = ImageDraw.Draw(image)
             
-            # تحميل الخطوط (الافتراضية لتجنب أخطاء المسارات)
+            # تحميل الخطوط الافتراضية
             try:
                 font_title = ImageFont.truetype("arial.ttf", 26)
                 font_bold = ImageFont.truetype("arial.ttf", 15)
@@ -65,18 +65,18 @@ if st.button("🚀 رسم وتوليد المخطط البصري الآن", key=
                     # 1. رسم صندوق الإطار الأبيض النظيف لكل مرحلة
                     draw.rectangle([bx, by, bx + box_w, by + box_h], fill=(255, 255, 255), outline=(160, 170, 180), width=2)
                     
-                    # 2. رسم صندوق الأيقونة العلوي (مستطيل بلون أزرق فاتح هادئ)
+                    # 2. رسم صندوق الأيقونة العلوي
                     icon_h = 110
                     draw.rectangle([bx + 15, by + 15, bx + box_w - 15, by + 15 + icon_h], fill=(235, 243, 250), outline=(130, 150, 170), width=1)
                     
-                    # رمز تخطيطي داخل مربع الأيقونة (إشارة بصرية)
+                    # رمز تخطيطي داخل مربع الأيقونة
                     draw.text((bx + (box_w/2) - 30, by + 55), f"ICON {i+1}", fill=(100, 130, 160), font=font_bold)
                     
-                    # 3. معالجة النص وفصله إلى عنوان ووصف (تم تصحيح الخطأ هنا)
+                    # 3. معالجة النص بأمان تام بدون أي أخطاء
                     if ":" in step_text:
                         parts = step_text.split(":", 1)
-                        label = parts.strip()
-                        desc = parts.strip()
+                        label = parts.strip() if len(parts) > 0 else f"Step {i+1}"
+                        desc = parts.strip() if len(parts) > 1 else step_text
                     else:
                         label = f"Step {i+1}"
                         desc = step_text
