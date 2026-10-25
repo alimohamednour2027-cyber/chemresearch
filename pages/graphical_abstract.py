@@ -2,7 +2,6 @@ import streamlit as st
 from PIL import Image, ImageDraw, ImageFont
 import io
 import google.generativeai as genai
-import textwrap
 
 # --- إعدادات الصفحة ---
 st.set_page_config(
@@ -12,7 +11,7 @@ st.set_page_config(
 )
 
 st.title("🔬 ChemResearch AI: Advanced Academic Graphical Abstract Engine")
-st.markdown("هذا المحرك يرسم مخططاً بصرياً أكاديمياً متكاملاً (Graphical Abstract) بناءً على نص بروتوكول التحضير التفصيلي الخاص بك، بأسلوب المجلات العلمية العالمية.")
+st.markdown("هذا المحرك يحلل بروتوكول التحضير النصي ويستخرج الهيكل البصري الأكاديمي بدقة عالية.")
 st.markdown("---")
 
 # --- القائمة الجانبية لإدخال المفتاح ---
@@ -31,37 +30,31 @@ if st.button("🚀 توليد المخطط البصري الاحترافي (Grap
     if not protocol_input.strip():
         st.error("الرجاء إدخال بروتوكول التحضير.")
     elif not api_key_input:
-        st.error("الرجاء إدخل Gemini API Key في القائمة الجانبية.")
+        st.error("الرجاء إدخال Gemini API Key في القائمة الجانبية.")
     else:
-        with st.spinner("جاري تحليل النص وتصميم المخطط البصري... (قد يستغرق دقيقة)"):
+        with st.spinner("جاري تحليل النص وتصميم الهيكل البصري..."):
             try:
-                # إعداد الاتصال بـ Gemini لتحليل النص
+                # إعداد الاتصال بـ Gemini باستخدام النموذج المستقر والمحدث
                 genai.configure(api_key=api_key_input)
-                # استخدام نموذج Gemini Pro لتحليل النص واستخراج المراحل
-                model = genai.GenerativeModel('gemini-1.5-pro')
+                model = genai.GenerativeModel('gemini-3.8-flash')
                 
                 analysis_prompt = f"""
-                Analyze the following laboratory synthesis protocol and extract the main process flow into 6 sequential phases.
-                For each phase, provide a clear title and a detailed visual description (prompt) for the laboratory equipment and actions involved.
+                Analyze the following laboratory synthesis protocol and extract the main process flow into sequential phases.
+                For each phase, provide a clear title and a detailed visual description for the laboratory equipment and actions.
                 
                 Protocol:
                 "{protocol_input}"
                 
                 Output format for each phase:
                 Phase [X]: [Title]
-                Visual Description: [Detailed description for image generation]
+                Visual Description: [Detailed steps for equipment and workflow]
                 """
                 
-                analysis_response = model.generate_content(analysis_prompt)
+                response = model.generate_content(analysis_prompt)
                 
-                st.success("تم تحليل البروتوكول بنجاح! جاري توليد الصورة النهائية...")
-                
-                # --- هذه هي النقطة الحاسمة: في النسخة القادمة سنربط هذا التحليل بمولد صور فعلي ---
-                # حالياً، سنعرض التقرير النصي الذي سيتم تحويله لصورة لإثبات أن الكود فهم الهيكل
-                st.markdown("### 📋 الهيكل البصري المستخلص من النص:")
-                st.write(analysis_response.text)
-                
-                st.warning("⚠️ ملاحظة: الكود الآن يحلل النص ويستخرج المراحل بدقة. الخطوة النهائية هي توصيل هذا الهيكل بمحرك توليد صور (مثل DALL-E 3 أو Imagen) عبر Gemini API لرسم الصورة المتسلسلة التي أرسلتها. هل أنت مستعد للربط النهائي؟")
+                st.success("تم تحليل البروتوكول واستخراج الهيكل البصري بنجاح!")
+                st.markdown("### 📋 الهيكل البصري المنظم للمراحل:")
+                st.write(response.text)
                 
             except Exception as e:
-                st.error(f"حدث خطأ أثناء الاتصال بـ Gemini: {e}")
+                st.error(f"حدث خطأ أثناء الاتصال: {e}")
