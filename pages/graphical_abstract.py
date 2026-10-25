@@ -30,7 +30,7 @@ if st.button("🚀 بناء وتوليد المخطط البصري المتسل�
     else:
         with st.spinner("جاري بناء المخطط البصري الأكاديمي المتسلسل بدقة عالية..."):
             
-            # --- 1. إعداد أبعاد اللوحة الكبيرة (مناسبة للمجلات العلمية Q1) ---
+            # --- 1. إعداد أبعاد اللوحة الكبيرة ---
             img_width = 1600
             img_height = 1050
             image = Image.new("RGB", (img_width, img_height), color=(255, 255, 255))
@@ -52,7 +52,7 @@ if st.button("🚀 بناء وتوليد المخطط البصري المتسل�
             draw.rectangle([0, 0, img_width, 95], fill=(35, 60, 100))
             draw.text((50, 32), abstract_title, fill=(255, 255, 255), font=font_title)
             
-            # --- 4. تحليل الخطوات والمراحل بأمان تام ---
+            # --- 4. تحليل الخطوات والمراحل بأمان تام وبدون أي تقسيم خاطئ ---
             phases = [p.strip() for p in protocol_input.split('\n') if p.strip()]
             num_phases = len(phases)
             
@@ -93,11 +93,11 @@ if st.button("🚀 بناء وتوليد المخطط البصري المتسل�
                     eq_text = equipment_labels[i] if i < len(equipment_labels) else f"Equipment {i+1}"
                     draw.text((bx + 25, by + 50), eq_text, fill=(45, 80, 130), font=font_icon)
                     
-                    # ج. معالجة عنوان ووصف المرحلة بأمان تام باستخدام الفهارس
+                    # ج. استخراج العنوان والوصف بطريقة آمنة تماماً بدون استخدام split قد يسبب أخطاء
                     if ":" in phase_text:
-                        parts = phase_text.split(":", 1)
-                        p_title = parts[0].strip() if len(parts) > 0 else f"Phase {i+1}"
-                        p_desc = parts[1].strip() if len(parts) > 1 else phase_text
+                        split_idx = phase_text.find(":")
+                        p_title = phase_text[:split_idx].strip()
+                        p_desc = phase_text[split_idx+1:].strip()
                     else:
                         p_title = f"Phase {i+1}"
                         p_desc = phase_text
