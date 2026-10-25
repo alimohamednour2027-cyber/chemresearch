@@ -72,11 +72,11 @@ if st.button("🚀 رسم وتوليد المخطط البصري الآن", key=
                     # رمز تخطيطي داخل مربع الأيقونة
                     draw.text((bx + (box_w/2) - 30, by + 55), f"ICON {i+1}", fill=(100, 130, 160), font=font_bold)
                     
-                    # 3. معالجة النص بأمان تام بدون أي أخطاء
+                    # 3. معالجة النص بأمان تام باستخدام الفهارس الصحيحة للقائمة
                     if ":" in step_text:
                         parts = step_text.split(":", 1)
-                        label = parts.strip() if len(parts) > 0 else f"Step {i+1}"
-                        desc = parts.strip() if len(parts) > 1 else step_text
+                        label = parts[0].strip() if len(parts) > 0 else f"Step {i+1}"
+                        desc = parts[1].strip() if len(parts) > 1 else step_text
                     else:
                         label = f"Step {i+1}"
                         desc = step_text
