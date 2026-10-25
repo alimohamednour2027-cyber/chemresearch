@@ -28,7 +28,6 @@ if st.button("🔄 معالجة وتنظيم النص إلى مراحل أكاد
     else:
         with st.spinner("جاري تحليل النص العشوائي وتصنيفه إلى مراحل علمية متسلسلة..."):
             
-            # محاكاة التنظيم الذكي للمراحل بناءً على الكلمات المفتاحية في النص الحر
             processed_text = f"""SYNTHESIS OF MAGNETIC ZEOLITE: A SEQUENTIAL PROCESS
 Row 1:
 - Phase 1 (Pre-treatment & Acid Washing): Grinding, sifting, H2SO4 agitation, and oven drying (DHG-9030).
@@ -42,13 +41,11 @@ Row 2:
             st.session_state['structured_protocol'] = processed_text
             st.success("تم تحليل النص وتنظيمه بنجاح إلى مراحل أكاديمية دقيقة!")
 
-# استخدام النص المنظم إن وجد، أو النص الافتراضي
 current_protocol = st.session_state.get('structured_protocol', raw_protocol_input)
 
 st.markdown("---")
 st.subheader("📋 المراحل المنظمة وجاهزية الوصف (Master Prompt):")
 
-# بناء الوصف النهائي الموجه للذكاء الاصطناعي
 generated_prompt = f"""
 A professional Q1-journal style scientific graphical abstract, horizontal two-row grid layout, clean white background, academic color palette (blues and greys). 
 Title banner across the top: "{abstract_title}".
@@ -74,7 +71,11 @@ with col2:
 
 st.markdown("---")
 st.markdown("### 📥 نافذة استيراد وعرض الصورة النهائية في المنصة:")
-uploaded_image = st.file_uploader("قم برفع الصورة بعد استخراجها من الأدوات المجانية لتوثيقها في تقرير بحثك:", type=["png", "jpg", "jpeg"])
+# تم تحديث أنواع الملفات المقبولة لتقبل .webp و .png و .jpg بدون أي مشاكل
+uploaded_image = st.file_uploader(
+    "قم برفع الصورة بعد استخراجها من الأدوات المجانية لتوثيقها في تقرير بحثك:", 
+    type=["png", "jpg", "jpeg", "webp"]
+)
 
 if uploaded_image is not None:
     st.success("تم اعتماد الصورة وربطها بالمنصة بنجاح!")
