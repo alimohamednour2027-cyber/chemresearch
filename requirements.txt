@@ -6,3 +6,6 @@ python-pptx
 google-generativeai
 pillow
 matplotlib
+streamlit
+openai
+pillow
