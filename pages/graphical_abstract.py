@@ -7,42 +7,37 @@ from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
 
 st.set_page_config(
-    page_title="Professional Lab Graphical Abstract Generator",
+    page_title="Clean Lab Graphical Abstract",
     page_icon="🧪",
     layout="wide"
 )
 
-st.title("🧪 ChemResearch AI: Professional Lab-Style Graphical Abstract")
-st.markdown("هذا المحرك يصمم مخططات رسومية أكاديمية متكاملة بمسافات أفقية واسعة ومقروءة تماماً، قابلة للتعديل والتحريك بنسبة 100% داخل برنامج PowerPoint.")
+st.title("🧪 ChemResearch AI: Professional Graphical Abstract Generator")
+st.markdown("هذا المحرك يولد مخططاً أفقياً واسعاً ونظيفاً (يعتمد على الكلمات المفتاحية والأيقونات البصرية) لتجنب أي تداخل أو نصوص طويلة، ومطابق لاشتراطات المجلات العلمية.")
 st.markdown("---")
 
-st.sidebar.title("🔑 Gemini API Configuration")
-st.sidebar.markdown("أدخل مفتاح الـ API لتفعيل ميزات الذكاء الاصطناعي القادمة:")
-api_key_input = st.sidebar.text_input("Enter Gemini API Key:", type="password", value="")
+st.subheader("✍️ أدخل خطوات العملية المخبرية (مختصرة ومركزة لكل مرحلة):")
+default_steps = """1. Stage 1: Raw Biomass Washing
+2. Stage 2: Oven Drying @ 100°C
+3. Stage 3: Chemical Treatment & Stirring
+4. Stage 4: Final Pure Bio-Adsorbent Yield"""
 
-st.subheader("✍️ أدخل خطوات العملية المخبرية (كل خطوة في سطر منفصل):")
-default_steps = """1. Raw Material Preparation: Washing and cleaning fish scales.
-2. Drying Process: Oven drying at 100°C for 12 hours.
-3. Grinding & Sieving: Mechanical grinding to obtain fine powder.
-4. Chemical Treatment: Deproteinization using NaOH solution.
-5. Final Product: Chitin/Chitosan powder yield."""
+steps_input = st.text_area("خطوات البروتوكول المخبري:", value=default_steps, height=160)
+abstract_title = st.text_input("عنوان المخطط الرسومي:", value="Extraction and Synthesis Workflow of Bio-Adsorbent")
 
-steps_input = st.text_area("خطوات البروتوكول المخبري:", value=default_steps, height=180)
-abstract_title = st.text_input("عنوان المخطط الرسومي:", value="Extraction and Synthesis Workflow of Chitosan from Fish Scales")
-
-if st.button("🚀 توليد المخطط الرسومي النظيف بصيغة PowerPoint", key="gen_clean_abstract"):
+if st.button("🚀 توليد وتحميل ملف الـ PowerPoint النظيف", key="gen_clean_ppt"):
     if not steps_input.strip():
         st.error("الرجاء إدخال خطوة واحدة على الأقل.")
     else:
-        with st.spinner("جاري تصميم المخطط المخبري المنظم..."):
+        with st.spinner("جاري تصميم الشريحة الهندسية النظيفة..."):
             prs = Presentation()
-            prs.slide_width = Inches(13.33)
+            prs.slide_width = Inches(13.33)  # قياس عرض الشريحة 16:9
             prs.slide_height = Inches(7.5)
             
-            blank_slide_layout = prs.slide_layouts[6]
-            slide = prs.slides.add_slide(blank_slide_layout)
+            blank_layout = prs.slide_layouts[6]
+            slide = prs.slides.add_slide(blank_layout)
             
-            # عنوان الشريحة الرئيسي
+            # عنوان الشريحة الأكاديمي
             title_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.4), Inches(11.73), Inches(0.8))
             tf_title = title_box.text_frame
             tf_title.word_wrap = True
@@ -57,9 +52,9 @@ if st.button("🚀 توليد المخطط الرسومي النظيف بصيغ�
             num_steps = len(steps)
             
             if num_steps > 0:
-                start_left = Inches(0.6)
+                start_left = Inches(0.8)
                 start_top = Inches(1.8)
-                total_width = Inches(12.13)
+                total_width = Inches(11.73)
                 
                 box_width = (total_width / num_steps) - Inches(0.25)
                 box_height = Inches(4.8)
@@ -68,7 +63,7 @@ if st.button("🚀 توليد المخطط الرسومي النظيف بصيغ�
                 for i, step_text in enumerate(steps):
                     current_left = start_left + i * (box_width + spacing)
                     
-                    # صندوق الخلفية لكل خطوة (خلفية بيضاء ونظيفة بدون تداخل)
+                    # 1. صندوق الخلفية البيضاء النظيفة لكل مرحلة
                     card = slide.shapes.add_shape(
                         MSO_SHAPE.ROUNDED_RECTANGLE, 
                         current_left, start_top, box_width, box_height
@@ -78,7 +73,7 @@ if st.button("🚀 توليد المخطط الرسومي النظيف بصيغ�
                     card.line.color.rgb = RGBColor(180, 190, 200)
                     card.line.width = Pt(1.2)
                     
-                    # مساحة مخصصة لأيقونة الأداة المخبرية في أعلى الصندوق
+                    # 2. مربع مخصص للأيقونة البصرية في أعلى الصندوق
                     icon_size = Inches(1.4)
                     icon_left = current_left + (box_width / 2) - (icon_size / 2)
                     icon_top = start_top + Inches(0.3)
@@ -88,7 +83,7 @@ if st.button("🚀 توليد المخطط الرسومي النظيف بصيغ�
                     icon.fill.fore_color.rgb = RGBColor(235, 242, 250)
                     icon.line.color.rgb = RGBColor(150, 170, 190)
                     
-                    # صندوق النصوص للوصف (بمساحة كافية وواضحة)
+                    # 3. صندوق النص المختصر والمركز أسفل الأيقونة
                     tb = slide.shapes.add_textbox(
                         current_left + Inches(0.1), 
                         start_top + Inches(1.8), 
@@ -98,43 +93,53 @@ if st.button("🚀 توليد المخطط الرسومي النظيف بصيغ�
                     tf = tb.text_frame
                     tf.word_wrap = True
                     
-                    # رقم المرحلة
+                    # تقسيم النص إلى عنوان المرحلة ووصفها المختصر إذا وجد نقطتان
+                    if ":" in step_text:
+                        parts = step_text.split(":", 1)
+                        stage_label = parts[0].strip()
+                        stage_desc = parts[1].strip()
+                    else:
+                        stage_label = f"Stage {i+1}"
+                        stage_desc = step_text
+                    
+                    # عنوان المرحلة (مثل Stage 1)
                     p_num = tf.paragraphs[0]
-                    p_num.text = f"Stage {i+1}"
+                    p_num.text = stage_label
                     p_num.font.name = "Times New Roman"
                     p_num.font.size = Pt(13)
                     p_num.font.bold = True
                     p_num.font.color.rgb = RGBColor(50, 90, 140)
                     p_num.alignment = PP_ALIGN.CENTER
                     
-                    # نص الخطوة التفصيلي
+                    # الوصف العلمي المختصر والموجز
                     p_desc = tf.add_paragraph()
-                    p_desc.text = step_text
+                    p_desc.text = stage_desc
                     p_desc.font.name = "Times New Roman"
                     p_desc.font.size = Pt(11)
                     p_desc.font.color.rgb = RGBColor(40, 40, 40)
                     p_desc.alignment = PP_ALIGN.CENTER
                     
-                    # رسم سهم التتابع بين الخطوات بمسافة آمنة
+                    # 4. سهم التتابع الهندسي بمسافة آمنة وواضحة
                     if i < num_steps - 1:
-                        arrow_left = current_left + box_width + Inches(0.02)
+                        arrow_left = current_left + box_width + Inches(0.04)
                         arrow_top = start_top + (box_height / 2) - Inches(0.2)
                         arrow = slide.shapes.add_shape(
                             MSO_SHAPE.RIGHT_ARROW,
-                            arrow_left, arrow_top, Inches(0.21), Inches(0.21)
+                            arrow_left, arrow_top, Inches(0.18), Inches(0.18)
                         )
                         arrow.fill.solid()
-                        arrow.fill.fore_color.rgb = RGBColor(100, 100, 100)
+                        arrow.fill.fore_color.rgb = RGBColor(110, 110, 110)
                         arrow.line.color.rgb = RGBColor(80, 80, 80)
 
+            # حفظ الملف في الذاكرة لتنزيله فوراً
             buffer = BytesIO()
             prs.save(buffer)
             buffer.seek(0)
             
-            st.success("تم توليد المخطط المخبري البصري بنجاح!")
+            st.success("تم توليد ملف الـ PowerPoint النظيف بنجاح!")
             st.download_button(
-                label="📥 تحميل ملف PowerPoint القابل للتعديل (.pptx)",
+                label="📥 تنزيل ملف PowerPoint النموذجي (.pptx)",
                 data=buffer,
-                file_name="Clean_Lab_Workflow_Abstract.pptx",
+                file_name="Clean_Graphical_Abstract_Example.pptx",
                 mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
             )
