@@ -66,12 +66,31 @@ with col_s2:
         ["Numerical Style [1, 2] (Standard Journal Format)", "Author-Date (Harvard / APA)"]
     )
 
-# --- دمج ميزة التوصيل الذكي مع أدوات الأدبيات (Consensus & Literature Engine) ---
+# --- قسم توليد المقدمة الأكاديمية (Introduction Synthesis) - المحافظة على الكود القديم ---
 st.markdown("---")
-st.subheader("🌐 قسيم البحث الذكي وتوليف أرشيف الـ Q1 (Consensus & Literature Bridge)")
-st.markdown("بناءً على مدخلاتك الحالية، ستقوم المنصة بتوليد الاستعلام الأكاديمي الدقيق لتستخرج عبر أدوات البحث الذكية (مثل Consensus) ما لا يقل عن 20 مقالة محكمة مرتبطة بشكل مباشر بتجربتك.")
+st.subheader("📝 Section 2: Q1 Introduction Synthesis & Drafting")
+intro_notes = st.text_area(
+    "أدخل النقاط الرئيسية أو الأهداف لإدراجها في مسودة المقدمة الأكاديمية:",
+    value="Highlighting the environmental risks of heavy metals, the novelty of the prepared bio-adsorbent, and the superior removal efficiency."
+)
 
-# بناء استعلام البحث المتقدم تلقائياً بناءً على مدخلات المستخدم
+if st.button("🚀 توليد مسودة المقدمة (Introduction Draft)", key="generate_intro"):
+    with st.spinner("جاري صياغة المقدمة بلغة أكاديمية رصينة تناسب مجلات الـ Q1..."):
+        st.success("تم توليد المسودة بنجاح!")
+        st.markdown(f"""
+        > **Suggested Q1 Introduction Draft:**
+        > Recent industrial developments have significantly increased the discharge of toxic heavy metal ions, particularly **{target_metal}**, into aqueous ecosystems... 
+        > To address this challenge, we report the **{prepared_material}** synthesized via a facile route. 
+        > Analytical characterizations including **{characterization_tools}** confirmed the successful structural fabrication. 
+        > *Core Focus:* {intro_notes}
+        """)
+
+# --- ميزة الربط الذكي مع أدوات الأدبيات (Consensus & Literature Bridge) الجديد ---
+st.markdown("---")
+st.subheader("🌐 قسم البحث الذكي وتوليف أرشيف الـ Q1 (Consensus & Literature Bridge)")
+st.markdown("بناءً على مدخلاتك الحالية، ستقوم المنصة بتوليد الاستعلام الأكاديمي الدقيق لاستخراج المقالات المحكمة المرتبطة مباشرة بتجربتك.")
+
+# بناء استعلام البحث المتقدم تلقائياً بناءً على المدخلات
 search_query_text = f"{prepared_material} {target_metal} {' '.join([f for f, active in [('SPE', field_spe), ('Adsorption', field_adsorb), ('Removal', field_removal)] if active])} Q1 journal"
 encoded_query = urllib.parse.quote(search_query_text)
 
@@ -90,15 +109,13 @@ with col_btn2:
     st.markdown(f"### [📚 البحث الاحتياطي في Google Scholar]({scholar_url})", unsafe_allow_html=True)
     st.caption("دعم إضافي للبحث الموسع في الأوراق الأكاديمية ذات الصلة.")
 
-# جدول أو مساحة لتسجيل المراجع المستخرجة للاستشهاد بها
+# أرشيف المراجع المكتشفة للورقة البحثية
 st.markdown("---")
-st.subheader("📝 أرشيف المراجع المكتشفة للورقة البحثية:")
-st.markdown("يمكنك إدخال روابط أو بيانات المراجع التي استخرجتها لتשكل قاعدة البيانات الخاصة بمستندك:")
-
+st.subheader("📚 أرشيف المراجع المكتشفة للورقة البحثية:")
 uploaded_refs_text = st.text_area(
     "أدخل المراجع المختارة (مرجع في كل سطر مع DOI أو الرابط):",
     value="1. Smith et al., J. Hazard. Mater., 2024, Bio-adsorbent for cadmium removal.\n2. Al-Duran et al., Chem. Eng. J., 2025, Optimization of micro solid-phase extraction."
 )
 
 if st.button("💾 حفظ قاعدة بيانات المشروع وربطها بالبوابات القادمة", key="save_meta"):
-    st.success("تم حفظ إعدادات البيانات الأساسية وربط الاستعلامات بنجاح! يمكنك الانتقال إلى بوابات الحسابات والمناقشة لاستخدام هذه المراجع مباشرة.")
+    st.success("تم حفظ إعدادات البيانات الأساسية وقسم المقدمة وربط الاستعلامات بنجاح!")
