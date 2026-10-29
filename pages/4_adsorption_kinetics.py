@@ -165,4 +165,81 @@ else:  # العربية
 
     par_title = "حسابات المتوسطات للقياسات الثلاثية المتوازية"
     par_desc = "إدخال قراءات القياسات الثلاثية المتكررة لاستخراج المتوسط الحسابي والانحراف المعياري بدقة تامة."
-    p1_
+    p1_lbl = "القراءة الأولى (Run 1):"
+    p2_lbl = "القراءة الثانية (Run 2):"
+    p3_lbl = "القراءة الثالثة (Run 3):"
+    par_btn = "حساب المتوسط والانحراف المعياري"
+    par_succ = "تمت الحسابات بنجاح!"
+    mean_lbl = "المتوسط الحسابي (Mean)"
+    std_lbl = "الانحراف المعياري (Standard Deviation - SD)"
+
+# --- عرض الهيدر ---
+st.markdown(f"""
+    <div class="custom-header">
+        <h1>{t_title}</h1>
+        <p>{t_desc}</p>
+    </div>
+""", unsafe_allow_html=True)
+
+# --- تقسيم البوابة إلى تبويبات رئيسية ---
+tab_kinetics, tab_isotherm, tab_parallel = st.tabs([
+    tab1_name, 
+    tab2_name, 
+    tab3_name
+])
+
+# =========================================================================
+# 1. تبويب نماذج الحركية
+# =========================================================================
+with tab_kinetics:
+    st.subheader(kin_title)
+    st.markdown(kin_desc)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        qe_exp = st.number_input(qe_exp_lbl, value=25.5)
+    with col2:
+        contact_time = st.text_input(time_lbl, value="0, 10, 30, 60, 120, 240")
+        
+    if st.button(kin_btn, key="btn_kinetics"):
+        st.success(kin_succ)
+        st.markdown(f"### {kin_results_title}")
+        st.info(kin_p_info)
+
+# =========================================================================
+# 2. تبويب متساويات الحرارة
+# =========================================================================
+with tab_isotherm:
+    st.subheader(iso_title)
+    st.markdown(iso_desc)
+    
+    iso_col1, iso_col2 = st.columns(2)
+    with iso_col1:
+        st.text_input(c0_lbl, value="10, 25, 50, 100, 200")
+    with iso_col2:
+        st.text_input(qe_lbl, value="8.2, 18.5, 32.1, 55.4, 85.0")
+        
+    if st.button(iso_btn, key="btn_iso"):
+        st.success(iso_succ)
+        st.markdown(f"### {iso_results_title}")
+        st.info(iso_p_info)
+
+# =========================================================================
+# 3. تبويب القياسات الثلاثية المتوازية
+# =========================================================================
+with tab_parallel:
+    st.subheader(par_title)
+    st.markdown(par_desc)
+    
+    p1 = st.number_input(p1_lbl, value=10.2)
+    p2 = st.number_input(p2_lbl, value=10.5)
+    p3 = st.number_input(p3_lbl, value=10.3)
+    
+    if st.button(par_btn, key="btn_parallel"):
+        values = [p1, p2, p3]
+        mean_val = np.mean(values)
+        std_val = np.std(values, ddof=1)
+        
+        st.success(par_succ)
+        st.metric(label=mean_lbl, value=f"{mean_val:.3f}")
+        st.metric(label=std_lbl, value=f"{std_val:.3f}")
