@@ -117,7 +117,7 @@ st.markdown(f"""
 # --- حقل إدخال النص العشوائي أو غير المنظم ---
 st.markdown(f"### {sec1_label}")
 raw_protocol_input = st.text_area(
-    "Enter text here", 
+    "Enter text here:", 
     value=default_text, 
     height=200
 )
