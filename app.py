@@ -169,7 +169,7 @@ st.markdown("---")
 # ==================== القسم الثاني: مركز صياغة المقدمة الذكي التلقائي ====================
 st.markdown(f"### {sec2_title}")
 
-st.markdown("مستودع مقالات المراجعة (ارفع ملفات الـ PDF هنا):")
+st.markdown("Review article repository (upload PDF files here):")
 sources_sec2 = st.file_uploader(t_upload_sec2, type=["pdf", "txt"], accept_multiple_files=True, key="sec2_files")
 
 extracted_pdf_text = ""
