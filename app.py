@@ -74,16 +74,29 @@ if "authenticated" not in st.session_state:
 if "current_user" not in st.session_state:
     st.session_state.current_user = ""
 
-# --- الشريط الجانبي الموحد والنظيف ---
+# --- الشريط الجانبي ---
 with st.sidebar:
     if st.session_state.authenticated:
         st.success(f"Status: Authenticated ({st.session_state.current_user})")
         st.markdown("---")
-        # زر تسجيل خروج مباشر ومبسط
+        # زر تسجيل خروج مباشر
         if st.button("Logout", use_container_width=True):
             st.session_state.authenticated = False
             st.session_state.current_user = ""
             st.rerun()
+        st.markdown("---")
+        
+        # --- عرض الصفحات الفرعية حصرياً بعد تسجيل الدخول ---
+        st.markdown("### Analytical Modules")
+        st.page_link("modules/0_Introduction_Hub.py", label="Introduction Hub")
+        st.page_link("modules/1_literature_hub.py", label="Literature Hub")
+        st.page_link("modules/2_optimization_parameters.py", label="Optimization Parameters")
+        st.page_link("modules/3_characterization_analysis.py", label="Characterization Analysis")
+        st.page_link("modules/4_adsorption_kinetics.py", label="Adsorption Kinetics")
+        st.page_link("modules/5_graphical_abstract.py", label="Graphical Abstract")
+        st.page_link("modules/6_Claude_Literature_Hub.py", label="Claude Literature Hub")
+        st.page_link("modules/7_Claude_Optimization_Hub.py", label="Claude Optimization Hub")
+        
         st.markdown("---")
         st.caption("ChemResearch AI - Q1 Analytical Engine")
     else:
@@ -92,9 +105,9 @@ with st.sidebar:
         st.markdown("---")
         st.caption("ChemResearch AI - Q1 Analytical Engine")
 
-# --- محتوى الصفحة الرئيسية (Dashboard Hub) ---
+# --- محتوى المنصة الرئيسي ---
 if not st.session_state.authenticated:
-    # واجهة تسجيل الدخول
+    # واجهة تسجيل الدخول (لن تظهر أي صفحة فرعية في الشريط الجانبي هنا أبداً)
     st.markdown("""
         <div class="custom-header" style="text-align: center;">
             <h1>ChemResearch AI: Secure Access Portal</h1>
@@ -119,7 +132,7 @@ if not st.session_state.authenticated:
                 st.error("Invalid credentials. Please verify your researcher ID and password.")
 
 else:
-    # اللوحة التعريفية الأصلية للـ Dashboard بعد تسجيل الدخول
+    # لوحة الترحيب بعد تسجيل الدخول بنجاح
     st.markdown("""
         <div class="custom-header">
             <h1>ChemResearch AI: Welcome to Main Workspace</h1>
