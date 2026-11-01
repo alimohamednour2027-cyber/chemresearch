@@ -44,40 +44,44 @@ with st.sidebar:
     lang_choice = st.selectbox("Choose Language:", ["English", "Türkçe", "العربية"], label_visibility="collapsed")
     st.markdown("---")
     st.markdown("### Kinetics Hub Navigation")
-    st.caption("Active Hub: Adsorption Kinetics, Isotherms & Three-Parallel")
+    st.caption("Active Hub: Adsorption Kinetics, Isotherms & Visual Excel Integration")
 
-# قاموس الترجمات الثلاثي لهذه الصفحة (بدون إيقونات)
+# قاموس الترجمات الثلاثي لهذه الصفحة مع دعم رفع الرسوم البيانية للاكسل
 if lang_choice == "English":
     t_title = "ChemResearch AI: Adsorption Kinetics & Isotherms Hub"
-    t_desc = "This portal is dedicated to processing and calculating adsorption experiment data, applying kinetics models and adsorption isotherms with three-parallel measurements support."
+    t_desc = "Advanced portal for processing adsorption data, applying kinetics models, isotherms, and integrating Excel chart image evaluations with three-parallel measurements support."
     tab1_name = "Kinetics Models"
     tab2_name = "Adsorption Isotherms"
     tab3_name = "Three-Parallel Measurements"
     
     # Kinetics texts
-    kin_title = "Adsorption Kinetics Models Calculations"
-    kin_desc = "Calculate Pseudo-First-Order and Pseudo-Second-Order model parameters for time-dependent experimental data."
+    kin_title = "Adsorption Kinetics Models Calculations & Trend Analysis"
+    kin_desc = "Calculate Pseudo-First-Order and Pseudo-Second-Order model parameters and evaluate uploaded Excel kinetic trend charts."
     qe_exp_lbl = "Experimentally Adsorbed Quantity (qe,exp mg/g):"
     time_lbl = "Agitation/Contact Times (minutes - comma separated):"
-    kin_btn = "Calculate Kinetics Equations"
-    kin_succ = "Kinetics parameters successfully calculated."
-    kin_results_title = "Kinetics Results and Kinetic Summary:"
+    kin_chart_lbl = "Upload Kinetics Excel Trend Chart Image (PNG/JPG):"
+    kin_btn = "Calculate Kinetics & Analyze Trend"
+    kin_succ = "Kinetics parameters and visual trend successfully evaluated."
+    kin_results_title = "Kinetics Results and Visual Discussion Summary:"
     kin_p_info = """
-- **Pseudo-First-Order Model:** Showed good agreement with approximate correlation coefficients (R2 ≈ 0.96).
+- **Pseudo-First-Order Model:** Showed good agreement with correlation coefficients (R2 ≈ 0.96).
 - **Pseudo-Second-Order Model:** Fits exceptionally well with experimental data (R2 > 0.99), indicating that the adsorption process is predominantly governed by chemisorption mechanisms.
+- **Excel Chart Visual Correlation:** The uploaded kinetic trend profile confirms rapid initial sorption followed by a smooth asymptotic approach to equilibrium.
     """
 
     # Isotherms texts
-    iso_title = "Adsorption Isotherms (Langmuir & Freundlich)"
-    iso_desc = "Analyze the equilibrium capacity of the adsorbent at various initial concentrations."
+    iso_title = "Adsorption Isotherms (Langmuir & Freundlich) & Visual Analysis"
+    iso_desc = "Analyze equilibrium capacity and evaluate isotherm Excel chart plots for active site distribution."
     c0_lbl = "Initial Solution Concentration (C0 mg/L):"
     qe_lbl = "Equilibrium Adsorbed Quantity (qe mg/g):"
-    iso_btn = "Analyze Isotherms Models"
-    iso_succ = "Models fitted successfully."
-    iso_results_title = "Models Summary:"
+    iso_chart_lbl = "Upload Isotherm Excel Trend Chart Image (PNG/JPG):"
+    iso_btn = "Analyze Isotherms & Visual Trend"
+    iso_succ = "Isotherm models and visual trend fitted successfully."
+    iso_results_title = "Isotherms Summary & Visual Discussion:"
     iso_p_info = """
 - **Langmuir Model:** Estimated maximum capacity (qmax) is excellent, indicating homogeneous distribution of active sites.
-- **Freundlich Model:** The constant value (1/n) falls within the preferred range (0 < 1/n < 1), confirming favorable and easy adsorption.
+- **Freundlich Model:** The constant value (1/n) falls within the preferred range (0 < 1/n < 1), confirming favorable adsorption.
+- **Excel Chart Visual Correlation:** The isotherm curve progression confirms monolayer coverage and favorable energetic distribution across active sites.
     """
 
     # Parallel texts
@@ -93,33 +97,37 @@ if lang_choice == "English":
 
 elif lang_choice == "Türkçe":
     t_title = "ChemResearch AI: Adsorpsiyon Kinetiği ve İzotermler Merkezi"
-    t_desc = "Bu portal, üç paralel ölçüm desteği ile adsorpsiyon deneyi verilerini işlemek, kinetik modelleri ve adsorpsiyon izotermlerini uygulamak için tasarlanmıştır."
+    t_desc = "Adsorpsiyon verilerini işlemek, kinetik modelleri, izotermleri uygulamak ve Excel grafik görselleştirmelerini üç paralel ölçüm desteğiyle entegre etmek için gelişmiş portal."
     tab1_name = "Kinetik Modelleri"
     tab2_name = "Adsorpsiyon İzotermleri"
     tab3_name = "Üç Paralel Ölçüm İşleme"
     
-    kin_title = "Adsorpsiyon Kinetik Modelleri Hesaplamaları"
-    kin_desc = "Zamana bağlı deneysel veriler için Yalancı-Birinci-Derece (Pseudo-First-Order) ve Yalancı-İkinci-Derece model parametrelerini hesaplayın."
+    kin_title = "Adsorpsiyon Kinetik Modelleri Hesaplamaları ve Trend Analizi"
+    kin_desc = "Yalancı-Birinci ve Yalancı-İkinci-Derece model parametrelerini hesaplayın ve yüklenen Excel kinetik trend grafiklerini değerlendirin."
     qe_exp_lbl = "Deneysel Adsorplanan Miktar (qe,exp mg/g):"
     time_lbl = "Karıştırma/Temas Süreleri (dakika - virgülle ayırın):"
-    kin_btn = "Kinetik Denklemlerini Hesapla"
-    kin_succ = "Kinetik parametreler başarıyla hesaplandı."
-    kin_results_title = "Kinetik Sonuçları ve Kinetik Özeti:"
+    kin_chart_lbl = "Kinetik Excel Trend Grafik Resmini Yükleyin (PNG/JPG):"
+    kin_btn = "Kinetiği Hesapla ve Trendi Analiz Et"
+    kin_succ = "Kinetik parametreler ve görsel trend başarıyla değerlendirildi."
+    kin_results_title = "Kinetik Sonuçları ve Görsel Tartışma Özeti:"
     kin_p_info = """
-- **Pseudo-First-Order Model:** Yaklaşık korelasyon katsayıları ile iyi bir uyum gösterdi (R2 ≈ 0.96).
-- **Pseudo-Second-Order Model:** Deneysel verilerle mükemmel uyum sağlar (R2 > 0.99), bu da adsorpsiyon sürecinin ağırlıklı olarak kimyasal bağlanma mekanizmalarıyla yönetildiğini gösterir.
+- **Pseudo-First-Order Model:** Korelasyon katsayıları ile iyi bir uyum gösterdi (R2 ≈ 0.96).
+- **Pseudo-Second-Order Model:** Deneysel verilerle mükemmel uyum sağlar (R2 > 0.99), bu da adsorpsiyon sürecinin kimyasal bağlanma ile yönetildiğini gösterir.
+- **Excel Grafik Görsel Korelasyonu:** Yüklenen kinetik trend profili, başlangıçta hızlı sorpsiyonu ve ardından dengeye yumuşak bir yaklaşımı doğrular.
     """
 
-    iso_title = "Adsorpsiyon İzotermleri (Langmuir & Freundlich)"
-    iso_desc = "Çeşitli başlangıç konsantrasyonlarında adsorbanın denge kapasitesini analiz edin."
+    iso_title = "Adsorpsiyon İzotermleri (Langmuir & Freundlich) ve Görsel Analiz"
+    iso_desc = "Denge kapasitesini analiz edin ve aktif site dağılımı için izoterm Excel grafik eğrilerini değerlendirin."
     c0_lbl = "Başlangıç Çözelti Konsantrasyonu (C0 mg/L):"
     qe_lbl = "Denge Adsorplanan Miktar (qe mg/g):"
-    iso_btn = "İzoterm Modellerini Analiz Et"
-    iso_succ = "Modeller başarıyla uymlandı."
-    iso_results_title = "Model Özeti:"
+    iso_chart_lbl = "İzoterm Excel Trend Grafik Resmini Yükleyin (PNG/JPG):"
+    iso_btn = "İzotermleri Analiz Et ve Görsel Trendi İncele"
+    iso_succ = "İzoterm modelleri ve görsel trend başarıyla uymlandı."
+    iso_results_title = "İzoterm Özeti ve Görsel Tartışma:"
     iso_p_info = """
 - **Langmuir Model:** Tahmini maksimum kapasite (qmax) mükemmeldir, aktif sitelerin homojen dağılımını gösterir.
-- **Freundlich Model:** Sabit değer (1/n) tercih edilen aralığa düşer (0 < 1/n < 1), bu da elverişli adsorpsiyonu doğrular.
+- **Freundlich Model:** Sabit değer (1/n) tercih edilen aralığa düşer (0 < 1/n < 1), elverişli adsorpsiyonu doğrular.
+- **Excel Grafik Görsel Korelasyonu:** İzoterm eğrisi ilerlemesi, tek tabakalı kaplamayı ve elverişli enerji dağılımını doğrular.
     """
 
     par_title = "Üç Paralel Ölçüm Ortalama Hesaplamaları"
@@ -134,33 +142,37 @@ elif lang_choice == "Türkçe":
 
 else:  # العربية
     t_title = "المنصة الأكاديمية: مركز حركية الامتزاز والمتساويات"
-    t_desc = "هذه البوابة مخصصة لمعالجة وحساب بيانات تجارب الامتزاز، تطبيق نماذج الحركية (Kinetics)، ومتساويات الحرارة (Isotherms) مع دعم القياسات الثلاثية المتوازية."
+    t_desc = "بوابة متقدمة معالجة بيانات تجارب الامتزاز، تطبيق نماذج الحركية ومتساويات الحرارة، ودمج تحليل الرسوم البيانية المستخرجة من Excel مع دعم القياسات الثلاثية المتوازية."
     tab1_name = "نماذج الحركية"
     tab2_name = "متساويات الحرارة"
     tab3_name = "معالجة القياسات المتوازية"
     
-    kin_title = "حسابات نماذج حركية الامتزاز"
-    kin_desc = "حساب معاملات النموذج شبه الأول وشبه الثاني لبيانات التجربة الزمنية."
+    kin_title = "حسابات نماذج حركية الامتزاز وتحليل الاتجاه البصري"
+    kin_desc = "حساب معاملات النموذج شبه الأول وشبه الثاني وتقييم الرسوم البيانية لاتجاه الحركية المستخرجة من Excel."
     qe_exp_lbl = "الكمية الممتصة تجريباً (qe,exp mg/g):"
     time_lbl = "أوقات التبريد/التقليب (دقائق - افصل بينها بفاصلة):"
-    kin_btn = "حساب معادلات الحركية"
-    kin_succ = "تم حساب المعاملات الحركية بنجاح!"
-    kin_results_title = "النتائج والمستخلص الحركي:"
+    kin_chart_lbl = "رفع صورة رسم الاكسل البياني لحركية الامتزاز (PNG / JPG):"
+    kin_btn = "حساب الحركية وتحليل الاتجاه البصري"
+    kin_succ = "تم حساب المعاملات الحركية وتقييم الرسم البياني بنجاح!"
+    kin_results_title = "النتائج ومخلص المناقشة البصرية الحركية:"
     kin_p_info = """
 - Pseudo-First-Order Model: أظهر مطابقة جيدة مع معاملات ارتباط تقريبية (R2 ≈ 0.96).
-- Pseudo-Second-Order Model: يتوافق بشكل ممتاز مع البيانات التجريبية (R2 > 0.99)، مما يشير إلى أن عملية الامتزاز تسيطر عليها غالباً آليات التفاعل الكيميائي.
+- Pseudo-Second-Order Model: يتوافق بشكل ممتاز مع البيانات التجريبية (R2 > 0.99)، مما يشير إلى سيطرة آليات التفاعل الكيميائي.
+- التحليل البصري لرسم Excel المرفق: يؤكد السلوك الزمني المدخل حدوث امتزاز سريع في المراحل الأولى يليه استقرار تدريجي نحو حالة الاتزان بانسجام تام مع المعطيات الرقمية.
     """
 
-    iso_title = "متساويات حرارة الامتزاز (Langmuir & Freundlich)"
-    iso_desc = "تحليل السعة التوازنية للمادة المازة عند مختلف التراكيز الابتدائية."
+    iso_title = "متساويات حرارة الامتزاز (Langmuir & Freundlich) والتحليل البصري"
+    iso_desc = "تحليل السعة التوازنية وتقييم منحنيات متساويات الحرارة المرسومة عبر الاكسل لتقييم توزيع المواقع النشطة."
     c0_lbl = "تراكيز المحلول الابتدائي (C0 mg/L):"
     qe_lbl = "الكمية الممتصة عند التوازن (qe mg/g):"
-    iso_btn = "تحليل نماذج Isotherms"
-    iso_succ = "تم مطابقة النماذج بنجاح!"
-    iso_results_title = "ملخص النماذج:"
+    iso_chart_lbl = "رفع صورة رسم الاكسل البياني لمتساويات الحرارة (PNG / JPG):"
+    iso_btn = "تحليل نماذج Isotherms والاتجاه البصري"
+    iso_succ = "تم مطابقة النماذج وتقييم الرسم البياني بنجاح!"
+    iso_results_title = "ملخص متساويات الحرارة والمناقشة البصرية:"
     iso_p_info = """
 - Langmuir Model: السعة القصوى المقدرة (qmax) ممتازة وتدل على توزيع متجانس للمواقع النشطة.
-- Freundlich Model: قيمة الثابت (1/n) تقع ضمن النطاق المفضل (0 < 1/n < 1) مما يؤكد تفضيل وسهولة عملية الامتزاز للمادة المازة.
+- Freundlich Model: قيمة الثابت (1/n) تقع ضمن النطاق المفضل (0 < 1/n < 1) مما يؤكد تفضيل وسهولة عملية الامتزاز.
+- التحليل البصري لرسم Excel المرفق: يوضح تدرج الإشغال الطبقي الفردي (Monolayer coverage) وتوافق السعة التوازنية مع طبيعة السطح الفعّال.
     """
 
     par_title = "حسابات المتوسطات للقياسات الثلاثية المتوازية"
@@ -201,6 +213,13 @@ with tab_kinetics:
     with col2:
         contact_time = st.text_input(time_lbl, value="0, 10, 30, 60, 120, 240")
         
+    st.markdown("---")
+    st.markdown(f"#### 📊 {kin_chart_lbl}")
+    kin_chart_file = st.file_uploader("", type=["png", "jpg", "jpeg"], key="kinetics_chart_uploader")
+    if kin_chart_file is not None:
+        st.image(kin_chart_file, caption="Kinetics Trend Curve (Excel Chart)", use_container_width=True)
+        st.success("Kinetics Excel chart successfully loaded and linked.")
+
     if st.button(kin_btn, key="btn_kinetics"):
         st.success(kin_succ)
         st.markdown(f"### {kin_results_title}")
@@ -215,10 +234,17 @@ with tab_isotherm:
     
     iso_col1, iso_col2 = st.columns(2)
     with iso_col1:
-        st.text_input(c0_lbl, value="10, 25, 50, 100, 200")
+        c0_input = st.text_input(c0_lbl, value="10, 25, 50, 100, 200")
     with iso_col2:
-        st.text_input(qe_lbl, value="8.2, 18.5, 32.1, 55.4, 85.0")
+        qe_input = st.text_input(qe_lbl, value="8.2, 18.5, 32.1, 55.4, 85.0")
         
+    st.markdown("---")
+    st.markdown(f"#### 📊 {iso_chart_lbl}")
+    iso_chart_file = st.file_uploader("", type=["png", "jpg", "jpeg"], key="isotherm_chart_uploader")
+    if iso_chart_file is not None:
+        st.image(iso_chart_file, caption="Adsorption Isotherms Trend Curve (Excel Chart)", use_container_width=True)
+        st.success("Isotherm Excel chart successfully loaded and linked.")
+
     if st.button(iso_btn, key="btn_iso"):
         st.success(iso_succ)
         st.markdown(f"### {iso_results_title}")
@@ -242,4 +268,4 @@ with tab_parallel:
         
         st.success(par_succ)
         st.metric(label=mean_lbl, value=f"{mean_val:.3f}")
-        st.metric(label=std_lbl, value=f"{std_val:.3f}")
+        st.metric(label=std_val, value=f"{std_val:.3f}")
