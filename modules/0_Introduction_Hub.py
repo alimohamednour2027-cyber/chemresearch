@@ -1,10 +1,10 @@
 import streamlit as st
 from io import BytesIO
 from docx import Document
-from docx.shared import Pt
+from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import pypdf
-from google import genai
+import google.generativeai as genai
 
 # إعدادات صفحة الموقع
 st.set_page_config(
@@ -12,10 +12,9 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- تنسيق CSS المخصص للهيدر العلوي والشريط الجانبي (بدون إيقونات، أزرق داكن وفاتح) ---
+# --- تنسيق CSS المخصص للهيدر العلوي والشريط الجانبي ---
 st.markdown("""
     <style>
-    /* الهيدر العلوي - أزرق داكن مع خط أبيض غليظ */
     .stApp > header {
         background-color: transparent !important;
     }
@@ -37,8 +36,6 @@ st.markdown("""
         margin: 5px 0 0 0;
         font-size: 15px;
     }
-    
-    /* الشريط الجانبي - أزرق أقل حدة */
     [data-testid="stSidebar"] {
         background-color: #2b4c7e;
         color: #ffffff;
@@ -49,7 +46,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# عرض الهيدر الاحترافي
 st.markdown("""
     <div class="custom-header">
         <h1>ChemResearch AI Platform</h1>
@@ -57,24 +53,22 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# ==================== الحفاظ على البيانات عند تغيير الخيارات (Session State) ====================
 if "intro_output" not in st.session_state:
     st.session_state.intro_output = ""
 
-# ==================== الشريط الجانبي وإعدادات الـ API ====================
+# ==================== الشريط الجانبي لمفتاح Gemini ====================
 with st.sidebar:
     st.markdown("### Language Configuration")
     lang_choice = st.selectbox("Choose Language:", ["English", "Türkçe", "العربية"], label_visibility="collapsed")
 
     st.markdown("---")
-    st.markdown("### Gemini API Configuration")
+    st.markdown("### 🔑 Gemini API Configuration")
     api_key_input = st.text_input("Enter your Gemini API Key:", type="password", value="")
 
     st.markdown("---")
     st.markdown("### Literature Hub")
     t_upload_sec2 = "Upload Review Papers (PDFs)"
 
-# قاموس الترجمات الشامل (خالٍ تماماً من الإيقونات)
 if lang_choice == "English":
     sec1_title = "Section 1: Experiment & Research Metadata"
     sec2_title = "Section 2: AI-Synthesized Introduction & Professional Citations"
@@ -112,7 +106,7 @@ elif lang_choice == "Türkçe":
     t_citation_style = "Atif Stili:"
     t_btn_sec2 = "Giris ve Profesyonel Atiflari Sentezle"
     t_spinner = "Yapay zeka PDF'lerinizi analiz ediyor ve profesyonel bir sentez olusturuyor..."
-    t_success_gen = "Giris ve profesyonel atiflar basariyla sentezlendi."
+    t_success_gen = "Giriş ve profesyonel atıflar başarıyla sentezlendi."
     t_download_btn = "Giris ve Referanslari Word Olarak Indir (.docx)"
 
 else:  # العربية
@@ -135,7 +129,6 @@ else:  # العربية
     t_success_gen = "تمت صياغة المقدمة وتوثيقها بالمراجع بأسلوب علمي احترافي ناجح."
     t_download_btn = "تحميل المقدمة وقائمة المراجع كملف Word نظيف (.docx)"
 
-# ==================== القسم الأول: بيانات التجربة والبحث ====================
 st.markdown(f"### {sec1_title}")
 
 col1, col2 = st.columns(2)
@@ -166,10 +159,8 @@ fields_text = ", ".join(selected_fields)
 
 st.markdown("---")
 
-# ==================== القسم الثاني: مركز صياغة المقدمة الذكي التلقائي ====================
 st.markdown(f"### {sec2_title}")
-
-st.markdown("مستودع مقالات المراجعة (ارفع ملفات الـ PDF هنا):")
+st.markdown("Review article repository (upload PDF files here):")
 sources_sec2 = st.file_uploader(t_upload_sec2, type=["pdf", "txt"], accept_multiple_files=True, key="sec2_files")
 
 extracted_pdf_text = ""
@@ -187,22 +178,27 @@ if sources_sec2:
 
 if st.button(t_btn_sec2, key="btn_sec2"):
     if not api_key_input:
-        st.error("Please enter your Gemini API Key in the sidebar to enable AI synthesis.")
+        st.error("الرجاء إدخال مفتاح Gemini API Key في الشريط الجانبي لتفعيل النظام.")
+    elif not extracted_pdf_text:
+        st.error("الرجاء رفع ملفات المراجعة (PDF) لكي يقوم النظام بتحليلها وصياغة المقدمة بناءً عليها.")
     else:
         with st.spinner(t_spinner):
             try:
-                client = genai.Client(api_key=api_key_input)
+                genai.configure(api_key=api_key_input)
+                # استخدام النموذج المحدث والموصى به من جوجل
+                model = genai.GenerativeModel('gemini-3.8-flash')
                 
                 prompt = f"""
                 You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
-                Your task is to write a rigorous, comprehensive, and entirely original Introduction section for a PhD-level research article.
+                Your task is to analyze the provided extracted text from review articles and write a rigorous, comprehensive, and entirely original Introduction section for a PhD-level research article.
                 
-                PROFESSIONAL CITATION & FORMATTING RULES:
-                1. STRICTLY DO NOT use Markdown asterisks (*) or bold/italic markdown symbols anywhere in the text (no *, no **). Keep plain clean text.
-                2. Use natural academic citation distribution: A reference can be cited where appropriate across different sections of the introduction.
-                3. Build a logical funnel introduction (Global environmental impact -> Limitations of conventional methods -> Research Gap -> Novelty of {adsorbent_material}).
-                4. At the end of the text, provide a clean References section listing unique literature derived from the uploaded sources in correct academic order, without any markdown stars.
-                5. Avoid complex LaTeX formatting (use standard text formats like Cu2+, Cd2+, qm, R2 > 0.99).
+                STRICT COMPLIANCE RULES FOR ANALYSIS & CITATION:
+                1. Base the scientific background, limitations, and literature gaps EXCLUSIVELY and STRICTLY on the provided Extracted Text from Uploaded Review Papers below.
+                2. Use natural academic citation distribution matching the uploaded sources (numerical format [1], [2]).
+                3. Build a logical funnel introduction: Global environmental impact -> Limitations of conventional methods based on literature -> Research Gap -> Novelty and objectives of {adsorbent_material}.
+                4. At the end of the text, provide a clean References section listing unique literature derived strictly from the uploaded review files.
+                5. STRICTLY DO NOT use Markdown asterisks (*) or bold/italic markdown symbols anywhere in the text. Keep plain clean text.
+                6. Avoid complex LaTeX formatting (use standard text formats like Cu2+, Cd2+, qm, R2 > 0.99).
                 
                 Research Metadata:
                 - Title: {paper_title}
@@ -210,39 +206,40 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 - Prepared Material/Sorbent: {adsorbent_material}
                 - Fields: {fields_text}
                 - Characterization Tools: {characterization_tools}
+                - Analytical Instrument: {analytical_instrument}
                 - Journal Standard: {journal_style}
                 - Citation Style: {citation_format}
                 
                 Extracted Text from Uploaded Review Papers:
-                {extracted_pdf_text[:25000]}
+                {extracted_pdf_text[:30000]}
                 
                 Write in formal academic English suitable for Q1 journals.
                 """
                 
-                response = client.models.generate_content(
-                    model="gemini-2.5-flash",
-                    contents=prompt,
-                )
-                
+                response = model.generate_content(prompt)
                 cleaned_text = response.text.replace('*', '').replace('###', '')
                 st.session_state.intro_output = cleaned_text
             except Exception as e:
-                st.error(f"An error occurred during AI generation: {e}")
+                try:
+                    model_fallback = genai.GenerativeModel('gemini-1.5-flash')
+                    response = model_fallback.generate_content(prompt)
+                    cleaned_text = response.text.replace('*', '').replace('###', '')
+                    st.session_state.intro_output = cleaned_text
+                except Exception as e2:
+                    st.error(f"حدث خطأ أثناء الاتصال: {e2}")
 
-# عرض النتائج
 if st.session_state.intro_output:
     st.markdown("#### Generated Introduction & Professional Citations Preview:")
     st.markdown(st.session_state.intro_output)
     st.success(t_success_gen)
 
     doc = Document()
-    
     sections = doc.sections
     for section in sections:
-        section.top_margin = Inches(1) if 'Inches' in globals() else doc.sections[0].top_margin
-        section.bottom_margin = doc.sections[0].bottom_margin
-        section.left_margin = doc.sections[0].left_margin
-        section.right_margin = doc.sections[0].right_margin
+        section.top_margin = Inches(1)
+        section.bottom_margin = Inches(1)
+        section.left_margin = Inches(1)
+        section.right_margin = Inches(1)
 
     p_title = doc.add_paragraph()
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
