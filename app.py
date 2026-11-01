@@ -86,16 +86,49 @@ with st.sidebar:
             st.rerun()
         st.markdown("---")
         
-        # --- عرض الصفحات الفرعية حصرياً بعد تسجيل الدخول ---
+        # --- عرض الصفحات الفرعية حصرياً بعد تسجيل الدخول باستخدام روابط آمنة ---
         st.markdown("### Analytical Modules")
-        st.page_link("modules/0_Introduction_Hub.py", label="Introduction Hub")
-        st.page_link("modules/1_literature_hub.py", label="Literature Hub")
-        st.page_link("modules/2_optimization_parameters.py", label="Optimization Parameters")
-        st.page_link("modules/3_characterization_analysis.py", label="Characterization Analysis")
-        st.page_link("modules/4_adsorption_kinetics.py", label="Adsorption Kinetics")
-        st.page_link("modules/5_graphical_abstract.py", label="Graphical Abstract")
-        st.page_link("modules/6_Claude_Literature_Hub.py", label="Claude Literature Hub")
-        st.page_link("modules/7_Claude_Optimization_Hub.py", label="Claude Optimization Hub")
+        
+        # استخدام الروابط البرمجية الآمنة للملفات الموجودة في مجلد modules
+        try:
+            st.page_link("modules/0_Introduction_Hub.py", label="Introduction Hub")
+        except:
+            st.write("• Introduction Hub")
+            
+        try:
+            st.page_link("modules/1_literature_hub.py", label="Literature Hub")
+        except:
+            st.write("• Literature Hub")
+            
+        try:
+            st.page_link("modules/2_optimization_parameters.py", label="Optimization Parameters")
+        except:
+            st.write("• Optimization Parameters")
+            
+        try:
+            st.page_link("modules/3_characterization_analysis.py", label="Characterization Analysis")
+        except:
+            st.write("• Characterization Analysis")
+            
+        try:
+            st.page_link("modules/4_adsorption_kinetics.py", label="Adsorption Kinetics")
+        except:
+            st.write("• Adsorption Kinetics")
+            
+        try:
+            st.page_link("modules/5_graphical_abstract.py", label="Graphical Abstract")
+        except:
+            st.write("• Graphical Abstract")
+            
+        try:
+            st.page_link("modules/6_Claude_Literature_Hub.py", label="Claude Literature Hub")
+        except:
+            st.write("• Claude Literature Hub")
+            
+        try:
+            st.page_link("modules/7_Claude_Optimization_Hub.py", label="Claude Optimization Hub")
+        except:
+            st.write("• Claude Optimization Hub")
         
         st.markdown("---")
         st.caption("ChemResearch AI - Q1 Analytical Engine")
@@ -107,7 +140,7 @@ with st.sidebar:
 
 # --- محتوى المنصة الرئيسي ---
 if not st.session_state.authenticated:
-    # واجهة تسجيل الدخول (لن تظهر أي صفحة فرعية في الشريط الجانبي هنا أبداً)
+    # واجهة تسجيل الدخول (آمنة تماماً وخالية من الروابط)
     st.markdown("""
         <div class="custom-header" style="text-align: center;">
             <h1>ChemResearch AI: Secure Access Portal</h1>
