@@ -105,7 +105,7 @@ elif lang_choice == "Türkçe":
     t_citation_style = "Atif Stili:"
     t_btn_sec2 = "Giris ve Profesyonel Atiflari Sentezle"
     t_spinner = "Yapay zeka PDF'lerinizi analiz ediyor ve profesyonel bir sentez olusturuyor..."
-    t_success_gen = "Giris ve profesyonel atiflar basariyla sentezlendi."
+    t_success_gen = "Giriş ve profesyonel atıflار başarıyla sentezlendi."
     t_download_btn = "Giris ve Referanslari Word Olarak Indir (.docx)"
 
 else:  # العربية
@@ -182,7 +182,8 @@ if st.button(t_btn_sec2, key="btn_sec2"):
         with st.spinner(t_spinner):
             try:
                 genai.configure(api_key=api_key_input)
-                model = genai.GenerativeModel('gemini-1.5-flash')
+                # استخدام النموذج الكلاسيكي gemini-pro لضمان عدم حدوث خطأ 404 أبداً
+                model = genai.GenerativeModel('gemini-pro')
                 
                 prompt = f"""
                 You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
