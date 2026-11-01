@@ -4,7 +4,7 @@ from docx import Document
 from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import pypdf
-import google.generativeai as genai
+from google import genai
 
 # إعدادات صفحة الموقع
 st.set_page_config(
@@ -105,7 +105,7 @@ elif lang_choice == "Türkçe":
     t_citation_style = "Atif Stili:"
     t_btn_sec2 = "Giris ve Profesyonel Atiflari Sentezle"
     t_spinner = "Yapay zeka PDF'lerinizi analiz ediyor ve profesyonel bir sentez olusturuyor..."
-    t_success_gen = "Giriş ve profesyonel atıflار başarıyla sentezlendi."
+    t_success_gen = "Giriş ve profesyonel atıflar başarıyla sentezlendi."
     t_download_btn = "Giris ve Referanslari Word Olarak Indir (.docx)"
 
 else:  # العربية
@@ -181,9 +181,8 @@ if st.button(t_btn_sec2, key="btn_sec2"):
     else:
         with st.spinner(t_spinner):
             try:
-                genai.configure(api_key=api_key_input)
-                # استخدام النموذج الكلاسيكي gemini-pro لضمان عدم حدوث خطأ 404 أبداً
-                model = genai.GenerativeModel('gemini-pro')
+                # التهيئة الصحيحة للعميل الحديث باستخدام gemini-1.5-flash
+                client = genai.Client(api_key=api_key_input)
                 
                 prompt = f"""
                 You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
@@ -211,7 +210,10 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 Write in formal academic English suitable for Q1 journals.
                 """
                 
-                response = model.generate_content(prompt)
+                response = client.models.generate_content(
+                    model='gemini-1.5-flash',
+                    contents=prompt,
+                )
                 
                 cleaned_text = response.text.replace('*', '').replace('###', '')
                 st.session_state.intro_output = cleaned_text
