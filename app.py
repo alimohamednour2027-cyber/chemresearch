@@ -109,19 +109,22 @@ if not st.session_state.authenticated:
                 st.error("Invalid credentials. Please verify your researcher ID and password.")
 
 else:
-    # 2. بعد تسجيل الدخول بنجاح: إظهار الشريط الجانبي الفعّال وزر الخروج بمفتاح فريد
+    # 2. بعد تسجيل الدخول بنجاح: إظهار الشريط الجانبي الفعّال وزر الخروج
     with st.sidebar:
         st.success(f"Status: Authenticated ({st.session_state.current_user})")
         st.markdown("---")
-        if st.button("Terminate Session (Logout)", key="logout_btn_active", use_container_width=True):
+        if st.button("Terminate Session (Logout)", use_container_width=True):
             st.session_state.authenticated = False
             st.session_state.current_user = ""
             st.rerun()
         st.markdown("---")
         st.caption("ChemResearch AI - Q1 Analytical Engine")
 
-    # تعريف الصفحات البرمجية (بدون تضمين app.py لتجنب التكرار والتعارض)
+    # تعريف الصفحات البرمجية المطابقة لملفاتك داخل مجلد modules
     pages = {
+        "Workspace": [
+            st.Page("app.py", title="Dashboard Hub"),
+        ],
         "Analytical Modules": [
             st.Page("modules/0_Introduction_Hub.py", title="Introduction Hub"),
             st.Page("modules/1_literature_hub.py", title="Literature Hub"),
