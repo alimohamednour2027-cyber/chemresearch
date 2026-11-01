@@ -119,7 +119,7 @@ elif lang_choice == "Türkçe":
     ref_tag_lbl = "Referans Etiketi (örn. Smith ve ark., 2024):"
     notes_lbl = "Bu Parametre İçin Hedeflenen Mekanistik Gözlem:"
     btn_generate = "Dinamik İzole Parametre Tartışması Oluştur (Q1 Stili)"
-    success_msg = "Bağlama özgü adaptasyon ile parametre tartışması başarıyla oluşturuldu."
+    success_msg = "Bağlama özgü adaptasyon ile parametre tartışması başarıyla hazırlandı."
     preview_title = "Bağlamsal Olarak Uyarlanmış Tartışma Paragrafı:"
 
 else:  # العربية
