@@ -1,4 +1,5 @@
 import streamlit as st
+import extra_streamlit_components as stx
 from datetime import datetime
 import os
 
@@ -7,6 +8,9 @@ st.set_page_config(
     page_title="ChemResearch AI: Portal Hub",
     layout="wide"
 )
+
+# --- تهيئة مدير ملفات تعريف الارتباط (Cookies Manager) ---
+cookie_manager = stx.CookieManager()
 
 # --- تنسيق CSS المخصص للهيدر، الشريط الجانبي، وأزرار النظام ---
 st.markdown("""
@@ -61,7 +65,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- مسار سجلات الدخول ---
 LOG_FILE = "access_logs.txt"
 
 def log_access(username):
@@ -77,19 +80,20 @@ def get_recent_logs():
         lines = f.readlines()
     return [line.strip() for line in lines[-5:]]
 
-# --- إدارة حالة المصادقة وحفظها في الرابط لتجنب الخروج عند التحديث ---
+# --- التحقق من حالة الجلسة عبر الكوكيز المحفوظة في المتصفح ---
+auth_cookie = cookie_manager.get(cookie="chem_auth_token")
+
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 if "current_user" not in st.session_state:
     st.session_state.current_user = ""
 
-# التحقق من الرابط في بداية التشغيل لاستعادة الجلسة فوراُ عند تحديث الصفحة
-query_params = st.query_params
-if "logged_in" in query_params and query_params["logged_in"] == "true":
+# إذا وُجد الكوكي في المتصفح، يتم استعادة الجلسة تلقائياً دون مطالبة بكلمة المرور
+if auth_cookie == "active_session":
     st.session_state.authenticated = True
-    st.session_state.current_user = query_params.get("user", "admin")
+    st.session_state.current_user = "admin"
 
-# --- واجهة تسجيل الدخول أو لوحة التحكم بناءً على الحالة ---
+# --- واجهة تسجيل الدخول أو لوحة التحكم ---
 if not st.session_state.authenticated:
     with st.sidebar:
         st.warning("Status: Locked / Secure Portal")
@@ -115,9 +119,8 @@ if not st.session_state.authenticated:
             if username_input == "admin" and password_input == "chem2026":
                 st.session_state.authenticated = True
                 st.session_state.current_user = username_input
-                # حفظ حالة الدخول في الرابط لتبقى ثابتة عند التحديث
-                st.query_params["logged_in"] = "true"
-                st.query_params["user"] = username_input
+                # حفظ رمز الجلسة في الكوكيز لمدة 30 يوماً لكي لا يطلب تسجيل الدخول عند التحديث
+                cookie_manager.set("chem_auth_token", "active_session", max_age=30*24*60*60)
                 log_access(username_input)
                 st.rerun()
             else:
@@ -127,14 +130,11 @@ else:
     with st.sidebar:
         st.success(f"Status: Authenticated ({st.session_state.current_user})")
         st.markdown("---")
-        # زر تسجيل خروج مباشر يحذف بيانات الجلسة والرابط
         if st.button("Logout", use_container_width=True):
             st.session_state.authenticated = False
             st.session_state.current_user = ""
-            if "logged_in" in st.query_params:
-                del st.query_params["logged_in"]
-            if "user" in st.query_params:
-                del st.query_params["user"]
+            # حذف الكوكي عند تسجيل الخروج الفعلي
+            cookie_manager.delete("chem_auth_token")
             st.rerun()
         st.markdown("---")
         st.caption("ChemResearch AI - Q1 Analytical Engine")
@@ -187,7 +187,7 @@ else:
         st.markdown("---")
         st.info("Use the sidebar menu above to switch between the specialized analytical modules.")
 
-    # تعريف صفحات المنصة بالكامل (بما فيها وحدة فحص التشابه الجديدة)
+    # تعريف صفحات المنصة بالكامل
     pages = {
         "Main Hub": [
             st.Page(show_dashboard, title="Dashboard Hub", default=True),
