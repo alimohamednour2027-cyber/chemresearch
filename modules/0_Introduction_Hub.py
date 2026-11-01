@@ -181,9 +181,8 @@ if st.button(t_btn_sec2, key="btn_sec2"):
     else:
         with st.spinner(t_spinner):
             try:
-                # التهيئة الصحيحة والمستقرة عبر مكتبة google-generativeai
                 genai.configure(api_key=api_key_input)
-                model = genai.GenerativeModel("gemini-1.5-flash")
+                model = genai.GenerativeModel('gemini-1.5-flash')
                 
                 prompt = f"""
                 You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
