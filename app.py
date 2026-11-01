@@ -109,11 +109,11 @@ if not st.session_state.authenticated:
                 st.error("Invalid credentials. Please verify your researcher ID and password.")
 
 else:
-    # 2. بعد تسجيل الدخول بنجاح: إظهار الشريط الجانبي الفعّال وزر الخروج
+    # 2. بعد تسجيل الدخول بنجاح: إظهار الشريط الجانبي الفعّال وزر الخروج بمفتاح فريد
     with st.sidebar:
         st.success(f"Status: Authenticated ({st.session_state.current_user})")
         st.markdown("---")
-        if st.button("Terminate Session (Logout)", use_container_width=True):
+        if st.button("Terminate Session (Logout)", key="logout_btn_active", use_container_width=True):
             st.session_state.authenticated = False
             st.session_state.current_user = ""
             st.rerun()
