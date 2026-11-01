@@ -1,7 +1,7 @@
 import streamlit as st
 from io import BytesIO
 from docx import Document
-from docx.shared import Pt
+from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import pypdf
 from google import genai
@@ -219,8 +219,9 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 Write in formal academic English suitable for Q1 journals.
                 """
                 
+                # تم التعديل إلى النموذج المدعوم رسمياً هنا:
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-1.5-flash",
                     contents=prompt,
                 )
                 
