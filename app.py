@@ -1,4 +1,6 @@
 import streamlit as st
+from datetime import datetime
+import os
 
 # --- إعدادات الصفحة ---
 st.set_page_config(
@@ -48,18 +50,39 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# --- مسار ملف سجلات الدخول ---
+LOG_FILE = "access_logs.txt"
+
+def log_access(username):
+    """تسجيل تاريخ ووقت الدخول الناجح"""
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    log_entry = f"User: {username} | Access Time: {current_time}\n"
+    with open(LOG_FILE, "a", encoding="utf-8") as f:
+        f.write(log_entry)
+
+def get_recent_logs():
+    """قراءة آخر عمليات الدخول المسجلة"""
+    if not os.path.exists(LOG_FILE):
+        return ["No access logs recorded yet."]
+    with open(LOG_FILE, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    return [line.strip() for line in lines[-5:]] # أخر 5 عمليات دخول
+
 # --- إدارة حالة المصادقة (Session State) ---
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
+if "current_user" not in st.session_state:
+    st.session_state.current_user = ""
 
 # --- الشريط الجانبي ---
 with st.sidebar:
     st.markdown("### Platform Navigation")
     if st.session_state.authenticated:
-        st.success("Status: Authenticated (Admin)")
+        st.success(f"Status: Authenticated ({st.session_state.current_user})")
         st.markdown("---")
         if st.button("Terminate Session (Logout)", use_container_width=True):
             st.session_state.authenticated = False
+            st.session_state.current_user = ""
             st.rerun()
     else:
         st.warning("Status: Locked / Secure")
@@ -84,22 +107,30 @@ if not st.session_state.authenticated:
         st.markdown("<br>", unsafe_allow_html=True)
         
         if st.button("Authenticate & Access Platform", use_container_width=True):
-            # بيانات الدخول الافتراضية للأدمن (يمكنك تعديلها هنا)
+            # بيانات الدخول الافتراضية للأدمن
             if username_input == "admin" and password_input == "chem2026":
                 st.session_state.authenticated = True
+                st.session_state.current_user = username_input
+                log_access(username_input) # تسجيل وقت الدخول تلقائياً
                 st.success("Authentication successful. Initializing dashboard...")
                 st.rerun()
             else:
                 st.error("Invalid credentials. Please verify your researcher ID and password.")
 
-# --- لوحة الترحيب التعريفية (بعد تسجيل الدخول بنجاح) ---
+# --- لوحة الترحيب التعريفية وسجل الأمان (بعد تسجيل الدخول بنجاح) ---
 else:
-    st.markdown("""
+    st.markdown(f"""
         <div class="custom-header">
             <h1>ChemResearch AI: Welcome to Main Workspace</h1>
             <p>Advanced computational support for Q1 journal publications in analytical chemistry, separation science, and material engineering.</p>
         </div>
     """, unsafe_allow_html=True)
+
+    # عرض قسم سجلات الدخول للأدمن (مراقبة النشاط الأمني)
+    with st.expander("Security Audit Trail: Recent Successful Logins"):
+        logs = get_recent_logs()
+        for l in logs:
+            st.text(l)
 
     st.markdown("### Platform Overview & Modules Directory:")
     
