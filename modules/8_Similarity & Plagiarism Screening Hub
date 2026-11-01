@@ -20,7 +20,6 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 if st.button("🚀 تشغيل فحص التشابه والاقتباس (Run Similarity Check)", use_container_width=True):
     if draft_text.strip() and ref_text.strip():
-        # حساب نسبة التشابه الدلالي النصي
         matcher = SequenceMatcher(None, draft_text, ref_text)
         similarity_ratio = matcher.ratio() * 100
         
