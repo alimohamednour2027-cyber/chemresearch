@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- تنسيق CSS المخصص ---
+# --- تنسيق CSS المخصص للهيدر، الشريط الجانبي، وأزرار النظام بوضوح تام ---
 st.markdown("""
     <style>
     [data-testid="stSidebar"] {
@@ -47,6 +47,7 @@ st.markdown("""
         color: #1a365d;
         margin-top: 0;
     }
+    /* تعديل لون زر تسجيل الدخول ليظهر بوضوح تام وخلفية داكنة احترافية */
     div.stButton > button {
         background-color: #1a365d !important;
         color: white !important;
@@ -61,33 +62,40 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# --- مسار سجلات الدخول ---
 LOG_FILE = "access_logs.txt"
 
 def log_access(username):
+    """تسجيل تاريخ ووقت الدخول الناجح"""
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     log_entry = f"User: {username} | Access Time: {current_time}\n"
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(log_entry)
 
 def get_recent_logs():
+    """قراءة آخر عمليات الدخول المسجلة"""
     if not os.path.exists(LOG_FILE):
         return ["No access logs recorded yet."]
     with open(LOG_FILE, "r", encoding="utf-8") as f:
         lines = f.readlines()
     return [line.strip() for line in lines[-5:]]
 
+# --- إدارة حالة المصادقة ---
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 if "current_user" not in st.session_state:
     st.session_state.current_user = ""
 
+# --- التحكم بالشريط الجانبي وصفحات التنقل بناءً على حالة الدخول ---
 if not st.session_state.authenticated:
+    # 1. قبل تسجيل الدخول: قفل الشريط الجانبي تماماً وإخفاء أي صفحة
     with st.sidebar:
         st.warning("Status: Locked / Secure Portal")
         st.markdown("Please log in to access analytical modules.")
         st.markdown("---")
         st.caption("ChemResearch AI - Q1 Analytical Engine")
     
+    # واجهة تسجيل الدخول الإجبارية
     st.markdown("""
         <div class="custom-header" style="text-align: center;">
             <h1>ChemResearch AI: Secure Access Portal</h1>
@@ -112,6 +120,7 @@ if not st.session_state.authenticated:
                 st.error("Invalid credentials. Please verify your researcher ID and password.")
 
 else:
+    # 2. بعد تسجيل الدخول بنجاح: إظهار الشريط الجانبي وزر الخروج المباشر
     with st.sidebar:
         st.success(f"Status: Authenticated ({st.session_state.current_user})")
         st.markdown("---")
@@ -122,6 +131,7 @@ else:
         st.markdown("---")
         st.caption("ChemResearch AI - Q1 Analytical Engine")
 
+    # تعريف دالة الـ Dashboard كصفحة رئيسية افتتاحية
     def show_dashboard():
         st.markdown(f"""
             <div class="custom-header">
@@ -164,15 +174,15 @@ else:
             
             st.markdown("""
                 <div class="card-box">
-                    <h3>4. Graphical Abstract, Kinetics & Similarity Checker</h3>
-                    <p>Transforms raw experimental protocols into publication-ready visual workflows, non-linear isotherm fitting, and integrated plagiarism screening.</p>
+                    <h3>4. Graphical Abstract & Adsorption Kinetics</h3>
+                    <p>Transforms raw experimental protocols into publication-ready visual workflows, non-linear isotherm fitting, and kinetic modeling calculations.</p>
                 </div>
             """, unsafe_allow_html=True)
 
         st.markdown("---")
         st.info("Use the sidebar menu above to switch between the specialized analytical modules.")
 
-    # تعريف الصفحات مع إضافة أداة فحص التشابه الجديدة
+    # إعداد نظام التنقل
     pages = {
         "Main Hub": [
             st.Page(show_dashboard, title="Dashboard Hub", default=True),
@@ -186,7 +196,6 @@ else:
             st.Page("modules/5_graphical_abstract.py", title="Graphical Abstract"),
             st.Page("modules/6_Claude_Literature_Hub.py", title="Claude Literature Hub"),
             st.Page("modules/7_Claude_Optimization_Hub.py", title="Claude Optimization Hub"),
-            st.Page("modules/8_similarity_checker.py", title="Similarity Checker"),
         ]
     }
     
