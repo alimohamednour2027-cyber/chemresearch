@@ -15,7 +15,6 @@ st.set_page_config(
 # --- تنسيق CSS المخصص للهيدر العلوي والشريط الجانبي (بدون إيقونات، أزرق داكن وفاتح) ---
 st.markdown("""
     <style>
-    /* الهيدر العلوي - أزرق داكن مع خط أبيض غليظ */
     .stApp > header {
         background-color: transparent !important;
     }
@@ -37,8 +36,6 @@ st.markdown("""
         margin: 5px 0 0 0;
         font-size: 15px;
     }
-    
-    /* الشريط الجانبي - أزرق أقل حدة */
     [data-testid="stSidebar"] {
         background-color: #2b4c7e;
         color: #ffffff;
@@ -49,7 +46,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# عرض الهيدر الاحترافي
 st.markdown("""
     <div class="custom-header">
         <h1>ChemResearch AI Platform</h1>
@@ -57,11 +53,9 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# ==================== الحفاظ على البيانات عند تغيير الخيارات (Session State) ====================
 if "intro_output" not in st.session_state:
     st.session_state.intro_output = ""
 
-# ==================== الشريط الجانبي وإعدادات الـ API ====================
 with st.sidebar:
     st.markdown("### Language Configuration")
     lang_choice = st.selectbox("Choose Language:", ["English", "Türkçe", "العربية"], label_visibility="collapsed")
@@ -74,7 +68,6 @@ with st.sidebar:
     st.markdown("### Literature Hub")
     t_upload_sec2 = "Upload Review Papers (PDFs)"
 
-# قاموس الترجمات الشامل (خالٍ تماماً من الإيقونات)
 if lang_choice == "English":
     sec1_title = "Section 1: Experiment & Research Metadata"
     sec2_title = "Section 2: AI-Synthesized Introduction & Professional Citations"
@@ -135,7 +128,6 @@ else:  # العربية
     t_success_gen = "تمت صياغة المقدمة وتوثيقها بالمراجع بأسلوب علمي احترافي ناجح."
     t_download_btn = "تحميل المقدمة وقائمة المراجع كملف Word نظيف (.docx)"
 
-# ==================== القسم الأول: بيانات التجربة والبحث ====================
 st.markdown(f"### {sec1_title}")
 
 col1, col2 = st.columns(2)
@@ -166,9 +158,7 @@ fields_text = ", ".join(selected_fields)
 
 st.markdown("---")
 
-# ==================== القسم الثاني: مركز صياغة المقدمة الذكي التلقائي ====================
 st.markdown(f"### {sec2_title}")
-
 st.markdown("Review article repository (upload PDF files here):")
 sources_sec2 = st.file_uploader(t_upload_sec2, type=["pdf", "txt"], accept_multiple_files=True, key="sec2_files")
 
@@ -191,7 +181,6 @@ if st.button(t_btn_sec2, key="btn_sec2"):
     else:
         with st.spinner(t_spinner):
             try:
-                # استخدام الطريقة الصحيحة للمكتبة الحديثة google-genai
                 client = genai.Client(api_key=api_key_input)
                 
                 prompt = f"""
@@ -220,7 +209,6 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 Write in formal academic English suitable for Q1 journals.
                 """
                 
-                # استخدام النموذج الافتراضي المدعم تلقائياً والمتوافق مع العميل الجديد
                 response = client.models.generate_content(
                     model="gemini-2.5-flash",
                     contents=prompt,
@@ -231,7 +219,6 @@ if st.button(t_btn_sec2, key="btn_sec2"):
             except Exception as e:
                 st.error(f"An error occurred during AI generation: {e}")
 
-# عرض النتائج
 if st.session_state.intro_output:
     st.markdown("#### Generated Introduction & Professional Citations Preview:")
     st.markdown(st.session_state.intro_output)
