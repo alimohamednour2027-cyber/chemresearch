@@ -9,3 +9,4 @@ matplotlib
 streamlit
 openai
 pillow
+extra-streamlit-components
