@@ -43,12 +43,12 @@ with st.sidebar:
     lang_choice = st.selectbox("Choose Language:", ["English", "Türkçe", "العربية"], label_visibility="collapsed")
     st.markdown("---")
     st.markdown("### Optimization Hub Navigation")
-    st.caption("Active Hub: Isolated Parameter Analysis & Targeted Reference Tagging")
+    st.caption("Active Hub: Dynamic Isolated Parameters & Contextual Q1 Synthesis")
 
-# قاموس الترجمات والخيارات
+# قاموس الترجمات والخيارات الشاملة
 if lang_choice == "English":
     t_title = "ChemResearch AI: Advanced Optimization Parameters Hub"
-    t_desc = "Precision analytical module engineered to extract, isolate, and index targeted parameter discussions from reference literature without cross-contamination."
+    t_desc = "Dynamic analytical module featuring fully expanded parameters for Adsorption, SPE/MSPE, and Environmental Removal, with real-time contextual adaptation."
     sec1_title = "1. Define Main Study System:"
     mode_label = "Select experiment type:"
     opt_modes = [
@@ -60,22 +60,33 @@ if lang_choice == "English":
     
     ads_params = ["Initial Concentration (C0)", "Adsorbent Dosage", "Contact Time", "Solution Temperature (Thermodynamics)", "Initial pH of Solution", "Ionic Strength / Salt Effect"]
     spe_params = ["Eluent Type & Volume", "Sample Volume (Preconcentration Factor)", "Extraction / Adsorption Time", "Sample pH", "Amount of Sorbent / Magnetic Nanoparticles", "Desorption Time & Shaking Speed"]
-    rem_params = ["Initial pH Optimization", "Co-existing / Interfering Ions", "Regeneration & Reusability Cycles", "Initial Pollutant Loading / Real Wastewater Sample"]
+    rem_params = [
+        "Initial Pollutant Concentration (C0)",
+        "Adsorbent / Material Dosage",
+        "Contact Time & Kinetic Evaluation",
+        "Solution Temperature & Thermodynamics",
+        "Initial pH Optimization",
+        "Co-existing / Interfering Ions (Selectivity)",
+        "Ionic Strength Effects",
+        "Regeneration & Reusability Cycles",
+        "Real Wastewater / Environmental Matrix Application",
+        "Continuous Fixed-Bed Column Parameters"
+    ]
 
     x_lbl = "Experimental Parameter Values (comma-separated):"
     y_lbl = "Resulting Performance Values (Capacity / Recovery / Removal %):"
     opt_val_lbl = "Selected Optimum Point / Condition:"
     sec3_title = "3. Targeted Reference Tagging & Specific Notes"
     uploader_lbl = "Upload Reference Document Specifically for this Parameter (PDF / TXT):"
-    ref_tag_lbl = "Reference Citation Tag (e.g., Smith et al., 2024 - pH mechanism):"
+    ref_tag_lbl = "Reference Citation Tag (e.g., Smith et al., 2024):"
     notes_lbl = "Targeted Mechanistic Observation for this Parameter:"
-    btn_generate = "Generate Isolated Parameter Discussion (Q1 Style)"
-    success_msg = "Targeted parameter discussion successfully formulated with dedicated literature indexing."
-    preview_title = "Isolated Parameter Discussion Paragraph:"
+    btn_generate = "Generate Dynamic Isolated Parameter Discussion (Q1 Style)"
+    success_msg = "Dynamic parameter discussion successfully formulated with context-specific adaptation."
+    preview_title = "Contextually Adapted Discussion Paragraph:"
 
 elif lang_choice == "Türkçe":
     t_title = "ChemResearch AI: Gelişmiş Optimizasyon Parametreleri Merkezi"
-    t_desc = "Referans literatüründen hedeflenen parametre tartışmalarını çapraz kontaminasyon olmadan izole etmek ve indekslemek için tasarlanmış hassas analitik modül."
+    t_desc = "Gerçek zamanlı bağlamsal adaptasyona sahip, Adsorpsiyon, SPE/MSPE ve Çevresel Giderim için tam genişletilmiş parametreler içeren dinamik analitik modül."
     sec1_title = "1. Ana Çalışma Sistemini Belirleyin:"
     mode_label = "Deney türünü seçin:"
     opt_modes = [
@@ -87,22 +98,33 @@ elif lang_choice == "Türkçe":
     
     ads_params = ["Başlangıç Konsantrasyonu (C0)", "Adsorban Dozu", "Temas Süresi", "Çözelti Sıcaklığı (Termodinamik)", "Çözeltinin Başlangıç pH'ı", "İyonik Şiddet / Tuz Etkisi"]
     spe_params = ["Elüent Türü ve Hacmi", "Örnek Hacmi (Zenginleştirme Faktörü)", "Ekstraksiyon Süresi", "Örnek pH'ı", "Nanopartikül Miktarı", "Desorpsiyon Süresi"]
-    rem_params = ["Başlangıç pH Optimizasyonu", "Birlikte Bulunan İyonlar", "Yeniden Kullanım Döngüleri", "Gerçek Atıksu Numunesi"]
+    rem_params = [
+        "Başlangıç Kirletici Konsantrasyonu (C0)",
+        "Adsorban / Malzeme Dozu",
+        "Temas Süresi ve Kinetik Değerlendirme",
+        "Çözelti Sıcaklığı ve Termodinamik",
+        "Başlangıç pH Optimizasyonu",
+        "Birlikte Bulunan / Girişen İyonlar (Seçicilik)",
+        "İyonik Şiddet Etkileri",
+        "Yeniden Üretim ve Yeniden Kullanım Döngüleri",
+        "Gerçek Atıksu / Çevresel Matris Uygulaması",
+        "Sürekli Sabit Yataklı Kolon Parametreleri"
+    ]
 
     x_lbl = "Deneysel Parametre Değerleri (virgülle ayırın):"
     y_lbl = "Sonuç Performans Değerleri:"
     opt_val_lbl = "Seçilen Optimum Nokta / Koşul:"
     sec3_title = "3. Hedeflenen Referans İndeksleme ve Özel Notlar"
     uploader_lbl = "Bu Parametreye Özel Referans Belgesi Yükleyin (PDF / Metin):"
-    ref_tag_lbl = "Referans Etiketi (örn. Smith ve ark., 2024 - pH mekanizması):"
+    ref_tag_lbl = "Referans Etiketi (örn. Smith ve ark., 2024):"
     notes_lbl = "Bu Parametre İçin Hedeflenen Mekanistik Gözlem:"
-    btn_generate = "İzole Parametre Tartışması Oluştur (Q1 Stili)"
-    success_msg = "Hedeflenen referans indeksleme ile parametre tartışması başarıyla oluşturuldu."
-    preview_title = "İzole Edilmiş Parametre Tartışma Paragrafı:"
+    btn_generate = "Dinamik İzole Parametre Tartışması Oluştur (Q1 Stili)"
+    success_msg = "Bağlama özgü adaptasyon ile parametre tartışması başarıyla oluşturuldu."
+    preview_title = "Bağlamsal Olarak Uyarlanmış Tartışma Paragrafı:"
 
 else:  # العربية
     t_title = "المنصة الأكاديمية: مركز تحسين المعلمات المتقدمة"
-    t_desc = "وحدة تحليلية دقيقة ومخصصة لاستخلاص وتحليل وفهرسة تأثير المعلمة المستهدفة وحدها من الأدبيات المرجعية، دون أي تداخل مع معلمات أخرى."
+    t_desc = "وحدة تحليلية ديناميكية متقدمة تغطي المعلمات الشاملة للامتزاز، الاستخلاص، ومعالجة المياه البيئية، مع التكيف الفوري والمعزول لكل معلمة."
     sec1_title = "1. حدد نظام الدراسة الرئيسي:"
     mode_label = "اختر نوع التجربة لدراسة العوامل المؤثرة:"
     opt_modes = [
@@ -113,7 +135,7 @@ else:  # العربية
     sec2_title = "2. إدخال بيانات المعلمة والنتائج الكمية:"
     
     ads_params = [
-        "Initial Concentration (C0) - تأثير التركيز الابتدائي", 
+        "Initial Concentration (C0) - تأثير التركيز الابتدائي للملوث", 
         "Adsorbent Dosage - تأثير جرعة المادة المازة", 
         "Contact Time - تأثير زمن التلامس والحركية", 
         "Solution Temperature (Thermodynamics) - تأثير درجة الحرارة والطاقة الحرة", 
@@ -131,10 +153,16 @@ else:  # العربية
     ]
     
     rem_params = [
-        "Initial pH Optimization - تحسين الحموضة للإزالة البيئية", 
-        "Co-existing / Interfering Ions - تأثير الأيونات المنافسة في المياه الحقيقية", 
-        "Regeneration & Reusability Cycles - دورات الاستعادة وإعادة الاستخدام", 
-        "Initial Pollutant Loading / Real Wastewater Sample - عينات الصرف الحقيقية والأحمال العالية"
+        "Initial Pollutant Concentration (C0) - تركيز الملوث الابتدائي",
+        "Adsorbent / Material Dosage - جرعة المادة المعالجة",
+        "Contact Time & Kinetic Evaluation - زمن التلامس وحركية الإزالة",
+        "Solution Temperature & Thermodynamics - تأثير درجة الحرارة والثرموديناميكا",
+        "Initial pH Optimization - تحسين الأس الهيدروجيني الأولي",
+        "Co-existing / Interfering Ions (Selectivity) - تأثير الأيونات المتنافسة والمنافسة",
+        "Ionic Strength Effects - تأثير القوة الأيونية",
+        "Regeneration & Reusability Cycles - دورات الاستعادة وإعادة الاستخدام",
+        "Real Wastewater / Environmental Matrix Application - تطبيق عينات المياه الحقيقية والصرف",
+        "Continuous Fixed-Bed Column Parameters - معلمات أعمدة الثابت المستمرة"
     ]
 
     x_lbl = "قيم المعامل التجريبية المدروسة (افصل بينها بفاصلة):"
@@ -142,11 +170,11 @@ else:  # العربية
     opt_val_lbl = "القيمة أو النقطة المثلى المحددة (Optimum Condition):"
     sec3_title = "3. الفهرسة المرجعية المخصصة والملاحظات الدقيقة"
     uploader_lbl = "رفع المرجع الخاص بهذه المعلمة فقط (PDF / TXT):"
-    ref_tag_lbl = "معرّف المرجع المفهرس (مثل: Ref [1] - Smith et al. regarding pH mechanism):"
+    ref_tag_lbl = "معرّف المرجع المفهرس (مثل: Ref [1] - Smith et al.):"
     notes_lbl = "الملاحظة الميكانيكية أو التحليل المستخلص من هذا المرجع لهذه المعلمة حصرياً:"
-    btn_generate = "توليد مناقشة دقيقة ومعزولة لـ Q1 (مخصصة للمعلمة فقط)"
-    success_msg = "تم توليد المناقشة العلمية المفهرسة والمخصصة لهذه المعلمة بنجاح!"
-    preview_title = "مسودة فقرة المناقشة المعزولة (Targeted Parameter & Reference Indexing):"
+    btn_generate = "توليد مناقشة ديناميكية ومعزولة لـ Q1 (مخصصة للمعلمة المختارة)"
+    success_msg = "تم توليد المناقشة العلمية المتكيّفة والمخصصة لهذه المعلمة بنجاح!"
+    preview_title = "مسودة فقرة المناقشة الديناميكية (Context-Specific Parameter Discussion):"
 
 # --- عرض الهيدر ---
 st.markdown(f"""
@@ -166,29 +194,81 @@ st.markdown(f"### {sec2_title} [{raw_mode_key}]")
 
 col1, col2 = st.columns(2)
 
+# التغيير الديناميكي للقيم الافتراضية بناءً على النظام والمعلمة المختارة
 if "Adsorption" in study_mode or "Adsorpsiyon" in study_mode or "Adsorption" in raw_mode_key:
     with col1:
-        param_type = st.selectbox("Select Parameter:", ads_params)
-        x_values = st.text_input(x_lbl, value="10, 25, 50, 100, 200")
+        param_type = st.selectbox("Select Adsorption Parameter:", ads_params)
     with col2:
-        y_values = st.text_input(y_lbl, value="5.2, 12.5, 24.1, 38.5, 42.0")
-        optimum_val = st.text_input(opt_val_lbl, value="Optimum threshold identified at 100 mg/L or 308 K")
+        if "Concentration" in param_type or "تركيز" in param_type:
+            x_values = st.text_input(x_lbl, value="10, 25, 50, 100, 200 mg/L")
+            opt_val = st.text_input(opt_val_lbl, value="100 mg/L (Saturation threshold)")
+        elif "Dosage" in param_type or "جرعة" in param_type:
+            x_values = st.text_input(x_lbl, value="0.1, 0.2, 0.5, 1.0, 2.0 g/L")
+            opt_val = st.text_input(opt_val_lbl, value="1.0 g/L (Optimal active surface)")
+        elif "Time" in param_type or "زمن" in param_type:
+            x_values = st.text_input(x_lbl, value="5, 15, 30, 60, 120, 240 min")
+            opt_val = st.text_input(opt_val_lbl, value="120 min (Equilibrium time)")
+        elif "Temperature" in param_type or "حرارة" in param_type:
+            x_values = st.text_input(x_lbl, value="298, 308, 318 K")
+            opt_val = st.text_input(opt_val_lbl, value="318 K (Endothermic maximum)")
+        elif "pH" in param_type or "الحموضة" in param_type:
+            x_values = st.text_input(x_lbl, value="2.0, 4.0, 6.0, 8.0, 10.0")
+            opt_val = st.text_input(opt_val_lbl, value="pH 6.0 (Electrostatic attraction apex)")
+        else:
+            x_values = st.text_input(x_lbl, value="0.01, 0.05, 0.1, 0.5 M")
+            opt_val = st.text_input(opt_val_lbl, value="0.05 M ionic strength")
+    y_values = st.text_input(y_lbl, value="12.5, 24.1, 45.2, 68.5, 72.0 mg/g")
 
 elif "SPE" in study_mode:
     with col1:
-        param_type = st.selectbox("Select Parameter:", spe_params)
-        x_values = st.text_input(x_lbl, value="1, 2, 5, 10")
+        param_type = st.selectbox("Select SPE Parameter:", spe_params)
     with col2:
-        y_values = st.text_input(y_lbl, value="75.2, 98.5, 91.0, 82.4")
-        optimum_val = st.text_input(opt_val_lbl, value="Quantitative elution achieved at 2 mL")
+        if "Eluent" in param_type or "مذيب" in param_type:
+            x_values = st.text_input(x_lbl, value="0.5, 1.0, 2.0, 5.0 mL")
+            opt_val = st.text_input(opt_val_lbl, value="2.0 mL (Quantitative recovery)")
+        elif "Volume" in param_type or "حجم" in param_type:
+            x_values = st.text_input(x_lbl, value="50, 100, 250, 500 mL")
+            opt_val = st.text_input(opt_val_lbl, value="250 mL (High preconcentration factor)")
+        else:
+            x_values = st.text_input(x_lbl, value="1, 3, 5, 10 min / mg")
+            opt_val = st.text_input(opt_val_lbl, value="5 min / 20 mg sorbent")
+    y_values = st.text_input(y_lbl, value="82.4, 98.5, 94.1, 88.0 % Recovery")
 
-else:  # Removal
+else:  # Removal (مع 10 معلمات شاملة)
     with col1:
-        param_type = st.selectbox("Select Parameter:", rem_params)
-        x_values = st.text_input(x_lbl, value="2, 4, 6, 8, 10")
+        param_type = st.selectbox("Select Removal Parameter:", rem_params)
     with col2:
-        y_values = st.text_input(y_lbl, value="35.0, 62.5, 96.8, 85.0, 68.2")
-        optimum_val = st.text_input(opt_val_lbl, value="Optimal performance apex at pH 6.0")
+        if "Concentration" in param_type or "تركيز" in param_type:
+            x_values = st.text_input(x_lbl, value="5, 10, 25, 50, 100 mg/L")
+            opt_val = st.text_input(opt_val_lbl, value="25 mg/L initial loading")
+        elif "Dosage" in param_type or "جرعة" in param_type:
+            x_values = st.text_input(x_lbl, value="0.05, 0.1, 0.25, 0.5 g")
+            opt_val = st.text_input(opt_val_lbl, value="0.25 g optimal mass")
+        elif "Time" in param_type or "زمن" in param_type:
+            x_values = st.text_input(x_lbl, value="10, 30, 60, 120, 180 min")
+            opt_val = st.text_input(opt_val_lbl, value="60 min kinetic equilibrium")
+        elif "Temperature" in param_type or "حرارة" in param_type:
+            x_values = st.text_input(x_lbl, value="293, 303, 313, 323 K")
+            opt_val = st.text_input(opt_val_lbl, value="303 K thermodynamic optimum")
+        elif "pH" in param_type or "الحموضة" in param_type:
+            x_values = st.text_input(x_lbl, value="2.0, 4.0, 6.0, 8.0, 10.0")
+            opt_val = st.text_input(opt_val_lbl, value="pH 6.0 removal apex")
+        elif "Co-existing" in param_type or "المتداخلة" in param_type:
+            x_values = st.text_input(x_lbl, value="Na+, K+, Ca2+, Mg2+, Cl-, SO42-")
+            opt_val = st.text_input(opt_val_lbl, value="High selectivity confirmed with minimal interference")
+        elif "Ionic" in param_type or "القوة الأيونية" in param_type:
+            x_values = st.text_input(x_lbl, value="0.0, 0.05, 0.1, 0.2, 0.5 M NaCl")
+            opt_val = st.text_input(opt_val_lbl, value="Stable removal across ionic strength gradients")
+        elif "Regeneration" in param_type or "دورات" in param_type:
+            x_values = st.text_input(x_lbl, value="Cycle 1, Cycle 2, Cycle 3, Cycle 4, Cycle 5")
+            opt_val = st.text_input(opt_val_lbl, value="Stable reusability up to 5 consecutive cycles (>88% retention)")
+        elif "Wastewater" in param_type or "المياه الحقيقية" in param_type:
+            x_values = st.text_input(x_lbl, value="Tap water, River water, Industrial effluent")
+            opt_val = st.text_input(opt_val_lbl, value=">92% removal efficiency in spiked real environmental matrices")
+        else:
+            x_values = st.text_input(x_lbl, value="1.0, 2.0, 5.0 mL/min flow rate")
+            opt_val = st.text_input(opt_val_lbl, value="2.0 mL/min optimal bed residence time")
+    y_values = st.text_input(y_lbl, value="35.0, 62.5, 96.8, 85.0, 68.2 % Removal")
 
 # --- رفع المرجع المخصص والفهرسة لهذه المعلمة حصرياً ---
 st.markdown("---")
@@ -199,67 +279,92 @@ with col_ref1:
 with col_ref2:
     ref_citation_tag = st.text_input(ref_tag_lbl, value="Ref. [1] (Smith et al., 2024)")
 
-chem_notes = st.text_area(notes_lbl, placeholder="e.g., This specific reference confirms that surface deprotonation governs the adsorption at this exact pH range...", key="param_specific_notes")
+chem_notes = st.text_area(notes_lbl, placeholder="e.g., This specific reference confirms the unique mechanistic trend for this parameter...", key="param_specific_notes")
 
-# --- محرك الصياغة المعزول والمخصص لكل معلمة مع مرجعها المفهرس ---
+# --- محرك الصياغة الديناميكي المتكيف لكل معلمة على حدة ---
 if st.button(btn_generate, key="btn_optimization"):
     st.success(success_msg)
     st.markdown(f"### {preview_title}")
     
     p_lower = param_type.lower()
     
-    # صياغة دقيقة ومعزولة تماماً تقتصر على تحليل هذه المعلمة وربطها بمرجعها حصرياً
+    # صياغات فريدة ومتكيّفة بالكامل ديناميكياً بناءً على اختيار المعلمة الفعلي
     if "concentration" in p_lower or "تركيز" in p_lower or "konsantrasyonu" in p_lower:
-        isolated_text = f"""
-**Targeted Analysis of {param_type}:**
-- The influence of the initial concentration gradient ({x_values}) on uptake capacity was systematically isolated and evaluated. 
-- Empirical data confirm a steady increase in sorption capacity up to the saturation apex at ({optimum_val}). 
-- *Mechanistic & Literature Correlation:* As corroborated by **{ref_citation_tag}**, the driving force generated by higher concentration gradients effectively overcomes liquid-phase mass transfer resistance, directing adsorbate species toward unassigned active sites until full surface coverage is attained.
-- *Specific Literature Insight:* {chem_notes if chem_notes else 'The findings match established monolayer adsorption dynamics.'}
+        dynamic_text = f"""
+**Dynamic Mechanistic Analysis for {param_type}:**
+- The effect of the initial concentration gradient spanning ({x_values}) was evaluated against the resulting capacity metrics ({y_values}), identifying the critical operational threshold at **{opt_val}**.
+- *Contextual Scientific Justification:* As explicitly documented in **{ref_citation_tag}**, initial concentration acts as the primary driving force in overcoming mass transfer resistance between the bulk solution and the solid interface. Lower concentrations maintain high active site availability, whereas higher concentrations accelerate diffusion rates until active site saturation is achieved.
+- *Specific Empirical Note:* {chem_notes if chem_notes else 'Monolayer adsorption capacity verified in accordance with high-impact literature.'}
         """
-    elif "dosage" in p_lower or "جرعة" in p_lower or "dozu" in p_lower or "nanopartikül" in p_lower or "amount" in p_lower:
-        isolated_text = f"""
-**Targeted Analysis of {param_type}:**
-- The isolated effect of varying solid mass loadings ({x_values}) on removal efficiency was thoroughly investigated. 
-- Performance peaked at the optimum dosage condition ({optimum_val}), establishing the threshold for active site availability. 
-- *Mechanistic & Literature Correlation:* Referring specifically to the findings documented in **{ref_citation_tag}**, the initial enhancement stems from a greater population of exposed surface sites. However, excessive material loading induces localized particle agglomeration, which curtails effective surface area and stabilizes removal performance into a plateau.
-- *Specific Literature Insight:* {chem_notes if chem_notes else 'Active site saturation and aggregation phenomena verified.'}
+    elif "dosage" in p_lower or "جرعة" in p_lower or "dozu" in p_lower or "malzeme" in p_lower or "amount" in p_lower:
+        dynamic_text = f"""
+**Dynamic Mechanistic Analysis for {param_type}:**
+- Solid mass loading variations across ({x_values}) were systematically correlated with removal/capacity performance ({y_values}), determining the optimal dosage apex at **{opt_val}**.
+- *Contextual Scientific Justification:* Supported by findings in **{ref_citation_tag}**, expanding the sorbent dosage increases the total surface area and active coordination sites available for pollutant capture. However, exceeding the optimum threshold induces particle aggregation and overlapping boundary layers, which diminishes effective surface area per unit mass.
+- *Specific Empirical Note:* {chem_notes if chem_notes else 'Optimal active site dispersion confirmed without excessive aggregation.'}
         """
     elif "time" in p_lower or "زمن" in p_lower or "süresi" in p_lower:
-        isolated_text = f"""
-**Targeted Analysis of {param_type}:**
-- Time-dependent kinetic behavior across the structured interval ({x_values}) was independently analyzed to determine equilibrium constraints. 
-- The system exhibited rapid initial uptake, reaching a dynamic steady-state plateau at ({optimum_val}). 
-- *Mechanistic & Literature Correlation:* In direct alignment with the kinetic models discussed in **{ref_citation_tag}**, early-stage sorption is expedited by numerous vacant active sites. Over time, intra-particle diffusion resistance increases as remaining sites become sterically hindered, achieving thermodynamic equilibrium.
-- *Specific Literature Insight:* {chem_notes if chem_notes else 'Equilibrium time matches surface-controlled kinetic mechanisms.'}
+        dynamic_text = f"""
+**Dynamic Mechanistic Analysis for {param_type}:**
+- Contact duration tracking over structured intervals ({x_values}) established the kinetic evolution ({y_values}), reaching steady-state equilibrium at **{opt_val}**.
+- *Contextual Scientific Justification:* In strict accordance with the transport models in **{ref_citation_tag}**, rapid initial uptake stems from abundant unoccupied surface sites. Over time, intra-particle diffusion resistance governs mass transfer as active sites become progressively occupied, establishing dynamic equilibrium.
+- *Specific Empirical Note:* {chem_notes if chem_notes else 'Equilibrium time reflects surface-controlled chemisorption kinetics.'}
         """
     elif "temperature" in p_lower or "حرارة" in p_lower or "sıcaklığı" in p_lower:
-        isolated_text = f"""
-**Targeted Analysis of {param_type}:**
-- The thermal dependency of the system was isolated across the temperature range ({x_values}), identifying the energetic optimum at ({optimum_val}). 
-- *Mechanistic & Literature Correlation:* Based strictly on the thermodynamic framework provided in **{ref_citation_tag}**, thermal elevation enhances ion mobility and diminishes boundary layer viscosity. This thermal input supplies the requisite activation energy for robust chemical complexation at the solid-liquid interface.
-- *Specific Literature Insight:* {chem_notes if chem_notes else 'Endothermic thermal activation confirmed.'}
+        dynamic_text = f"""
+**Dynamic Mechanistic Analysis for {param_type}:**
+- Thermal sensitivity across the range ({x_values}) was analyzed to establish the energetic profile ({y_values}), defining the thermodynamic optimum at **{opt_val}**.
+- *Contextual Scientific Justification:* Relying on the thermodynamic principles outlined in **{ref_citation_tag}**, temperature elevation decreases boundary layer viscosity and enhances adsorbate mobility, supplying the necessary thermal activation energy for spontaneous endothermic complexation.
+- *Specific Empirical Note:* {chem_notes if chem_notes else 'Endothermic spontaneity confirmed through thermodynamic parameter evaluation.'}
         """
     elif "ph" in p_lower or "أس هيدروجيني" in p_lower or "ph'ı" in p_lower:
-        isolated_text = f"""
-**Targeted Analysis of {param_type} (Acidity & Surface Charge):**
-- The distinct impact of initial solution pH ({x_values}) on the interfacial binding mechanism was isolated, identifying the optimal performance apex at ({optimum_val}). 
-- *Mechanistic & Literature Correlation:* As specifically emphasized in **{ref_citation_tag}**, solution acidity strictly regulates surface charge and ionic speciation. In acidic domains, high concentrations of hydronium ions ($H^+$) provoke intense electrostatic repulsion, hindering active binding. As pH approaches the optimum threshold, surface deprotonation of functional groups fosters favorable electrostatic attraction, whereas higher alkalinity induces hydroxide precipitation.
-- *Specific Literature Insight:* {chem_notes if chem_notes else 'Electrostatic surface charge dynamics and deprotonation validated.'}
+        dynamic_text = f"""
+**Dynamic Mechanistic Analysis for {param_type}:**
+- Interfacial acidity variations ({x_values}) were isolated to determine surface charge dynamics ({y_values}), achieving maximum performance efficiency at **{opt_val}**.
+- *Contextual Scientific Justification:* As emphasized in **{ref_citation_tag}**, solution pH dictates both material zeta potential and pollutant ionic speciation. Highly acidic conditions trigger intense electrostatic repulsion due to excess hydronium ($H^+$) competition, whereas optimizing the pH promotes surface deprotonation and favorable electrostatic attraction.
+- *Specific Empirical Note:* {chem_notes if chem_notes else 'Surface deprotonation and electrostatic control verified.'}
         """
-    elif "eluent" in p_lower or "مؤبيب" in p_lower or "volume" in p_lower or "حجم" in p_lower:
-        isolated_text = f"""
-**Targeted Analysis of {param_type} (Elution & Recovery):**
-- Elution parameters and solvent gradients ({x_values}) were isolated to maximize desorption efficiency, achieving quantitative recovery at ({optimum_val}). 
-- *Mechanistic & Literature Correlation:* In accordance with the extraction principles outlined in **{ref_citation_tag}**, optimized eluent volumes ensure complete quantitative stripping of bound ions without causing excessive sample dilution or disrupting complexation equilibria.
-- *Specific Literature Insight:* {chem_notes if chem_notes else 'Quantitative recovery and complete desorption verified.'}
+    elif "co-existing" in p_lower or "interfering" in p_lower or "المتداخلة" in p_lower or "girişen" in p_lower:
+        dynamic_text = f"""
+**Dynamic Mechanistic Analysis for {param_type} (Selectivity Study):**
+- Matrix selectivity and competitive ion testing ({x_values}) were performed against baseline performance ({y_values}), confirming operational resilience at **{opt_val}**.
+- *Contextual Scientific Justification:* In accordance with selective binding criteria reported in **{ref_citation_tag}**, high-performance materials must maintain structural affinity for target species despite high concentrations of background co-existing ions ($\text{Ca}^{2+}, \text{Mg}^{2+}, \text{Cl}^-$), owing to inner-sphere complexation.
+- *Specific Empirical Note:* {chem_notes if chem_notes else 'High selectivity and negligible matrix interference confirmed.'}
+        """
+    elif "ionic" in p_lower or "القوة الأيونية" in p_lower:
+        dynamic_text = f"""
+**Dynamic Mechanistic Analysis for {param_type}:**
+- Ionic strength gradients via electrolyte additions ({x_values}) were assessed for performance stability ({y_values}), with optimal behavior observed at **{opt_val}**.
+- *Contextual Scientific Justification:* Reference data in **{ref_citation_tag}** indicate that varying ionic strength helps differentiate outer-sphere versus inner-sphere surface complexation mechanisms, ensuring operational stability in saline environments.
+- *Specific Empirical Note:* {chem_notes if chem_notes else 'Outer-sphere electrostatic stability verified across salt concentrations.'}
+        """
+    elif "regeneration" in p_lower or "reusability" in p_lower or "دورات" in p_lower:
+        dynamic_text = f"""
+**Dynamic Mechanistic Analysis for {param_type}:**
+- Multi-cycle adsorption-desorption testing ({x_values}) evaluated reusability retention ({y_values}), establishing stability thresholds at **{opt_val}**.
+- *Contextual Scientific Justification:* Lifecycle durability metrics cited in **{ref_citation_tag}** demonstrate that a resilient material must endure repeated chemical regeneration (using mild eluents) without structural degradation or active site collapse.
+- *Specific Empirical Note:* {chem_notes if chem_notes else 'Exceptional reusability and structural framework stability verified.'}
+        """
+    elif "wastewater" in p_lower or "environmental" in p_lower or "المياه الحقيقية" in p_lower:
+        dynamic_text = f"""
+**Dynamic Mechanistic Analysis for {param_type}:**
+- Real environmental matrix applications ({x_values}) were tested to validate practical applicability ({y_values}), confirming performance reliability at **{opt_val}**.
+- *Contextual Scientific Justification:* Real-world validation protocols in **{ref_citation_tag}** confirm that synthesized adsorbents successfully overcome complex organic and inorganic competition present in natural waters.
+- *Specific Empirical Note:* {chem_notes if chem_notes else 'Practical environmental matrix adaptability successfully verified.'}
+        """
+    elif "column" in p_lower or "continuous" in p_lower or "أعمدة" in p_lower:
+        dynamic_text = f"""
+**Dynamic Mechanistic Analysis for {param_type}:**
+- Fixed-bed column flow evaluations ({x_values}) established dynamic breakthrough characteristics ({y_values}), optimizing operational parameters at **{opt_val}**.
+- *Contextual Scientific Justification:* Continuous column dynamics detailed in **{ref_citation_tag}** govern industrial-scale scaling, where bed residence time and empty bed contact time dictate solute breakthrough behavior.
+- *Specific Empirical Note:* {chem_notes if chem_notes else 'Continuous flow operational scalability verified.'}
         """
     else:
-        isolated_text = f"""
-**Targeted Analysis of {param_type}:**
-- Systemic variations across the experimental gradient ({x_values}) were evaluated to isolate operational performance at ({optimum_val}). 
-- *Mechanistic & Literature Correlation:* Supported by findings from **{ref_citation_tag}**, the observed response verifies structural integrity and physicochemical stability under controlled analytical conditions.
-- *Specific Literature Insight:* {chem_notes if chem_notes else 'Reproducible operational stability confirmed.'}
+        dynamic_text = f"""
+**Dynamic Mechanistic Analysis for {param_type}:**
+- Systematic parameter evaluation across ({x_values}) demonstrated distinct performance trends ({y_values}), establishing the optimized condition at **{opt_val}**.
+- *Contextual Scientific Justification:* Grounded in analytical principles from **{ref_citation_tag}**, this configuration secures reproducibility and structural integrity.
+- *Specific Empirical Note:* {chem_notes if chem_notes else 'Reproducible analytical performance confirmed.'}
         """
 
-    st.info(isolated_text.strip())
+    st.info(dynamic_text.strip())
