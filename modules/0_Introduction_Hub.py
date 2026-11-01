@@ -185,8 +185,7 @@ if st.button(t_btn_sec2, key="btn_sec2"):
         with st.spinner(t_spinner):
             try:
                 genai.configure(api_key=api_key_input)
-                # استخدام النموذج المحدث والموصى به من جوجل
-                model = genai.GenerativeModel('gemini-3.8-flash')
+                model = genai.GenerativeModel('gemini-1.5-flash')
                 
                 prompt = f"""
                 You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
@@ -220,13 +219,7 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 cleaned_text = response.text.replace('*', '').replace('###', '')
                 st.session_state.intro_output = cleaned_text
             except Exception as e:
-                try:
-                    model_fallback = genai.GenerativeModel('gemini-1.5-flash')
-                    response = model_fallback.generate_content(prompt)
-                    cleaned_text = response.text.replace('*', '').replace('###', '')
-                    st.session_state.intro_output = cleaned_text
-                except Exception as e2:
-                    st.error(f"حدث خطأ أثناء الاتصال: {e2}")
+                st.error(f"حدث خطأ أثناء الاتصال: {e}")
 
 if st.session_state.intro_output:
     st.markdown("#### Generated Introduction & Professional Citations Preview:")
