@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- تنسيق CSS المخصص ---
+# --- تنسيق CSS المخصص للهيدر، الشريط الجانبي، وأزرار النظام بوضوح تام ---
 st.markdown("""
     <style>
     [data-testid="stSidebar"] {
@@ -76,10 +76,18 @@ def get_recent_logs():
         lines = f.readlines()
     return [line.strip() for line in lines[-5:]]
 
+# --- إدارة حالة المصادقة المستمرة عبر الرابط لمنع تسجيل الخروج عند التحديث ---
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 if "current_user" not in st.session_state:
     st.session_state.current_user = ""
+
+# التحقق من وجود مفتاح المصادقة في عنوان URL للحفاظ على الجلسة
+queryParams = st.query_params
+if "logged_in" in queryParams and queryParams["logged_in"] == "true":
+    st.session_state.authenticated = True
+    if "user" in queryParams:
+        st.session_state.current_user = queryParams["user"]
 
 if not st.session_state.authenticated:
     with st.sidebar:
@@ -106,6 +114,9 @@ if not st.session_state.authenticated:
             if username_input == "admin" and password_input == "chem2026":
                 st.session_state.authenticated = True
                 st.session_state.current_user = username_input
+                # حفظ حالة الدخول في رابط المتصفح لكي لا تفقدها عند تحديث الصفحة
+                st.query_params["logged_in"] = "true"
+                st.query_params["user"] = username_input
                 log_access(username_input)
                 st.rerun()
             else:
@@ -118,6 +129,11 @@ else:
         if st.button("Logout", use_container_width=True):
             st.session_state.authenticated = False
             st.session_state.current_user = ""
+            # حذف مؤشرات الدخول من رابط المتصفح عند تسجيل الخروج
+            if "logged_in" in st.query_params:
+                del st.query_params["logged_in"]
+            if "user" in st.query_params:
+                del st.query_params["user"]
             st.rerun()
         st.markdown("---")
         st.caption("ChemResearch AI - Q1 Analytical Engine")
@@ -139,40 +155,37 @@ else:
         
         col_a, col_b = st.columns(2)
         
-        with col_a:
-            st.markdown("""
-                <div class="card-box">
-                    <h3>1. Literature & Introduction Hub</h3>
-                    <p>Leverages massive context windows to synthesize rigorous Q1 introductions, extract research gaps, and process multi-document review literature.</p>
-                </div>
-            """, unsafe_allow_html=True)
-            
-            st.markdown("""
-                <div class="card-box">
-                    <h3>2. Advanced Optimization Parameters Hub</h3>
-                    <p>Specialized analytical module covering Adsorption, SPE/MSPE, and Environmental Removal with isolated parameter analysis and targeted reference indexing.</p>
-                </div>
-            """, unsafe_allow_html=True)
+        col_a.markdown("""
+            <div class="card-box">
+                <h3>1. Literature & Introduction Hub</h3>
+                <p>Leverages massive context windows to synthesize rigorous Q1 introductions, extract research gaps, and process multi-document review literature.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        col_a.markdown("""
+            <div class="card-box">
+                <h3>2. Advanced Optimization Parameters Hub</h3>
+                <p>Specialized analytical module covering Adsorption, SPE/MSPE, and Environmental Removal with isolated parameter analysis and targeted reference indexing.</p>
+            </div>
+        """, unsafe_allow_html=True)
 
-        with col_b:
-            st.markdown("""
-                <div class="card-box">
-                    <h3>3. Characterisation Analysis</h3>
-                    <p>Interprets structural, morphological, and spectroscopic data (FTIR, XRD, SEM, XPS) for novel synthesized sorbents and magnetic nanocomposites.</p>
-                </div>
-            """, unsafe_allow_html=True)
-            
-            st.markdown("""
-                <div class="card-box">
-                    <h3>4. Graphical Abstract, Kinetics & Similarity Checker</h3>
-                    <p>Transforms raw experimental protocols into publication-ready visual workflows, non-linear isotherm fitting, and integrated plagiarism screening.</p>
-                </div>
-            """, unsafe_allow_html=True)
+        col_b.markdown("""
+            <div class="card-box">
+                <h3>3. Characterisation Analysis</h3>
+                <p>Interprets structural, morphological, and spectroscopic data (FTIR, XRD, SEM, XPS) for novel synthesized sorbents and magnetic nanocomposites.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        col_b.markdown("""
+            <div class="card-box">
+                <h3>4. Graphical Abstract & Adsorption Kinetics</h3>
+                <p>Transforms raw experimental protocols into publication-ready visual workflows, non-linear isotherm fitting, and kinetic modeling calculations.</p>
+            </div>
+        """, unsafe_allow_html=True)
 
         st.markdown("---")
         st.info("Use the sidebar menu above to switch between the specialized analytical modules.")
 
-    # تعريف الصفحات مع إضافة أداة فحص التشابه الجديدة
     pages = {
         "Main Hub": [
             st.Page(show_dashboard, title="Dashboard Hub", default=True),
@@ -186,7 +199,6 @@ else:
             st.Page("modules/5_graphical_abstract.py", title="Graphical Abstract"),
             st.Page("modules/6_Claude_Literature_Hub.py", title="Claude Literature Hub"),
             st.Page("modules/7_Claude_Optimization_Hub.py", title="Claude Optimization Hub"),
-            st.Page("modules/8_similarity_checker.py", title="Similarity Checker"),
         ]
     }
     
