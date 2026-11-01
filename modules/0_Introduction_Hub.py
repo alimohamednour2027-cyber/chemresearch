@@ -4,7 +4,7 @@ from docx import Document
 from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import pypdf
-from google import genai
+import google.generativeai as genai
 
 # إعدادات صفحة الموقع
 st.set_page_config(
@@ -181,7 +181,9 @@ if st.button(t_btn_sec2, key="btn_sec2"):
     else:
         with st.spinner(t_spinner):
             try:
-                client = genai.Client(api_key=api_key_input)
+                # التهيئة الصحيحة والمستقرة عبر مكتبة google-generativeai
+                genai.configure(api_key=api_key_input)
+                model = genai.GenerativeModel("gemini-1.5-flash")
                 
                 prompt = f"""
                 You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
@@ -209,11 +211,7 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 Write in formal academic English suitable for Q1 journals.
                 """
                 
-                # تم تحديث اسم النموذج هنا ليتوافق مع المعيار الحديث
-                response = client.models.generate_content(
-                    model="gemini-1.5-flash",
-                    contents=prompt,
-                )
+                response = model.generate_content(prompt)
                 
                 cleaned_text = response.text.replace('*', '').replace('###', '')
                 st.session_state.intro_output = cleaned_text
