@@ -1,0 +1,45 @@
+import streamlit as st
+from difflib import SequenceMatcher
+
+st.markdown("## 🔍 Q1 Manuscript Similarity & Plagiarism Screening Hub")
+st.markdown("أداة فحص مبدئي للتشابه والاقتباس للنصوص الأكاديمية مقارنة بالمراجع المصدرية لضمان مطابقة معايير مجلات Q1 العالمية.")
+
+st.markdown("---")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader("📝 نص المسودة الأكاديمية (Draft)")
+    draft_text = st.text_area("ألصق هنا الفقرة أو المقدمة المراد فحصها:", height=250, placeholder="Enter your draft manuscript text here...")
+
+with col2:
+    st.subheader("📚 النص المرجعي للمقارنة (Reference)")
+    ref_text = st.text_area("ألصق هنا النص المستهدف من الأدبيات أو المراجع:", height=250, placeholder="Enter literature or reference source text here...")
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+if st.button("🚀 تشغيل فحص التشابه والاقتباس (Run Similarity Check)", use_container_width=True):
+    if draft_text.strip() and ref_text.strip():
+        # حساب نسبة التشابه الدلالي النصي
+        matcher = SequenceMatcher(None, draft_text, ref_text)
+        similarity_ratio = matcher.ratio() * 100
+        
+        st.markdown("---")
+        st.subheader("📊 تقرير نتيجة الفحص الأكاديمي:")
+        
+        m_col1, m_col2, m_col3 = st.columns(3)
+        m_col1.metric("نسبة التشابه والتطابق", f"{similarity_ratio:.2f}%")
+        m_col2.metric("كلمات المسودة", len(draft_text.split()))
+        m_col3.metric("كلمات المرجع", len(ref_text.split()))
+        
+        st.markdown("### 💡 التوصيات لمجلات Q1:")
+        if similarity_ratio > 15:
+            st.warning("⚠️ **تنبيه (نسبة عالية):** نسبة التشابه تتجاوز الحد المقبول عموماً في مجلات Q1 (أقل من 10-15%). يوصى بإعادة صياغة (Paraphrasing) الجمل المتشابهة.")
+        else:
+            st.success("✅ **ممتاز:** نسبة التشابه ضمن النطاق الآمن والمقبول أكاديمياً للنشر الدولي.")
+            
+    else:
+        st.error("الرجاء إدخال النصوص في الحقلين (المسودة والمرجع) لإتمام عملية التحليل والمقارنة بدقة.")
+
+st.markdown("---")
+st.info("ملاحظة: هذه الأداة توفر فحصاً تحليلياً مبدئياً وسريعاً لمساعدة الباحث في صياغة الأوراق وتحسين نسب الاقتباس محلياً.")
