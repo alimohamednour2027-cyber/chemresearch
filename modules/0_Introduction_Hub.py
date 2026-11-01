@@ -56,7 +56,7 @@ st.markdown("""
 if "intro_output" not in st.session_state:
     st.session_state.intro_output = ""
 
-# ==================== الشريط الجانبي لإدخال مفتاح Gemini ====================
+# ==================== الشريط الجانبي لإدخال المفتاح ====================
 with st.sidebar:
     st.markdown("### Language Configuration")
     lang_choice = st.selectbox("Choose Language:", ["English", "Türkçe", "العربية"], label_visibility="collapsed")
@@ -179,23 +179,25 @@ if sources_sec2:
 if st.button(t_btn_sec2, key="btn_sec2"):
     if not api_key_input:
         st.error("الرجاء إدخال مفتاح Gemini API Key في الشريط الجانبي لتفعيل النظام.")
+    elif not extracted_pdf_text:
+        st.error("الرجاء رفع ملفات المراجعة (PDF) لكي يقوم النظام بتحليلها وصياغة المقدمة بناءً عليها.")
     else:
         with st.spinner(t_spinner):
             try:
                 genai.configure(api_key=api_key_input)
-                # استخدام النموذج الافتراضي المجاني والمستقر المتاح لحسابات جوجل
                 model = genai.GenerativeModel('gemini-1.5-flash')
                 
                 prompt = f"""
                 You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
-                Your task is to write a rigorous, comprehensive, and entirely original Introduction section for a PhD-level research article.
+                Your task is to analyze the provided extracted text from review articles and write a rigorous, comprehensive, and entirely original Introduction section for a PhD-level research article.
                 
-                PROFESSIONAL CITATION & FORMATTING RULES:
-                1. STRICTLY DO NOT use Markdown asterisks (*) or bold/italic markdown symbols anywhere in the text (no *, no **). Keep plain clean text.
-                2. Use natural academic citation distribution: A reference can be cited where appropriate across different sections of the introduction.
-                3. Build a logical funnel introduction (Global environmental impact -> Limitations of conventional methods -> Research Gap -> Novelty of {adsorbent_material}).
-                4. At the end of the text, provide a clean References section listing unique literature derived from the uploaded sources in correct academic order, without any markdown stars.
-                5. Avoid complex LaTeX formatting (use standard text formats like Cu2+, Cd2+, qm, R2 > 0.99).
+                STRICT COMPLIANCE RULES FOR ANALYSIS & CITATION:
+                1. Base the scientific background, limitations, and literature gaps EXCLUSIVELY and STRICTLY on the provided Extracted Text from Uploaded Review Papers below. Do not fabricate external unsourced literature facts.
+                2. Use natural academic citation distribution matching the uploaded sources (e.g., citing specific findings from the text in numerical format [1], [2]).
+                3. Build a logical funnel introduction: Global environmental impact -> Limitations of conventional methods based on literature -> Research Gap -> Novelty and objectives of {adsorbent_material}.
+                4. At the end of the text, provide a clean References section listing unique literature derived strictly from the uploaded review files.
+                5. STRICTLY DO NOT use Markdown asterisks (*) or bold/italic markdown symbols anywhere in the text. Keep plain clean text.
+                6. Avoid complex LaTeX formatting (use standard text formats like Cu2+, Cd2+, qm, R2 > 0.99).
                 
                 Research Metadata:
                 - Title: {paper_title}
@@ -203,11 +205,12 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 - Prepared Material/Sorbent: {adsorbent_material}
                 - Fields: {fields_text}
                 - Characterization Tools: {characterization_tools}
+                - Analytical Instrument: {analytical_instrument}
                 - Journal Standard: {journal_style}
                 - Citation Style: {citation_format}
                 
                 Extracted Text from Uploaded Review Papers:
-                {extracted_pdf_text[:25000]}
+                {extracted_pdf_text[:30000]}
                 
                 Write in formal academic English suitable for Q1 journals.
                 """
@@ -216,14 +219,13 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 cleaned_text = response.text.replace('*', '').replace('###', '')
                 st.session_state.intro_output = cleaned_text
             except Exception as e:
-                # محاولة تلقائية ثانية في حال فشل الموديل الأول
                 try:
                     model_fallback = genai.GenerativeModel('gemini-pro')
                     response = model_fallback.generate_content(prompt)
                     cleaned_text = response.text.replace('*', '').replace('###', '')
                     st.session_state.intro_output = cleaned_text
                 except Exception as e2:
-                    st.error(f"حدث خطأ أثناء الاتصال: {e2}")
+                    st.error(f"حدث خطأ أثناء التوليد: {e2}")
 
 if st.session_state.intro_output:
     st.markdown("#### Generated Introduction & Professional Citations Preview:")
@@ -231,13 +233,12 @@ if st.session_state.intro_output:
     st.success(t_success_gen)
 
     doc = Document()
-    
     sections = doc.sections
     for section in sections:
-        section.top_margin = Inches(1) if 'Inches' in globals() else doc.sections[0].top_margin
-        section.bottom_margin = doc.sections[0].bottom_margin
-        section.left_margin = doc.sections[0].left_margin
-        section.right_margin = doc.sections[0].right_margin
+        section.top_margin = Inches(1)
+        section.bottom_margin = Inches(1)
+        section.left_margin = Inches(1)
+        section.right_margin = Inches(1)
 
     p_title = doc.add_paragraph()
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
