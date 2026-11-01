@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- تنسيق CSS المخصص للهيدر والشريط الجانبي (بدون إيقونات) ---
+# --- تنسيق CSS المخصص للشريط الجانبي والهيدر (بدون إيقونات) ---
 st.markdown("""
     <style>
     [data-testid="stSidebar"] {
@@ -50,7 +50,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- مسار ملف سجلات الدخول ---
+# --- مسار سجلات الدخول ---
 LOG_FILE = "access_logs.txt"
 
 def log_access(username):
@@ -66,31 +66,24 @@ def get_recent_logs():
         return ["No access logs recorded yet."]
     with open(LOG_FILE, "r", encoding="utf-8") as f:
         lines = f.readlines()
-    return [line.strip() for line in lines[-5:]] # أخر 5 عمليات دخول
+    return [line.strip() for line in lines[-5:]]
 
-# --- إدارة حالة المصادقة (Session State) ---
+# --- حالة المصادقة ---
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 if "current_user" not in st.session_state:
     st.session_state.current_user = ""
 
-# --- الشريط الجانبي ---
-with st.sidebar:
-    st.markdown("### Platform Navigation")
-    if st.session_state.authenticated:
-        st.success(f"Status: Authenticated ({st.session_state.current_user})")
-        st.markdown("---")
-        if st.button("Terminate Session (Logout)", use_container_width=True):
-            st.session_state.authenticated = False
-            st.session_state.current_user = ""
-            st.rerun()
-    else:
-        st.warning("Status: Locked / Secure")
-    st.markdown("---")
-    st.caption("ChemResearch AI - Q1 Analytical Engine")
-
-# --- واجهة تسجيل الدخول (إذا لم يتم الاعتماد بعد) ---
+# --- التحكم بالشريط الجانبي وصفحات التنقل بناءً على حالة الدخول ---
 if not st.session_state.authenticated:
+    # 1. قبل تسجيل الدخول: إخفاء القائمة الجانبية وقفلها تماماً
+    with st.sidebar:
+        st.warning("Status: Locked / Secure Portal")
+        st.markdown("Please log in to access analytical modules.")
+        st.markdown("---")
+        st.caption("ChemResearch AI - Q1 Analytical Engine")
+    
+    # واجهة تسجيل الدخول الإجبارية
     st.markdown("""
         <div class="custom-header" style="text-align: center;">
             <h1>ChemResearch AI: Secure Access Portal</h1>
@@ -100,25 +93,55 @@ if not st.session_state.authenticated:
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.markdown("### Please authenticate to enter workspace:")
         username_input = st.text_input("Username / Researcher ID:")
         password_input = st.text_input("Password:", type="password")
         
         st.markdown("<br>", unsafe_allow_html=True)
         
         if st.button("Authenticate & Access Platform", use_container_width=True):
-            # بيانات الدخول الافتراضية للأدمن
             if username_input == "admin" and password_input == "chem2026":
                 st.session_state.authenticated = True
                 st.session_state.current_user = username_input
-                log_access(username_input) # تسجيل وقت الدخول تلقائياً
+                log_access(username_input)
                 st.success("Authentication successful. Initializing dashboard...")
                 st.rerun()
             else:
                 st.error("Invalid credentials. Please verify your researcher ID and password.")
 
-# --- لوحة الترحيب التعريفية وسجل الأمان (بعد تسجيل الدخول بنجاح) ---
 else:
+    # 2. بعد تسجيل الدخول بنجاح: إظهار الشريط الجانبي الفعّال وزر الخروج
+    with st.sidebar:
+        st.success(f"Status: Authenticated ({st.session_state.current_user})")
+        st.markdown("---")
+        if st.button("Terminate Session (Logout)", use_container_width=True):
+            st.session_state.authenticated = False
+            st.session_state.current_user = ""
+            st.rerun()
+        st.markdown("---")
+        st.caption("ChemResearch AI - Q1 Analytical Engine")
+
+    # تعريف الصفحات البرمجية المطابقة لملفاتك داخل مجلد modules
+    pages = {
+        "Workspace": [
+            st.Page("app.py", title="Dashboard Hub"),
+        ],
+        "Analytical Modules": [
+            st.Page("modules/0_Introduction_Hub.py", title="Introduction Hub"),
+            st.Page("modules/1_literature_hub.py", title="Literature Hub"),
+            st.Page("modules/2_optimization_parameters.py", title="Optimization Parameters"),
+            st.Page("modules/3_characterization_analysis.py", title="Characterization Analysis"),
+            st.Page("modules/4_adsorption_kinetics.py", title="Adsorption Kinetics"),
+            st.Page("modules/5_graphical_abstract.py", title="Graphical Abstract"),
+            st.Page("modules/6_Claude_Literature_Hub.py", title="Claude Literature Hub"),
+            st.Page("modules/7_Claude_Optimization_Hub.py", title="Claude Optimization Hub"),
+        ]
+    }
+    
+    # تشغيل نظام التنقل البرمجي الآمن
+    pg = st.navigation(pages)
+    pg.run()
+
+    # --- لوحة الترحيب التعريفية وسجل الأمان ---
     st.markdown(f"""
         <div class="custom-header">
             <h1>ChemResearch AI: Welcome to Main Workspace</h1>
@@ -126,7 +149,6 @@ else:
         </div>
     """, unsafe_allow_html=True)
 
-    # عرض قسم سجلات الدخول للأدمن (مراقبة النشاط الأمني)
     with st.expander("Security Audit Trail: Recent Successful Logins"):
         logs = get_recent_logs()
         for l in logs:
@@ -167,4 +189,4 @@ else:
         """, unsafe_allow_html=True)
 
     st.markdown("---")
-    st.info("Use the sidebar menu or page navigator in Streamlit to switch between the specialized analytical modules above.")
+    st.info("Use the sidebar menu or page navigator above to switch between the specialized analytical modules.")
