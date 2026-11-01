@@ -4,7 +4,7 @@ from docx import Document
 from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import pypdf
-from google import genai
+from openai import OpenAI
 
 # إعدادات صفحة الموقع
 st.set_page_config(
@@ -49,7 +49,7 @@ st.markdown("""
 st.markdown("""
     <div class="custom-header">
         <h1>ChemResearch AI Platform</h1>
-        <p>Advanced Academic Platform & Professional Q1 Research Synthesis Engine</p>
+        <p>Advanced Academic Platform & Professional Q1 Research Synthesis Engine (OpenAI Powered)</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -61,8 +61,8 @@ with st.sidebar:
     lang_choice = st.selectbox("Choose Language:", ["English", "Türkçe", "العربية"], label_visibility="collapsed")
 
     st.markdown("---")
-    st.markdown("### Gemini API Configuration")
-    api_key_input = st.text_input("Enter your Gemini API Key:", type="password", value="")
+    st.markdown("### OpenAI API Configuration")
+    api_key_input = st.text_input("Enter your OpenAI API Key:", type="password", value="")
 
     st.markdown("---")
     st.markdown("### Literature Hub")
@@ -177,20 +177,19 @@ if sources_sec2:
 
 if st.button(t_btn_sec2, key="btn_sec2"):
     if not api_key_input:
-        st.error("Please enter your Gemini API Key in the sidebar to enable AI synthesis.")
+        st.error("Please enter your OpenAI API Key in the sidebar to enable AI synthesis.")
     else:
         with st.spinner(t_spinner):
             try:
-                # التهيئة الصحيحة للعميل الحديث باستخدام gemini-1.5-flash
-                client = genai.Client(api_key=api_key_input)
+                client = OpenAI(api_key=api_key_input)
                 
-                prompt = f"""
-                You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
-                Your task is to write a rigorous, comprehensive, and entirely original Introduction section for a PhD-level research article.
+                system_prompt = "You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals."
+                user_prompt = f"""
+                Write a rigorous, comprehensive, and entirely original Introduction section for a PhD-level research article based on the following details and extracted review texts.
                 
                 PROFESSIONAL CITATION & FORMATTING RULES:
                 1. STRICTLY DO NOT use Markdown asterisks (*) or bold/italic markdown symbols anywhere in the text (no *, no **). Keep plain clean text.
-                2. Use natural academic citation distribution: A reference can be cited where appropriate across different sections of the introduction.
+                2. Use natural academic citation distribution.
                 3. Build a logical funnel introduction (Global environmental impact -> Limitations of conventional methods -> Research Gap -> Novelty of {adsorbent_material}).
                 4. At the end of the text, provide a clean References section listing unique literature derived from the uploaded sources in correct academic order, without any markdown stars.
                 5. Avoid complex LaTeX formatting (use standard text formats like Cu2+, Cd2+, qm, R2 > 0.99).
@@ -210,12 +209,16 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 Write in formal academic English suitable for Q1 journals.
                 """
                 
-                response = client.models.generate_content(
-                    model='gemini-1.5-flash',
-                    contents=prompt,
+                response = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    temperature=0.7
                 )
                 
-                cleaned_text = response.text.replace('*', '').replace('###', '')
+                cleaned_text = response.choices[0].message.content.replace('*', '').replace('###', '')
                 st.session_state.intro_output = cleaned_text
             except Exception as e:
                 st.error(f"An error occurred during AI generation: {e}")
