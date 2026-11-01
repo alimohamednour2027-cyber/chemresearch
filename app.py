@@ -120,11 +120,8 @@ else:
         st.markdown("---")
         st.caption("ChemResearch AI - Q1 Analytical Engine")
 
-    # تعريف الصفحات البرمجية المطابقة لملفاتك داخل مجلد modules
+    # تعريف الصفحات البرمجية (بدون تضمين app.py لتجنب التكرار والتعارض)
     pages = {
-        "Workspace": [
-            st.Page("app.py", title="Dashboard Hub"),
-        ],
         "Analytical Modules": [
             st.Page("modules/0_Introduction_Hub.py", title="Introduction Hub"),
             st.Page("modules/1_literature_hub.py", title="Literature Hub"),
