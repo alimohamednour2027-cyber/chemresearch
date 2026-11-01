@@ -4,7 +4,7 @@ from docx import Document
 from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import pypdf
-import google.generativeai as genai
+from google import genai
 
 # إعدادات صفحة الموقع
 st.set_page_config(
@@ -191,9 +191,8 @@ if st.button(t_btn_sec2, key="btn_sec2"):
     else:
         with st.spinner(t_spinner):
             try:
-                genai.configure(api_key=api_key_input)
-                # استخدام النموذج القياسي المتوافق تماماً مع جميع المفاتيح
-                model = genai.GenerativeModel("gemini-pro")
+                # استخدام الطريقة الصحيحة للمكتبة الحديثة google-genai
+                client = genai.Client(api_key=api_key_input)
                 
                 prompt = f"""
                 You are an expert analytical chemistry researcher and professional academic writer publishing in top Q1 journals.
@@ -221,7 +220,11 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 Write in formal academic English suitable for Q1 journals.
                 """
                 
-                response = model.generate_content(prompt)
+                # استخدام النموذج الافتراضي المدعم تلقائياً والمتوافق مع العميل الجديد
+                response = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt,
+                )
                 
                 cleaned_text = response.text.replace('*', '').replace('###', '')
                 st.session_state.intro_output = cleaned_text
@@ -252,7 +255,9 @@ if st.session_state.intro_output:
     run_title.font.size = Pt(14)
 
     final_clean_text = st.session_state.intro_output.replace('*', '')
-    for para_text in final_clean_text.split('\n\n'):
+    paragraphs = final_clean_text.split('\n\n')
+    
+    for para_text in paragraphs:
         if para_text.strip():
             p = doc.add_paragraph()
             p.paragraph_format.space_after = Pt(8)
