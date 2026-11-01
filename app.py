@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- تنسيق CSS المخصص للهيدر والشريط الجانبي (بدون إيقونات) ---
+# --- تنسيق CSS المخصص للهيدر والشريط الجانبي ---
 st.markdown("""
     <style>
     [data-testid="stSidebar"] {
@@ -74,73 +74,16 @@ if "authenticated" not in st.session_state:
 if "current_user" not in st.session_state:
     st.session_state.current_user = ""
 
-# --- الشريط الجانبي ---
-with st.sidebar:
-    if st.session_state.authenticated:
-        st.success(f"Status: Authenticated ({st.session_state.current_user})")
-        st.markdown("---")
-        # زر تسجيل خروج مباشر
-        if st.button("Logout", use_container_width=True):
-            st.session_state.authenticated = False
-            st.session_state.current_user = ""
-            st.rerun()
-        st.markdown("---")
-        
-        # --- عرض الصفحات الفرعية حصرياً بعد تسجيل الدخول باستخدام روابط آمنة ---
-        st.markdown("### Analytical Modules")
-        
-        # استخدام الروابط البرمجية الآمنة للملفات الموجودة في مجلد modules
-        try:
-            st.page_link("modules/0_Introduction_Hub.py", label="Introduction Hub")
-        except:
-            st.write("• Introduction Hub")
-            
-        try:
-            st.page_link("modules/1_literature_hub.py", label="Literature Hub")
-        except:
-            st.write("• Literature Hub")
-            
-        try:
-            st.page_link("modules/2_optimization_parameters.py", label="Optimization Parameters")
-        except:
-            st.write("• Optimization Parameters")
-            
-        try:
-            st.page_link("modules/3_characterization_analysis.py", label="Characterization Analysis")
-        except:
-            st.write("• Characterization Analysis")
-            
-        try:
-            st.page_link("modules/4_adsorption_kinetics.py", label="Adsorption Kinetics")
-        except:
-            st.write("• Adsorption Kinetics")
-            
-        try:
-            st.page_link("modules/5_graphical_abstract.py", label="Graphical Abstract")
-        except:
-            st.write("• Graphical Abstract")
-            
-        try:
-            st.page_link("modules/6_Claude_Literature_Hub.py", label="Claude Literature Hub")
-        except:
-            st.write("• Claude Literature Hub")
-            
-        try:
-            st.page_link("modules/7_Claude_Optimization_Hub.py", label="Claude Optimization Hub")
-        except:
-            st.write("• Claude Optimization Hub")
-        
-        st.markdown("---")
-        st.caption("ChemResearch AI - Q1 Analytical Engine")
-    else:
+# --- التحكم بالشريط الجانبي وصفحات التنقل بناءً على حالة الدخول ---
+if not st.session_state.authenticated:
+    # 1. قبل تسجيل الدخول: قفل الشريط الجانبي تماماً وإخفاء أي صفحة فرعية
+    with st.sidebar:
         st.warning("Status: Locked / Secure Portal")
         st.markdown("Please log in to access analytical modules.")
         st.markdown("---")
         st.caption("ChemResearch AI - Q1 Analytical Engine")
-
-# --- محتوى المنصة الرئيسي ---
-if not st.session_state.authenticated:
-    # واجهة تسجيل الدخول (آمنة تماماً وخالية من الروابط)
+    
+    # واجهة تسجيل الدخول الإجبارية
     st.markdown("""
         <div class="custom-header" style="text-align: center;">
             <h1>ChemResearch AI: Secure Access Portal</h1>
@@ -165,8 +108,36 @@ if not st.session_state.authenticated:
                 st.error("Invalid credentials. Please verify your researcher ID and password.")
 
 else:
-    # لوحة الترحيب بعد تسجيل الدخول بنجاح
-    st.markdown("""
+    # 2. بعد تسجيل الدخول بنجاح: تفعيل الشريط الجانبي وزر الخروج المباشر
+    with st.sidebar:
+        st.success(f"Status: Authenticated ({st.session_state.current_user})")
+        st.markdown("---")
+        if st.button("Logout", use_container_width=True):
+            st.session_state.authenticated = False
+            st.session_state.current_user = ""
+            st.rerun()
+        st.markdown("---")
+        st.caption("ChemResearch AI - Q1 Analytical Engine")
+
+    # تعريف الصفحات وتشغيل نظام التنقل الآمن حصرياً بعد الدخول
+    pages = {
+        "Analytical Modules": [
+            st.Page("modules/0_Introduction_Hub.py", title="Introduction Hub"),
+            st.Page("modules/1_literature_hub.py", title="Literature Hub"),
+            st.Page("modules/2_optimization_parameters.py", title="Optimization Parameters"),
+            st.Page("modules/3_characterization_analysis.py", title="Characterization Analysis"),
+            st.Page("modules/4_adsorption_kinetics.py", title="Adsorption Kinetics"),
+            st.Page("modules/5_graphical_abstract.py", title="Graphical Abstract"),
+            st.Page("modules/6_Claude_Literature_Hub.py", title="Claude Literature Hub"),
+            st.Page("modules/7_Claude_Optimization_Hub.py", title="Claude Optimization Hub"),
+        ]
+    }
+    
+    pg = st.navigation(pages)
+    pg.run()
+
+    # --- لوحة الترحيب التعريفية وسجل الأمان ---
+    st.markdown(f"""
         <div class="custom-header">
             <h1>ChemResearch AI: Welcome to Main Workspace</h1>
             <p>Advanced computational support for Q1 journal publications in analytical chemistry, separation science, and material engineering.</p>
@@ -213,4 +184,4 @@ else:
         """, unsafe_allow_html=True)
 
     st.markdown("---")
-    st.info("Use the sidebar menu to switch between the specialized analytical modules above.")
+    st.info("Use the sidebar menu above to switch between the specialized analytical modules.")
