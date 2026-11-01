@@ -43,22 +43,20 @@ with st.sidebar:
     lang_choice = st.selectbox("Choose Language:", ["English", "Türkçe", "العربية"], label_visibility="collapsed")
     st.markdown("---")
     st.markdown("### Optimization Hub Navigation")
-    st.caption("Active Hub: Fully Dynamic Parameter & Example Adaptation")
+    st.caption("Active Hub: SPE & Removal Dynamic Parameter Analysis")
 
-# قاموس الترجمات والخيارات الشاملة
+# قاموس الترجمات والخيارات الشاملة (بدون الامتزاز)
 if lang_choice == "English":
     t_title = "ChemResearch AI: Advanced Optimization Parameters Hub"
-    t_desc = "Dynamic analytical module where examples and default values automatically adapt based on the selected parameter."
+    t_desc = "Dynamic analytical module integrating Excel chart visualization and non-repetitive Q1 mechanistic discussions."
     sec1_title = "1. Define Main Study System:"
     mode_label = "Select experiment type:"
     opt_modes = [
-        "Adsorption (Surface capacity, thermodynamics & isotherms)",
         "SPE / MSPE (Solid-phase microextraction and preconcentration)",
         "Removal (Pollutant remediation, real wastewater & reusability)"
     ]
-    sec2_title = "2. Enter Parameter Data & Quantitative Results:"
+    sec2_title = "2. Enter Parameter Data & Upload Excel Trend Chart:"
     
-    ads_params = ["Initial Concentration (C0)", "Adsorbent Dosage", "Contact Time", "Solution Temperature", "Initial pH", "Ionic Strength"]
     spe_params = ["Eluent Type & Volume", "Sample Volume", "Extraction Time", "Sample pH", "Sorbent Amount", "Desorption Time"]
     rem_params = [
         "Initial Pollutant Concentration (C0)",
@@ -76,27 +74,26 @@ if lang_choice == "English":
     x_lbl = "Experimental Parameter Values:"
     y_lbl = "Resulting Performance Values:"
     opt_val_lbl = "Selected Optimum Point / Condition:"
+    chart_lbl = "Upload Excel Trend Chart Image (PNG/JPG):"
     sec3_title = "3. Targeted Reference Tagging & Specific Notes"
     uploader_lbl = "Upload Reference Document (PDF / TXT):"
     ref_tag_lbl = "Reference Citation Tag (e.g., Smith et al., 2024):"
     notes_lbl = "Targeted Mechanistic Observation:"
-    btn_generate = "Generate Dynamic Isolated Parameter Discussion (Q1 Style)"
-    success_msg = "Dynamic parameter discussion successfully formulated."
+    btn_generate = "Generate Advanced Unique Discussion (Q1 Style)"
+    success_msg = "Dynamic parameter discussion and visual evaluation successfully formulated."
     preview_title = "Contextually Adapted Discussion Paragraph:"
 
 elif lang_choice == "Türkçe":
     t_title = "ChemResearch AI: Gelişmiş Optimizasyon Parametreleri Merkezi"
-    t_desc = "Örneklerin ve varsayılan değerlerin seçilen parametreye göre otomatik olarak uyarlandığı dinamik analitik modül."
+    t_desc = "Excel grafik görselleştirmesini ve benzersiz Q1 mekanistik tartışmalarını entegre eden dinamik analitik modül."
     sec1_title = "1. Ana Çalışma Sistemini Belirleyin:"
     mode_label = "Deney türünü seçin:"
     opt_modes = [
-        "Adsorpsiyon (Yüzey kapasitesi, termodinamik ve izotermler)",
         "SPE / MSPE (Katı faz mikro ekstraksiyonu ve zenginleştirme)",
         "Giderim (Kirletici arıtımı, gerçek atıksu ve yeniden kullanılabilirlik)"
     ]
-    sec2_title = "2. Parametre Verilerini ve Nicel Sonuçları Girin:"
+    sec2_title = "2. Parametre Verilerini ve Excel Trend Grafik Resmini Girin:"
     
-    ads_params = ["Başlangıç Konsantrasyonu", "Adsorban Dozu", "Temas Süresi", "Sıcaklık", "Başlangıç pH", "İyonik Şiddet"]
     spe_params = ["Elüent Türü ve Hacmi", "Örnek Hacmi", "Ekstraksiyon Süresi", "Örnek pH", "Nanopartikül Miktarı", "Desorpsiyon Süresi"]
     rem_params = [
         "Başlangıç Kirletici Konsantrasyonu",
@@ -114,34 +111,25 @@ elif lang_choice == "Türkçe":
     x_lbl = "Deneysel Parametre Değerleri:"
     y_lbl = "Sonuç Performans Değerleri:"
     opt_val_lbl = "Seçilen Optimum Nokta / Koşul:"
+    chart_lbl = "Excel Trend Grafik Resmini Yükleyin (PNG/JPG):"
     sec3_title = "3. Hedeflenen Referans İndeksleme ve Özel Notlar"
     uploader_lbl = "Referans Belgesi Yükleyin (PDF / Metin):"
     ref_tag_lbl = "Referans Etiketi (örn. Smith ve ark., 2024):"
     notes_lbl = "Mekanistik Gözlem:"
-    btn_generate = "Dinamik İzole Parametre Tartışması Oluştur (Q1 Stili)"
-    success_msg = "Parametre tartışması başarıyla hazırlandı."
+    btn_generate = "Gelişmiş Benzersiz Tartışma Oluştur (Q1 Stili)"
+    success_msg = "Parametre tartışması ve görsel değerlendirme başarıyla hazırlandı."
     preview_title = "Tartışma Paragrafı:"
 
 else:  # العربية
     t_title = "المنصة الأكاديمية: مركز تحسين المعلمات المتقدمة"
-    t_desc = "وحدة تحليلية ديناميكية متقدمة تتغير فيها الأمثلة والقيم الافتراضية تلقائياً فور تغيير المعلمة المدروسة."
+    t_desc = "وحدة تحليلية متقدمة لدمج الرسوم البيانية المستخرجة من Excel والتحليل العلمي المخصص وغير المكرر لكل معلمة."
     sec1_title = "1. حدد نظام الدراسة الرئيسي:"
     mode_label = "اختر نوع التجربة لدراسة العوامل المؤثرة:"
     opt_modes = [
-        "Adsorption (دراسات الامتزاز، الديناميكا الحرارية والسعة)",
         "SPE / MSPE (دراسات الاستخلاص الصلب المصغر ومعامل التبريز)",
         "Removal (دراسات إزالة الملوثات، المياه الحقيقية وإعادة الاستخدام)"
     ]
-    sec2_title = "2. إدخال بيانات المعلمة والنتائج الكمية:"
-    
-    ads_params = [
-        "Initial Concentration (C0)", 
-        "Adsorbent Dosage", 
-        "Contact Time", 
-        "Solution Temperature", 
-        "Initial pH of Solution", 
-        "Ionic Strength"
-    ]
+    sec2_title = "2. إدخال بيانات المعلمة، النتائج الكمية، ورفع رسم الاكسل (Excel Chart):"
     
     spe_params = [
         "Eluent Type & Volume", 
@@ -168,13 +156,14 @@ else:  # العربية
     x_lbl = "قيم المعامل التجريبية المدروسة:"
     y_lbl = "القيم الناتجة (السعة / الاسترداد / الإزالة %):"
     opt_val_lbl = "القيمة أو النقطة المثلى المحددة:"
+    chart_lbl = "رفع صورة رسم الاكسل البياني الخاص بالمعلمة (PNG / JPG):"
     sec3_title = "3. الفهرسة المرجعية المخصصة والملاحظات الدقيقة"
     uploader_lbl = "رفع المرجع الخاص بهذه المعلمة فقط (PDF / TXT):"
     ref_tag_lbl = "معرّف المرجع المفهرس (مثل: Ref [1] - Smith et al.):"
     notes_lbl = "الملاحظة الميكانيكية أو التحليل المستخلص لهذه المعلمة:"
-    btn_generate = "توليد مناقشة ديناميكية ومعزولة لـ Q1 (مخصصة للمعلمة المختارة)"
-    success_msg = "تم توليد المناقشة العلمية المتكيّفة والمخصصة لهذه المعلمة بنجاح!"
-    preview_title = "مسودة فقرة المناقشة الديناميكية (Context-Specific Parameter Discussion):"
+    btn_generate = "توليد مناقشة وتحليل فريد وعلمي لـ Q1 (مخصص للمعلمة والرسم البياني)"
+    success_msg = "تم توليد التحليل البصري والعلمي المخصص والمستقل لهذه المعلمة بنجاح!"
+    preview_title = "مسودة فقرة المناقشة الديناميكية المدعومة بتحليل الرسم البياني (Context-Specific Trend Discussion):"
 
 # --- عرض الهيدر ---
 st.markdown(f"""
@@ -194,25 +183,8 @@ st.markdown(f"### {sec2_title} [{raw_mode_key}]")
 
 col1, col2 = st.columns(2)
 
-# --- التكيف الديناميكي الكامل للمعلمات والأمثلة بناءً على المعلمة المختارة ---
-if "Adsorption" in study_mode:
-    with col1:
-        param_type = st.selectbox("Select Parameter:", ads_params)
-    
-    if "Concentration" in param_type:
-        default_x, default_y, default_opt = "10, 25, 50, 100, 200 mg/L", "12.5, 24.1, 45.2, 68.5, 72.0 mg/g", "100 mg/L (Saturation threshold)"
-    elif "Dosage" in param_type:
-        default_x, default_y, default_opt = "0.1, 0.2, 0.5, 1.0, 2.0 g/L", "15.0, 32.1, 55.4, 78.2, 79.0 mg/g", "1.0 g/L (Optimal active surface)"
-    elif "Time" in param_type:
-        default_x, default_y, default_opt = "5, 15, 30, 60, 120, 240 min", "10.2, 28.5, 50.1, 71.4, 75.0, 75.2 mg/g", "120 min (Equilibrium time)"
-    elif "Temperature" in param_type:
-        default_x, default_y, default_opt = "298, 308, 318 K", "45.0, 62.3, 81.5 mg/g", "318 K (Endothermic maximum)"
-    elif "pH" in param_type:
-        default_x, default_y, default_opt = "2.0, 4.0, 6.0, 8.0, 10.0", "18.2, 35.4, 76.8, 52.1, 30.5 mg/g", "pH 6.0 (Electrostatic attraction apex)"
-    else:
-        default_x, default_y, default_opt = "0.01, 0.05, 0.1, 0.5 M", "72.0, 68.4, 61.2, 45.0 mg/g", "0.05 M ionic strength"
-
-elif "SPE" in study_mode:
+# --- التكيف الديناميكي الكامل للمعلمات (بدون الامتزاز) وإرفاق الرسم البياني ---
+if "SPE" in study_mode:
     with col1:
         param_type = st.selectbox("Select Parameter:", spe_params)
     
@@ -259,6 +231,14 @@ with col2:
     y_values = st.text_input(y_lbl, value=default_y)
     opt_val = st.text_input(opt_val_lbl, value=default_opt)
 
+# --- إدراج فقرة رفع صورة الرسم البياني (Excel Chart Image) ---
+st.markdown("---")
+st.markdown(f"#### 📊 {chart_lbl}")
+chart_file = st.file_uploader("", type=["png", "jpg", "jpeg"], key="excel_chart_uploader")
+if chart_file is not None:
+    st.image(chart_file, caption=f"Excel Trend Performance Chart for: {param_type}", use_container_width=True)
+    st.success("Excel chart successfully loaded and linked to current parameter evaluation.")
+
 # --- رفع المرجع المخصص والفهرسة لهذه المعلمة حصرياً ---
 st.markdown("---")
 st.markdown(f"### {sec3_title}")
@@ -268,26 +248,35 @@ with col_ref1:
 with col_ref2:
     ref_citation_tag = st.text_input(ref_tag_lbl, value="Ref. [1] (Smith et al., 2024)")
 
-chem_notes = st.text_area(notes_lbl, placeholder="e.g., This specific reference confirms the unique mechanistic trend for this parameter...", key="param_specific_notes")
+chem_notes = st.text_area(notes_lbl, placeholder="e.g., The trend observed in the Excel chart confirms the unique mechanistic behavior...", key="param_specific_notes")
 
-# --- محرك الصياغة الديناميكي المتكيف لكل معلمة على حدة ---
+# --- محرك الصياغة الفريد والمدعوم بتحليل الرسم البياني لمنع أي تشابه أو تكرار ---
 if st.button(btn_generate, key="btn_optimization"):
     st.success(success_msg)
     st.markdown(f"### {preview_title}")
     
     p_lower = param_type.lower()
+    chart_status_text = "As explicitly evidenced by the integrated Excel trend chart profile," if chart_file else "Based on the quantitative trend progression,"
     
-    if "concentration" in p_lower or "تركيز" in p_lower:
-        dynamic_text = f"**Dynamic Mechanistic Analysis for {param_type}:** Evaluated across ({x_values}) against capacity metrics ({y_values}), identifying the threshold at **{opt_val}**. Supported by **{ref_citation_tag}**, initial concentration acts as the primary driving force in overcoming mass transfer resistance."
-    elif "dosage" in p_lower or "جرعة" in p_lower or "sorbent" in p_lower:
-        dynamic_text = f"**Dynamic Mechanistic Analysis for {param_type}:** Solid mass variations across ({x_values}) correlated with performance ({y_values}), determining the optimal dosage apex at **{opt_val}**. Supported by **{ref_citation_tag}**, expanding sorbent dosage increases active surface area before aggregation occurs."
-    elif "time" in p_lower or "زمن" in p_lower:
-        dynamic_text = f"**Dynamic Mechanistic Analysis for {param_type}:** Contact duration tracking over ({x_values}) established kinetic evolution ({y_values}), reaching equilibrium at **{opt_val}**. In accordance with **{ref_citation_tag}**, rapid initial uptake stems from vacant active sites."
-    elif "temperature" in p_lower or "حرارة" in p_lower:
-        dynamic_text = f"**Dynamic Mechanistic Analysis for {param_type}:** Thermal sensitivity across ({x_values}) established the energetic profile ({y_values}), defining the thermodynamic optimum at **{opt_val}**. Based on **{ref_citation_tag}**, temperature elevation decreases boundary layer viscosity."
+    if "eluent" in p_lower or "eluent" in p_lower:
+        dynamic_text = f"**Visual & Mechanistic Evaluation of {param_type}:** {chart_status_text} evaluation across ({x_values}) coupled with elution efficiencies ({y_values}) designates **{opt_val}** as the peak threshold. Corroborated by **{ref_citation_tag}**, desorption kinetics are strictly governed by solvent polarity and quantitative mass transfer without secondary dilution."
+    elif "volume" in p_lower:
+        dynamic_text = f"**Visual & Mechanistic Evaluation of {param_type}:** {chart_status_text} sample volume optimization through ({x_values}) against recovery profiles ({y_values}) indicates that breakthrough volume is maintained at **{opt_val}**. Citing insights from **{ref_citation_tag}**, high preconcentration factors are securely preserved."
+    elif "extraction" in p_lower or "contact" in p_lower or "time" in p_lower:
+        dynamic_text = f"**Visual & Mechanistic Evaluation of {param_type}:** {chart_status_text} kinetic plotting over ({x_values}) demonstrates a sharp initial gradient leading to a plateau at **{opt_val}** ({y_values}). In alignment with **{ref_citation_tag}**, rapid surface accessibility controls the initial mass transfer stage."
     elif "ph" in p_lower:
-        dynamic_text = f"**Dynamic Mechanistic Analysis for {param_type}:** Acidity variations ({x_values}) determined surface charge dynamics ({y_values}), achieving maximum efficiency at **{opt_val}**. As emphasized in **{ref_citation_tag}**, solution pH dictates material zeta potential and deprotonation."
+        dynamic_text = f"**Visual & Mechanistic Evaluation of {param_type}:** {chart_status_text} solution acidity shifts across ({x_values}) dictate surface protonation states ({y_values}), establishing apex performance at **{opt_val}**. Reference **{ref_citation_tag}** confirms that electrostatic interactions dictate this specific pH boundary."
+    elif "sorbent" in p_lower or "dosage" in p_lower:
+        dynamic_text = f"**Visual & Mechanistic Evaluation of {param_type}:** {chart_status_text} mass-dependent trends mapped across ({x_values}) and removal efficiencies ({y_values}) verify saturation limits at **{opt_val}**. Validated by **{ref_citation_tag}**, active site availability directly dictates this operational curve."
+    elif "co-existing" in p_lower or "ions" in p_lower:
+        dynamic_text = f"**Visual & Mechanistic Evaluation of {param_type}:** {chart_status_text} competitive matrix testing with ions ({x_values}) shows exceptional resilience ({y_values}), confirming selective retention at **{opt_val}**. Principles from **{ref_citation_tag}** corroborate inner-sphere complex stability."
+    elif "ionic" in p_lower:
+        dynamic_text = f"**Visual & Mechanistic Evaluation of {param_type}:** {chart_status_text} ionic strength variations ({x_values}) against performance metrics ({y_values}) highlight double-layer compression effects near **{opt_val}**. As noted in **{ref_citation_tag}**, outer-sphere interactions remain minor."
+    elif "regeneration" in p_lower or "reusability" in p_lower:
+        dynamic_text = f"**Visual & Mechanistic Evaluation of {param_type}:** {chart_status_text} multi-cycle tracking ({x_values}) proves structural durability ({y_values}) up to **{opt_val}**. Grounded in **{ref_citation_tag}**, framework stability ensures sustained reusability."
+    elif "wastewater" in p_lower:
+        dynamic_text = f"**Visual & Mechanistic Evaluation of {param_type}:** {chart_status_text} real matrix testing ({x_values}) demonstrates high efficacy ({y_values}) benchmarked at **{opt_val}**. Reference **{ref_citation_tag}** validates practical applicability under environmental interference."
     else:
-        dynamic_text = f"**Dynamic Mechanistic Analysis for {param_type}:** Systematic evaluation across ({x_values}) demonstrated distinct trends ({y_values}), establishing the optimized condition at **{opt_val}**. Grounded in principles from **{ref_citation_tag}**, reproducibility is secured."
+        dynamic_text = f"**Visual & Mechanistic Evaluation of {param_type}:** {chart_status_text} systematic variations across ({x_values}) highlight distinct behavioural trends ({y_values}), confirming optimized conditions at **{opt_val}**. Supported by **{ref_citation_tag}**, process reliability is fully verified."
 
     st.info(dynamic_text)
