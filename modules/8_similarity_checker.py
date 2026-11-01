@@ -1,5 +1,4 @@
 import streamlit as st
-from difflip import SequenceMatcher
 
 # --- قواميس اللغات الثلاثة (الإنجليزية، التركية، العربية) ---
 translations = {
@@ -60,6 +59,16 @@ translations = {
 selected_lang = st.sidebar.selectbox("Select Language / Dil Seçin / اختر اللغة", ["English", "Türkçe", "العربية"])
 t = translations[selected_lang]
 
+# --- دالة حساب التشابه الآمنة بدون استيراد مكتبات خارجية ---
+def calculate_similarity(text1, text2):
+    words1 = set(text1.lower().split())
+    words2 = set(text2.lower().split())
+    if not words1 or not words2:
+        return 0.0
+    intersection = words1.intersection(words2)
+    union = words1.union(words2)
+    return (len(intersection) / len(union)) * 100
+
 # --- تنسيق CSS المخصص الموحد ---
 st.markdown("""
     <style>
@@ -118,8 +127,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 # --- زر التنفيذ والتحليل ---
 if st.button(t['btn_text'], use_container_width=True):
     if draft_text.strip() and reference_text.strip():
-        matcher = SequenceMatcher(None, draft_text, reference_text)
-        similarity_ratio = matcher.ratio() * 100
+        similarity_ratio = calculate_similarity(draft_text, reference_text)
         
         st.markdown("---")
         st.markdown(f"### {t['report_title']}")
