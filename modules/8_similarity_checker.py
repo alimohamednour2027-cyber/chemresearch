@@ -1,7 +1,66 @@
 import streamlit as st
-from difflib import SequenceMatcher
+from difflip import SequenceMatcher
 
-# --- إعدادات الصفحة ---
+# --- قواميس اللغات الثلاثة (الإنجليزية، التركية، العربية) ---
+translations = {
+    "English": {
+        "title": "Manuscript Similarity & Plagiarism Screening Hub",
+        "desc": "Advanced preliminary screening module for Q1 analytical chemistry journal submissions and academic drafting.",
+        "draft_label": "Draft Manuscript Text",
+        "draft_placeholder": "Enter draft text here...",
+        "ref_label": "Reference Literature Text",
+        "ref_placeholder": "Enter reference text here...",
+        "btn_text": "Run Similarity Analysis",
+        "report_title": "Analysis Report & Q1 Benchmarks",
+        "similarity_score": "Similarity Score",
+        "draft_words": "Draft Word Count",
+        "ref_words": "Reference Word Count",
+        "warning": "Warning: Similarity index exceeds the recommended Q1 threshold (typically under 10-15%). Paraphrasing is strongly advised.",
+        "success": "Status: Similarity index is within the safe academic threshold for international journal submissions.",
+        "error_text": "Please provide both draft and reference texts to execute the comparison.",
+        "note": "System Note: This module performs local semantic comparison to assist researchers in refining manuscript phrasing before formal journal submission."
+    },
+    "Türkçe": {
+        "title": "Makale Benzerliği ve İntihal Tarama Merkezi",
+        "desc": "Q1 analitik kimya dergisi gönderimleri ve akademik taslaklar için gelişmiş ön tarama modülü.",
+        "draft_label": "Taslak Makale Metni",
+        "draft_placeholder": "Taslak metni buraya girin...",
+        "ref_label": "Referans Literatür Metni",
+        "ref_placeholder": "Referans metni buraya girin...",
+        "btn_text": "Benzerlik Analizini Çalıştır",
+        "report_title": "Analiz Raporu ve Q1 Kriterleri",
+        "similarity_score": "Benzerlik Oranı",
+        "draft_words": "Taslak Kelime Sayısı",
+        "ref_words": "Referans Kelime Sayısı",
+        "warning": "Uyarı: Benzerlik oranı önerilen Q1 eşiğini (genellikle %10-15 altı) aşıyor. Yeniden ifade etme şiddetle tavsiye edilir.",
+        "success": "Durum: Benzerlik oranı, uluslararası dergi gönderimleri için güvenli akademik eşiktedir.",
+        "error_text": "Karşılaştırma yapmak için lütfen hem taslak hem de referans metinlerini girin.",
+        "note": "Sistem Notu: Bu modül, araştırmacılara dergi gönderimi öncesinde makale ifadelerini geliştirmelerinde yardımcı olmak için yerel anlamsal karşılaştırma yapar."
+    },
+    "العربية": {
+        "title": "منصة فحص التشابه والاقتباس للأوراق البحثية",
+        "desc": "وحدة الفحص المبدئي المتقدمة لتقديمات مجلات الكيمياء التحليلية Q1 والصياغة الأكاديمية.",
+        "draft_label": "نص المسودة الأكاديمية",
+        "draft_placeholder": "ألصق نص المسودة هنا...",
+        "ref_label": "نص الأدبيات والمراجع",
+        "ref_placeholder": "ألصق نص المرجع أو الأدبيات هنا...",
+        "btn_text": "تشغيل فحص التشابه والاقتباس",
+        "report_title": "تقرير التحليل ومعايير Q1",
+        "similarity_score": "نسبة التشابه والتطابق",
+        "draft_words": "كلمات المسودة",
+        "ref_words": "كلمات المرجع",
+        "warning": "تنبيه: نسبة التشابه تتجاوز الحد المقبول عموماً في مجلات Q1 (أقل من 10-15%). يوصى بشدة إعادة الصياغة.",
+        "success": "حالة ممتازة: نسبة التشابه ضمن النطاق الآمن والمقبول أكاديمياً للنشر الدولي.",
+        "error_text": "الرجاء إدخال نص المسودة والنص المرجعي لإتمام المقارنة.",
+        "note": "ملاحظة النظام: تقوم هذه الوحدة بمقارنة دلالية محلية لمساعدة الباحثين في تنقيح صياغة المخطوطة قبل التقديم الرسمي للمجلة."
+    }
+}
+
+# --- اختيار اللغة من الشريط الجانبي ---
+selected_lang = st.sidebar.selectbox("Select Language / Dil Seçin / اختر اللغة", ["English", "Türkçe", "العربية"])
+t = translations[selected_lang]
+
+# --- تنسيق CSS المخصص الموحد ---
 st.markdown("""
     <style>
     .custom-header {
@@ -22,13 +81,6 @@ st.markdown("""
         margin: 8px 0 0 0;
         font-size: 14px;
     }
-    .card-box {
-        background-color: #f8fafc;
-        border: 1px solid #e2e8f0;
-        padding: 20px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-    }
     div.stButton > button {
         background-color: #1a365d !important;
         color: white !important;
@@ -42,51 +94,50 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- ترويسة الصفحة العامة للمنصة ---
-st.markdown("""
+# --- ترويسة الصفحة مترجمة ---
+st.markdown(f"""
     <div class="custom-header">
-        <h1>Manuscript Similarity & Plagiarism Screening Hub</h1>
-        <p>Advanced preliminary screening module for Q1 analytical chemistry journal submissions and academic drafting.</p>
+        <h1>{t['title']}</h1>
+        <p>{t['desc']}</p>
     </div>
 """, unsafe_allow_html=True)
 
-# --- واجهة إدخال النصوص ---
+# --- حقول إدخال النصوص ---
 col1, col2 = st.columns(2)
 
 with col1:
-    st.markdown("### Draft Manuscript Text")
-    draft_text = st.text_area("Paste your draft text (Introduction, Discussion, etc.):", height=280, placeholder="Enter draft text here...")
+    st.markdown(f"### {t['draft_label']}")
+    draft_text = st.text_area("", height=280, placeholder=t['draft_placeholder'], key="draft_input")
 
 with col2:
-    st.markdown("### Reference Literature Text")
-    reference_text = st.text_area("Paste reference literature or source text:", height=280, placeholder="Enter reference text here...")
+    st.markdown(f"### {t['ref_label']}")
+    reference_text = st.text_area("", height=280, placeholder=t['ref_placeholder'], key="ref_input")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# --- عملية التحليل والتقييم ---
-if st.button("Run Similarity Analysis", use_container_width=True):
+# --- زر التنفيذ والتحليل ---
+if st.button(t['btn_text'], use_container_width=True):
     if draft_text.strip() and reference_text.strip():
-        # حساب نسبة التطابق
         matcher = SequenceMatcher(None, draft_text, reference_text)
         similarity_ratio = matcher.ratio() * 100
         
         st.markdown("---")
-        st.markdown("### Analysis Report & Q1 Benchmarks")
+        st.markdown(f"### {t['report_title']}")
         
         m_col1, m_col2, m_col3 = st.columns(3)
-        m_col1.metric("Similarity Score", f"{similarity_ratio:.2f}%")
-        m_col2.metric("Draft Word Count", len(draft_text.split()))
-        m_col3.metric("Reference Word Count", len(reference_text.split()))
+        m_col1.metric(t['similarity_score'], f"{similarity_ratio:.2f}%")
+        m_col2.metric(t['draft_words'], len(draft_text.split()))
+        m_col3.metric(t['ref_words'], len(reference_text.split()))
         
         st.markdown("<br>", unsafe_allow_html=True)
         
         if similarity_ratio > 15:
-            st.warning("Warning: Similarity index exceeds the recommended Q1 threshold (typically under 10-15%). Paraphrasing is strongly advised.")
+            st.warning(t['warning'])
         else:
-            st.success("Status: Similarity index is within the safe academic threshold for international journal submissions.")
+            st.success(t['success'])
             
     else:
-        st.error("Please provide both draft and reference texts to execute the comparison.")
+        st.error(t['error_text'])
 
 st.markdown("---")
-st.info("System Note: This module performs local semantic comparison to assist researchers in refining manuscript phrasing before formal journal submission.")
+st.info(t['note'])
