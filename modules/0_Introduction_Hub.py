@@ -12,7 +12,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- تنسيق CSS المخصص للهيدر العلوي والشريط الجانبي (بدون إيقونات، أزرق داكن وفاتح) ---
+# --- تنسيق CSS المخصص للهيدر العلوي والشريط الجانبي ---
 st.markdown("""
     <style>
     .stApp > header {
@@ -209,8 +209,9 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 Write in formal academic English suitable for Q1 journals.
                 """
                 
+                # تم تحديث اسم النموذج هنا ليتوافق مع المعيار الحديث
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-1.5-flash",
                     contents=prompt,
                 )
                 
