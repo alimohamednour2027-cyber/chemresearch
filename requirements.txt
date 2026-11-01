@@ -1,12 +1,9 @@
 streamlit
 python-docx
 pypdf
-google-genai
-python-pptx
 google-generativeai
+python-pptx
 pillow
 matplotlib
-streamlit
 openai
-pillow
 extra-streamlit-components
