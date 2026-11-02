@@ -7,3 +7,5 @@ pillow
 matplotlib
 openai
 extra-streamlit-components
+google-genai
+docx
