@@ -30,12 +30,12 @@ st.markdown("""
 
 st.markdown("""
     <div class="main-header">
-        <h2>🎨 Q1 Graphical Abstract & AI Visual Generator Hub</h2>
+        <h2> Q1 Graphical Abstract & AI Visual Generator Hub</h2>
         <p>Transform your experimental protocols into professional visual workflows and utilize top AI image/text generators (ChatGPT vs. Midjourney vs. Claude).</p>
     </div>
 """, unsafe_allow_html=True)
 
-st.markdown("### 📝 Enter Experimental Protocol or Core Findings:")
+st.markdown("### Enter Experimental Protocol or Core Findings:")
 
 # مربع الإدخال مع مفتاح فريد لضمان قراءة النصوص الجديدة فوراً
 experimental_input = st.text_area(
@@ -68,11 +68,11 @@ Requirements: Clean vector-style icons, logical left-to-right scientific workflo
             st.session_state.latest_ga_prompt = dynamic_prompt
 
             st.markdown("---")
-            st.markdown("### 📊 Generated Prompt & Design Blueprint:")
+            st.markdown("### Generated Prompt & Design Blueprint:")
             
             st.markdown(f"""
                 <div class="card">
-                    <h4 style='color: #2b4c7e;'>✨ Active Prompt for AI Image Generators</h4>
+                    <h4 style='color: #2b4c7e;'> Active Prompt for AI Image Generators</h4>
                     <p><b>Selected Style:</b> {style_option}</p>
                     <hr>
                     <pre style="background-color: #ffffff; padding: 12px; border-radius: 5px; border: 1px solid #cbd5e1; white-space: pre-wrap;">{dynamic_prompt}</pre>
@@ -84,7 +84,7 @@ Requirements: Clean vector-style icons, logical left-to-right scientific workflo
 st.markdown("---")
 
 # --- قسم أدوات الـ AI ومقارنتها (ChatGPT vs Midjourney vs Claude) ---
-st.markdown("### 🤖 AI Tools Integration & Comparison (ChatGPT vs. Midjourney vs. Claude)")
+st.markdown("### AI Tools Integration & Comparison (ChatGPT vs. Midjourney vs. Claude)")
 st.markdown("Choose your preferred AI platform to render or refine the graphical abstract image based on the generated prompt above:")
 
 col_ai1, col_ai2, col_ai3 = st.columns(3)
@@ -120,7 +120,7 @@ with col_ai3:
 if "latest_ga_prompt" in st.session_state:
     st.markdown("---")
     st.download_button(
-        label="📥 Download Generated GA Prompt (.txt)",
+        label=" Download Generated GA Prompt (.txt)",
         data=st.session_state.latest_ga_prompt,
         file_name="graphical_abstract_prompt.txt",
         mime="text/plain",
