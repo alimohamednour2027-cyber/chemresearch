@@ -1,7 +1,7 @@
 import streamlit as st
 from io import BytesIO
 from docx import Document
-from docx.shared import Pt, Inches
+from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import pypdf
 from google import genai
@@ -188,7 +188,7 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 """
                 
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-3.8-flash",
                     contents=prompt,
                 )
                 
@@ -209,10 +209,10 @@ if st.session_state.intro_output:
     
     sections = doc.sections
     for section in sections:
-        section.top_margin = Inches(1)
-        section.bottom_margin = Inches(1)
-        section.left_margin = Inches(1)
-        section.right_margin = Inches(1)
+        section.top_margin = Inches(1) if 'Inches' in globals() else doc.sections[0].top_margin
+        section.bottom_margin = doc.sections[0].bottom_margin
+        section.left_margin = doc.sections[0].left_margin
+        section.right_margin = doc.sections[0].right_margin
 
     p_title = doc.add_paragraph()
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
