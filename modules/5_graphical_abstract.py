@@ -1,183 +1,85 @@
 import streamlit as st
 
-# --- إعدادات الصفحة ---
-st.set_page_config(
-    page_title="ChemResearch AI: Smart Graphical Abstract Bridge",
-    layout="wide"
-)
+st.set_page_config(page_title="Graphical Abstract Hub", layout="wide")
 
-# --- تنسيق CSS المخصص للشريط الجانبي والهيدر (بدون إيقونات) ---
 st.markdown("""
     <style>
-    [data-testid="stSidebar"] {
-        background-color: #2b4c7e;
-        color: #ffffff;
-    }
-    [data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] label, [data-testid="stSidebar"] span {
-        color: #ffffff !important;
-    }
-    .custom-header {
+    .main-header {
         background-color: #1a365d;
-        color: #ffffff;
+        color: white;
         padding: 20px;
         border-radius: 8px;
         margin-bottom: 20px;
     }
-    .custom-header h1 {
-        color: #ffffff;
-        font-weight: 800;
-        margin: 0;
-        font-size: 26px;
-    }
-    .custom-header p {
-        color: #e2e8f0;
-        margin: 5px 0 0 0;
-        font-size: 14px;
+    .card {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 15px;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# --- الشريط الجانبي الموحد لاختيار اللغة ---
-with st.sidebar:
-    st.markdown("### Language Configuration")
-    lang_choice = st.selectbox("Choose Language:", ["English", "Türkçe", "العربية"], label_visibility="collapsed")
-    st.markdown("---")
-    st.markdown("### Graphical Abstract Navigation")
-    st.caption("Active Hub: Protocol Organizer & Master Prompt Bridge")
-
-# قاموس الترجمات الثلاثي لهذه الصفحة (بدون إيقونات)
-if lang_choice == "English":
-    t_title = "ChemResearch AI: Smart Protocol Organizer & Bridge"
-    t_desc = "Input any random or unstructured experimental text, and the system will instantly analyze and formulate it into precise academic stages, preparing the final prompt for free tools."
-    sec1_label = "Enter Experimental Details (Free or unstructured writing):"
-    default_text = "Natural low grade molybdenum ore was ground and sifted. We added sulfuric acid and agitated it overnight then dried in oven DHG-9030. Next we mixed with NaOH in nickel crucible and calcined at 550 C. Dissolved in water, centrifuged with Eppendorf 5810R, added sodium silicate and nano Fe3O4, ultrasonicated, stirred with sodium aluminate at 70 C, heated in reaction kettle at 100 C for 15 hours, and finally magnetically separated and freeze dried."
-    title_label = "Main Graphical Abstract Title:"
-    default_abs_title = "SYNTHESIS OF MAGNETIC ZEOLITE FROM LOW-GRADE MOLYBDENUM ORE"
-    btn_process = "Process and Organize Text into Academic Stages"
-    spinner_text = "Analyzing unstructured text and classifying it into sequential scientific stages..."
-    success_process = "Text successfully analyzed and organized into precise academic stages."
-    sec2_label = "Organized Stages and Master Prompt Readiness:"
-    sec3_label = "Quick Transition to Free Design Tools:"
-    tool1_title = "Microsoft Designer / Copilot (Fully Free)"
-    tool1_link = "Open Bing Image Creator / Copilot"
-    tool2_title = "ChatGPT (Free Version)"
-    tool2_link = "Open ChatGPT"
-    sec4_label = "Final Image Import and Display Window:"
-    uploader_label = "Upload the image after generating it from free tools to document it in your research report:"
-    success_upload = "Image successfully approved and linked to the platform."
-
-elif lang_choice == "Türkçe":
-    t_title = "ChemResearch AI: Akıllı Protokol Düzenleyici ve Köprü"
-    t_desc = "Herhangi bir rastgele veya yapılandırılmamış deneysel metni girin; sistem bunu hemen analiz ederek hassas akademik aşamalara dönüştürür ve ücretsiz araçlar için son komut istemini hazırlar."
-    sec1_label = "Deneysel Detayları Girin (Serbest veya yapılandırılmamış yazı):"
-    default_text = "Natural low grade molybdenum ore was ground and sifted. We added sulfuric acid and agitated it overnight then dried in oven DHG-9030. Next we mixed with NaOH in nickel crucible and calcined at 550 C. Dissolved in water, centrifuged with Eppendorf 5810R, added sodium silicate and nano Fe3O4, ultrasonicated, stirred with sodium aluminate at 70 C, heated in reaction kettle at 100 C for 15 hours, and finally magnetically separated and freeze dried."
-    title_label = "Ana Grafik Özet Başlığı:"
-    default_abs_title = "SYNTHESIS OF MAGNETIC ZEOLITE FROM LOW-GRADE MOLYBDENUM ORE"
-    btn_process = "Metni Akademik Aşamalara Dönüştür ve Düzenle"
-    spinner_text = "Yapılandırılmamış metin analiz ediliyor ve ardışık bilimsel aşamalara sınıflandırılıyor..."
-    success_process = "Metin başarıyla analiz edildi ve hassas akademik aşamalara düzenlendi."
-    sec2_label = "Düzenlenmiş Aşamalar ve Master Prompt Hazırlığı:"
-    sec3_label = "Ücretsiz Tasarım Araçlarına Hızlı Geçiş:"
-    tool1_title = "Microsoft Designer / Copilot (Tamamen Ücretsiz)"
-    tool1_link = "Bing Image Creator / Copilot'u Aç"
-    tool2_title = "ChatGPT (Ücretsiz Sürüm)"
-    tool2_link = "ChatGPT'yi Aç"
-    sec4_label = "Final Resim İçe Aktarma ve Görüntüleme Penceresi:"
-    uploader_label = "Araştırma raporunuzda belgelendirmek için ücretsiz araçlardan aldıktan sonra resmi yükleyin:"
-    success_upload = "Görsel başarıyla onaylandı ve platforma bağlandı."
-
-else:  # العربية
-    t_title = "المنصة الأكاديمية: منظم البروتوكول الذكي وجسر الربط"
-    t_desc = "قم بإدخال أي نص تجريبي عشوائي أو غير منظم، وسيقوم النظام فوراً بتحليله وصياغته في مراحل أكاديمية دقيقة، وتجهيز الوصف النهائي لتصديره للأدوات المجانية."
-    sec1_label = "أدخل تفاصيل التجربة العملية (يمكنك كتابتها بشكل حر أو غير منظم):"
-    default_text = "Natural low grade molybdenum ore was ground and sifted. We added sulfuric acid and agitated it overnight then dried in oven DHG-9030. Next we mixed with NaOH in nickel crucible and calcined at 550 C. Dissolved in water, centrifuged with Eppendorf 5810R, added sodium silicate and nano Fe3O4, ultrasonicated, stirred with sodium aluminate at 70 C, heated in reaction kettle at 100 C for 15 hours, and finally magnetically separated and freeze dried."
-    title_label = "عنوان المخطط الرئيسي:"
-    default_abs_title = "SYNTHESIS OF MAGNETIC ZEOLITE FROM LOW-GRADE MOLYBDENUM ORE"
-    btn_process = "معالجة وتنظيم النص إلى مراحل أكاديمية"
-    spinner_text = "جاري تحليل النص العشوائي وتصنيفه إلى مراحل علمية متسلسلة..."
-    success_process = "تم تحليل النص وتنظيمه بنجاح إلى مراحل أكاديمية دقيقة!"
-    sec2_label = "المراحل المنظمة وجاهزية الوصف (Master Prompt):"
-    sec3_label = "الانتقال السريع إلى الأدوات المجانية:"
-    tool1_title = "Microsoft Designer / Copilot (مجاني بالكامل)"
-    tool1_link = "افتح Bing Image Creator / Copilot"
-    tool2_title = "ChatGPT (النسخة المجانية)"
-    tool2_link = "افتح موقع ChatGPT"
-    sec4_label = "نافذة استيراد وعرض الصورة النهائية في المنصة:"
-    uploader_label = "قم برفع الصورة بعد استخراجها من الأدوات المجانية لتوثيقها في تقرير بحثك:"
-    success_upload = "تم اعتماد الصورة وربطها بالمنصة بنجاح!"
-
-# --- عرض الهيدر ---
-st.markdown(f"""
-    <div class="custom-header">
-        <h1>{t_title}</h1>
-        <p>{t_desc}</p>
+st.markdown("""
+    <div class="main-header">
+        <h2>🎨 Q1 Graphical Abstract & Visual Workflow Generator</h2>
+        <p>Transform raw experimental protocols and core findings into publication-ready visual workflows and structured prompts.</p>
     </div>
 """, unsafe_allow_html=True)
 
-# --- حقل إدخال النص العشوائي أو غير المنظم ---
-st.markdown(f"### {sec1_label}")
-raw_protocol_input = st.text_area(
-    "Enter text here:", 
-    value=default_text, 
-    height=200
+st.markdown("### 📝 Enter Experimental Protocol or Core Findings:")
+
+# استخدام key فريد لضمان قراءة التعديلات والنصوص الجديدة فوراً
+experimental_input = st.text_area(
+    "Paste your experimental procedure, adsorption process, or synthesis steps here:",
+    height=220,
+    placeholder="e.g., Synthesis of magnetic zeolite from molybdenum ore, followed by batch adsorption of heavy metals at optimized pH 6.0...",
+    key="graphical_abstract_text_input"
 )
 
-abstract_title = st.text_input(title_label, value=default_abs_title)
+style_option = st.selectbox(
+    "Select Graphical Abstract Layout Style:",
+    ["Step-by-Step Workflow (Synthesis -> Adsorption -> Characterization)", "Central Core Sorbent & Pollutant Removal", "Comparative Kinetic & Thermodynamic Flow"]
+)
 
-# --- زر المعالجة الذكية وصياغة المراحل ---
-if st.button(btn_process, key="process_raw_text"):
-    if not raw_protocol_input.strip():
-        st.error("الرجاء إدخال نص البروتوكول أولاً.")
+if st.button("Generate Visual Prompt & Workflow Structure", use_container_width=True, key="generate_ga_btn"):
+    if not experimental_input.strip():
+        st.warning("Please enter your experimental protocol first.")
     else:
-        with st.spinner(spinner_text):
-            processed_text = f"""SYNTHESIS OF MAGNETIC ZEOLITE: A SEQUENTIAL PROCESS
-Row 1:
-- Phase 1 (Pre-treatment & Acid Washing): Grinding, sifting, H2SO4 agitation, and oven drying (DHG-9030).
-- Phase 2 (Alkali Fusion): Mixing with NaOH in a nickel crucible and calcination in a muffle furnace at 550 °C.
-- Phase 3 (Solution Prep & Centrifugation): Dissolution in water, centrifugation (Eppendorf 5810R), and adding sodium silicate to the supernatant.
-Row 2:
-- Phase 4 (Mixing & Ultrasonication): Nano Fe3O4 addition, ultrasonic bath treatment, and sodium aluminate mixing.
-- Phase 5 (Hydrothermal Reaction): Transfer to a reaction kettle and heating at 100 °C for 15 h followed by cooling.
-- Phase 6 (Purification & Final Product): Magnetic separation using water dispersant, removal of unloaded particles, and freeze-drying to obtain the final porous magnetic zeolite."""
+        with st.spinner("Generating dynamic graphical abstract workflow and prompt..."):
             
-            st.session_state['structured_protocol'] = processed_text
-            st.success(success_process)
+            # توليد الـ Prompt مباشرة بناءً على النص الجديد الذي كتبه الباحث
+            dynamic_prompt = f"""
+            [Generated GA Prompt for Style: {style_option}]
+            Create a high-resolution, professional scientific illustration representing the following protocol:
+            "{experimental_input}"
+            Ensure clean vector-style icons, a logical left-to-right or circular workflow, clear labels for materials, and a polished Q1 journal visual standard.
+            """
+            
+            # تخزين النص المولد في الـ session state لضمان استمراريته
+            st.session_state.latest_ga_prompt = dynamic_prompt
 
-current_protocol = st.session_state.get('structured_protocol', raw_protocol_input)
-
-st.markdown("---")
-st.markdown(f"### {sec2_label}")
-
-generated_prompt = f"""
-A professional Q1-journal style scientific graphical abstract, horizontal two-row grid layout, clean white background, academic color palette (blues and greys). 
-Title banner across the top: "{abstract_title}".
-Based on the structured protocol:
-{current_protocol}
-High resolution, sharp vector illustration style, clear English labels, distinct vector icons for laboratory equipment (grinder, oven, crucible, centrifuge, ultrasonic bath, reaction kettle, magnet), and directional arrows connecting all steps sequentially.
-""".strip()
-
-st.code(generated_prompt, language="text")
-
-st.markdown("---")
-st.markdown(f"### {sec3_label}")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    st.markdown(f"#### 1. {tool1_title}")
-    st.markdown(f"[🔗 {tool1_link}](https://www.bing.com/create)", unsafe_allow_html=True)
-
-with col2:
-    st.markdown(f"#### 2. {tool2_title}")
-    st.markdown(f"[🔗 {tool2_link}](https://chatgpt.com/)", unsafe_allow_html=True)
-
-st.markdown("---")
-st.markdown(f"### {sec4_label}")
-uploaded_image = st.file_uploader(
-    uploader_label, 
-    type=["png", "jpg", "jpeg", "webp"]
-)
-
-if uploaded_image is not None:
-    st.success(success_upload)
-    st.image(uploaded_image, caption=f"Graphical Abstract: {abstract_title}", use_column_width=True)
+            st.markdown("---")
+            st.markdown("### 📊 Generated Graphical Abstract Structure & Prompt:")
+            
+            st.markdown(f"""
+                <div class="card">
+                    <h4 style='color: #2b4c7e;'>✨ Active Prompt & Design Blueprint</h4>
+                    <p><b>Selected Style:</b> {style_option}</p>
+                    <p><b>Analyzed Input Source:</b> {experimental_input[:100]}...</p>
+                    <hr>
+                    <p><b>Generated Prompt for Image/Workflow:</b></p>
+                    <pre style="background-color: #ffffff; padding: 10px; border-radius: 5px; border: 1px solid #cbd5e1;">{dynamic_prompt}</pre>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            st.success("Prompt and workflow updated successfully based on your new input!")
+            
+            st.download_button(
+                label="Download GA Prompt & Workflow (.txt)",
+                data=dynamic_prompt,
+                file_name="graphical_abstract_prompt.txt",
+                mime="text/plain",
+                key="download_ga_prompt_btn"
+            )
