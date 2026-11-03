@@ -1,4 +1,4 @@
-import streamlit as st
+İmport streamlit as st
 from io import BytesIO
 from docx import Document
 from docx.shared import Pt
