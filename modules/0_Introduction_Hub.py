@@ -47,7 +47,7 @@ if sources_sec2:
     # مزامنة المراجع تلقائياً مع الصفحة 8 (Similarity & Paraphrase)
     st.session_state.uploaded_references = uploaded_ref_names
 
-# زر التوليد مع نظام إعادة المحاولة الذكي وموديل gemini-2.5-flash
+# زر التوليد مع نظام إعادة المحاولة الذكي وموديل gemini-3.8-flash الموصى به
 if st.button("Synthesize Clean Introduction & Citations", key="btn_sec2"):
     if not api_key_input:
         st.error("Please enter your Gemini API Key in the sidebar to enable AI synthesis.")
@@ -87,9 +87,9 @@ if st.button("Synthesize Clean Introduction & Citations", key="btn_sec2"):
                     Write in formal academic English suitable for Q1 journals.
                     """
                     
-                    # استخدام نموذج gemini-2.5-flash المدعوم والمستقر
+                    # استخدام النموذج المحدث والموصى به رسميًا gemini-3.8-flash
                     response = client.models.generate_content(
-                        model="gemini-2.5-flash",
+                        model="gemini-3.8-flash",
                         contents=prompt,
                     )
                     
