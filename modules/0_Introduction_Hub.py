@@ -14,7 +14,7 @@ if "intro_output" not in st.session_state:
 st.title("ChemResearch AI: Introduction Hub")
 st.markdown("---")
 
-# استقبال المدخلات (تأكد أن هذه المتغيرات موجودة لديك أو مأخوذة من واجهتك)
+# استقبال المدخلات الأساسية للبحث
 paper_title = st.text_input("Article or Thesis Title:", value="Facile synthesis of a novel bio-adsorbent for cadmium removal")
 target_metal = st.text_input("Target Heavy Metal / Pollutant:", value="Cadmium(II) - Cd2+")
 adsorbent_material = st.text_input("Prepared Novel Material / Sorbent:", value="Modified Agricultural Waste Bio-adsorbent")
@@ -47,7 +47,7 @@ if sources_sec2:
     # مزامنة المراجع تلقائياً مع الصفحة 8 (Similarity & Paraphrase)
     st.session_state.uploaded_references = uploaded_ref_names
 
-# زر التوليد مع نظام إعادة المحاولة الذكي لتجاوز خطأ 503
+# زر التوليد مع نظام إعادة المحاولة الذكي وموديل gemini-2.5-flash
 if st.button("Synthesize Clean Introduction & Citations", key="btn_sec2"):
     if not api_key_input:
         st.error("Please enter your Gemini API Key in the sidebar to enable AI synthesis.")
@@ -87,9 +87,9 @@ if st.button("Synthesize Clean Introduction & Citations", key="btn_sec2"):
                     Write in formal academic English suitable for Q1 journals.
                     """
                     
-                    # استخدام موديل مستقر لتجنب خطأ الضغط العالي
+                    # استخدام نموذج gemini-2.5-flash المدعوم والمستقر
                     response = client.models.generate_content(
-                        model="gemini-1.5-flash",
+                        model="gemini-2.5-flash",
                         contents=prompt,
                     )
                     
@@ -101,14 +101,14 @@ if st.button("Synthesize Clean Introduction & Citations", key="btn_sec2"):
                 except Exception as e:
                     last_error = str(e)
                     if "503" in str(e) or "UNAVAILABLE" in str(e):
-                        time.sleep(3) # انتظار 3 ثوانٍ وإعادة المحاولة تلقائياً
+                        time.sleep(3)
                     else:
                         break
             
             if success:
                 st.success("تمت صياغة المقدمة وتوثيقها بدقة متناهية وبدون أي تكرار!")
             else:
-                st.error(f"عذراً، الخادم مشغّل حالياً (خطأ 503). يرجى تقليل عدد ملفات الـ PDF المرفوعة قليلاً أو المحاولة بعد دقيقة. التفاصيل: {last_error}")
+                st.error(f"عذراً، حدث خطأ أثناء الاتصال بالخادم. التفاصيل: {last_error}")
 
 # عرض النتائج
 if st.session_state.intro_output:
