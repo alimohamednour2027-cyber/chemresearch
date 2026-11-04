@@ -182,7 +182,7 @@ if st.button(t_btn_sec2, key="btn_sec2"):
                 - Citation Style: {citation_format}
                 
                 Extracted Text from Uploaded Review Papers:
-                {extracted_pdf_text[:25000]}
+                {extracted_pdf_text[:8000]}
                 
                 Write in formal academic English suitable for Q1 journals.
                 """
