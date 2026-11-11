@@ -131,21 +131,21 @@ def show_dashboard():
     st.markdown("---")
     st.info("Use the sidebar menu above to switch between the specialized analytical modules.")
 
-# --- نظام التنقل الشامل والمستقر لجميع الوحدات بدون انقطاع ---
+# --- نظام التنقل المحدث بالترتيب الجديد تماماً حسب طلبك ---
 pages = {
     "Main Hub": [
         st.Page(show_dashboard, title="Dashboard Hub", default=True),
     ],
     "Analytical Modules": [
-        st.Page("modules/0_Introduction_Hub.py", title="Introduction Hub"),
         st.Page("modules/1_literature_hub.py", title="Literature Hub"),
-        st.Page("modules/2_optimization_parameters.py", title="Optimization Parameters"),
-        st.Page("modules/3_characterization_analysis.py", title="Characterization Analysis"),
-        st.Page("modules/4_adsorption_kinetics.py", title="Adsorption Kinetics"),
-        st.Page("modules/5_graphical_abstract.py", title="Graphical Abstract"),
-        st.Page("modules/6_Claude_Literature_Hub.py", title="Claude Literature Hub"),
-        st.Page("modules/7_Claude_Optimization_Hub.py", title="Claude Optimization Hub"),
-        st.Page("modules/8_similarity_checker.py", title="Similarity Checker"),
+        st.Page("modules/0_Introduction_Hub.py", title="Introduction Hub"),
+        st.Page("modules/2_optimization_parameters.py", title="Optimization parameters"),
+        st.Page("modules/3_characterization_analysis.py", title="Characterisation analysis"),
+        st.Page("modules/4_adsorption_kinetics.py", title="Adsorption kinetics"),
+        st.Page("modules/5_graphical_abstract.py", title="Graphical abstract"),
+        st.Page("modules/8_similarity_checker.py", title="Similarity checkers"),
+        st.Page("modules/6_Claude_Literature_Hub.py", title="Cloude literature hub"),
+        st.Page("modules/7_Claude_Optimization_Hub.py", title="Cloude optimizastion hub"),
     ]
 }
 
