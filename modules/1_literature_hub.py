@@ -7,6 +7,10 @@ st.set_page_config(
     layout="wide"
 )
 
+# --- التأكد من مزامنة عنوان البحث في الـ Session State ---
+if "paper_title" not in st.session_state:
+    st.session_state.paper_title = "Facile synthesis of a novel bio-adsorbent for cadmium removal from aqueous solutions"
+
 # --- تنسيق CSS المخصص للشريط الجانبي والهيدر (بدون إيقونات) ---
 st.markdown("""
     <style>
@@ -46,12 +50,12 @@ with st.sidebar:
     st.markdown("### Literature Hub Navigation")
     st.caption("Active Hub: Consensus & Literature Retrieval")
 
-# قاموس الترجمات الثلاثي لهذه الصفحة (بدون إيقونات)
+# قاموس الترجمات الثلاثي لهذه الصفحة
 if lang_choice == "English":
     t_title = "ChemResearch AI: Q1 Consensus Literature Hub"
     t_desc = "This portal is dedicated to retrieving and reviewing peer-reviewed articles directly connected to your experiment data via Consensus."
-    sec_meta = "Current Research Parameters:"
-    t_title_lbl = "Article or Thesis Title:"
+    sec_meta = "Current Research Parameters (Synced):"
+    t_title_lbl = "Article or Thesis Title (Synced across platform):"
     t_metal_lbl = "Target Heavy Metal / Pollutant:"
     t_material_lbl = "Prepared Material / Sorbent:"
     t_tools_lbl = "Characterization Tools:"
@@ -70,8 +74,8 @@ if lang_choice == "English":
 elif lang_choice == "Türkçe":
     t_title = "ChemResearch AI: Q1 Konsensus Literatür Merkezi"
     t_desc = "Bu portal, deney verilerinizle doğrudan bağlantılı en son hakemli makaleleri Consensus aracıyla incelemek için tasarlanmıştır."
-    sec_meta = "Mevcut Araştırma Parametreleri:"
-    t_title_lbl = "Makale veya Tez Başlığı:"
+    sec_meta = "Mevcut Araştırma Parametreleri (Senkronize):"
+    t_title_lbl = "Makale veya Tez Başlığı (Platform genelinde senkronize):"
     t_metal_lbl = "Hedef Ağır Metal / Kirletici:"
     t_material_lbl = "Hazırlanan Malzeme / Adsorban:"
     t_tools_lbl = "Karakterizasyon Araçları:"
@@ -90,18 +94,18 @@ elif lang_choice == "Türkçe":
 else:  # العربية
     t_title = "المنصة الأكاديمية: مركز أدبيات الأبحاث Consensus"
     t_desc = "هذه البوابة مخصصة لجلب واستعراض أحدث الأبحاث والمقالات المحكمة (20+ مقالة) المرتبطة مباشرة ببيانات تجربتك عبر محرك الأدبيات Consensus."
-    sec_meta = "معايير البحث الحالية المستمدة من مشروعك:"
-    t_title_lbl = "عنوان البحث أو الأطروحة:"
+    sec_meta = "معايير البحث الحالية (متزامنة مع المنصة):"
+    t_title_lbl = "عنوان البحث أو الأطروحة (متزامن تلقائياً):"
     t_metal_lbl = "الملوث أو العنصر الثقيل المستهدف:"
     t_material_lbl = "المادة المازة / المحضرة:"
-    t_tools_lbl = "أوات التوصيف والتحليل:"
+    t_tools_lbl = "أدوات التوصيف والتحليل:"
     sec_query = "استعلام البحث المتقدم المتولد أوتوماتيكياً:"
     query_label = "نص الاستعلام العلمي:"
     btn_consensus = "فتح وفحص 20+ مقالة عبر منصة Consensus"
     cap_consensus = "ينقلك مباشرة إلى منصة Consensus لاستعراض المقالات والأوراق العلمية التي تدعم استنتاجاتك."
     btn_scholar = "البحث الاحتياطي في Google Scholar"
     cap_scholar = "دعم إضافي للبحث الموسع في قواعد بيانات جوجل الأكاديمية."
-    sec_archive = "أرشيف المراجع Mلجلبة وتوثيقها للبحث:"
+    sec_archive = "أرشيف المراجع المجلوبة وتوثيقها للبحث:"
     archive_desc = "قم بتسجيل روابط أو عناوين المقالات لاستخدامها لاحقاً في صياغة المناقشة:"
     archive_input = "قائمة المراجع (ضع كل مرجع في سطر منفصل مع رابط الـ DOI):"
     btn_save = "حفظ أرشيف المراجع في قاعدة بيانات المشروع"
@@ -115,19 +119,22 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# --- إدخال معايير البحث ---
+# --- إدخال معايير البحث مع ربط العنوان بالـ Session State ---
 st.markdown(f"### {sec_meta}")
 
 col1, col2 = st.columns(2)
 with col1:
-    article_title = st.text_input(t_title_lbl, value="Facile synthesis of a novel bio-adsorbent for cadmium removal from aqueous solutions")
+    # ربط العنوان بذاكرة الجلسة ليتحدث تلقائياً عبر المنصة
+    current_title = st.text_input(t_title_lbl, value=st.session_state.paper_title, key="consensus_paper_title")
+    st.session_state.paper_title = current_title
+    
     target_metal = st.text_input(t_metal_lbl, value="Cadmium(II) - Cd2+")
 
 with col2:
     prepared_material = st.text_input(t_material_lbl, value="Modified Agricultural Waste Bio-adsorbent")
     characterization_tools = st.text_input(t_tools_lbl, value="FTIR, SEM, XRD, AAS")
 
-# --- تجميع وتوليد استعلام البحث الذكي (يعمل بثبات بغض النظر عن لغة الواجهة) ---
+# --- تجميع وتوليد استعلام البحث الذكي ---
 st.markdown("---")
 st.markdown(f"### {sec_query}")
 
